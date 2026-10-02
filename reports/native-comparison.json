@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-10-02T04:31:07.579668+00:00",
+  "upstreamVersion": "0.1.34",
+  "upstreamCommit": "1678de333d0e0711bc414ad992b640e1a37dd814",
+  "executableSha256": "f0838beeb5b630483262456b1d0a596c76c7e19633bbb58eebe27ab86b497bb4",
+  "inputs": [
+    760,
+    6511,
+    314,
+    9338,
+    369,
+    11751
+  ],
+  "portableKernelSha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
+  "portableLogitsSha256": "88fd69736db3148099c8c4627cc5c30f78c45de5f99255a9e526602fdaacab19",
+  "note": "This measures differences; agreement on one token is not a native parity or model-quality pass.",
+  "comparisons": [
+    {
+      "mode": "canonical",
+      "command": [
+        "D:\\StrataCuda\\.local\\native-upstream\\bin\\strata.exe",
+        "--pack",
+        "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-WebCuda-Q2_0",
+        "--tokens",
+        "760,6511,314,9338,369,11751",
+        "--max-new",
+        "1",
+        "--max-context",
+        "256",
+        "--mmap-experts",
+        "--pool-workers",
+        "4",
+        "--ple-gguf",
+        "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf",
+        "--dump-logits",
+        "D:\\StrataCuda\\.local\\native-upstream\\canonical-logits.f32",
+        "--dump-routing",
+        "D:\\StrataCuda\\.local\\native-upstream\\canonical-routing.bin"
+      ],
+      "nativeLogitsSha256": "7cc5c821d18f35d62e63734d40ad90b7b3bae2a48942804596309f12e6a60ed1",
+      "nativeRoutingSha256": "9471ad7b3a0699f6f73ce626ea7959034aa31234e6095f500adafd49efafae65",
+      "positions": 6,
+      "nativeLastToken": 13,
+      "portableLastToken": 13,
+      "bitExact": false,
+      "maxAbsoluteError": 0.9972515106201172,
+      "rmsError": 0.16274228029062798,
+      "cosine": 0.9977428568434035,
+      "routing": {
+        "records": 288,
+        "orderedMatches": 81,
+        "setMatches": 213,
+        "selectedExpertOverlap": 2802,
+        "selectedExperts": 2880
+      }
+    },
+    {
+      "mode": "native",
+      "command": [
+        "D:\\StrataCuda\\.local\\native-upstream\\bin\\strata.exe",
+        "--pack",
+        "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-WebCuda-Q2_0",
+        "--tokens",
+        "760,6511,314,9338,369,11751",
+        "--max-new",
+        "1",
+        "--max-context",
+        "256",
+        "--mmap-experts",
+        "--pool-workers",
+        "4",
+        "--ple-gguf",
+        "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf",
+        "--dump-logits",
+        "D:\\StrataCuda\\.local\\native-upstream\\native-logits.f32",
+        "--dump-routing",
+        "D:\\StrataCuda\\.local\\native-upstream\\native-routing.bin",
+        "--native",
+        "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf"
+      ],
+      "nativeLogitsSha256": "b3d9e872d315dd0459da1905c33830876cea33cbd5892f6a71615234ef71ac87",
+      "nativeRoutingSha256": "4bdf530c8ceb0bd3b2e949aad765ad49a4c78ad0ddd115f79545a3040e5361a3",
+      "positions": 6,
+      "nativeLastToken": 13,
+      "portableLastToken": 13,
+      "bitExact": false,
+      "maxAbsoluteError": 0.9397945404052734,
+      "rmsError": 0.15168872284443333,
+      "cosine": 0.9980339944764733,
+      "routing": {
+        "records": 288,
+        "orderedMatches": 144,
+        "setMatches": 244,
+        "selectedExpertOverlap": 2834,
+        "selectedExperts": 2880
+      }
+    }
+  ]
+}

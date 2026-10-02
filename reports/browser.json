@@ -1,0 +1,709 @@
+{
+  "sourceSha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
+  "errors": [],
+  "reports": [
+    {
+      "mode": "webgpu",
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 41,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 5395,
+        "submissions": 279,
+        "dispatches": 7064,
+        "uniformBytesUploaded": 1741616,
+        "dataBytesUploaded": 13544000,
+        "readbackBytes": 3506820,
+        "pooledBytes": 371564,
+        "poolHits": 5672,
+        "bindingCacheHits": 1669
+      },
+      "checks": [
+        {
+          "name": "All 65536 packed FP16 bit patterns",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "Packed Q2 gate with strided prompt output",
+          "maxAbsoluteError": 4.709581844508648e-7
+        },
+        {
+          "name": "Packed Q2 up with strided prompt output",
+          "maxAbsoluteError": 7.806374924257398e-7
+        },
+        {
+          "name": "Packed Q2 down with strided prompt output",
+          "maxAbsoluteError": 7.806374924257398e-7
+        },
+        {
+          "name": "router ties",
+          "maxAbsoluteError": 1.4901161138336505e-9
+        },
+        {
+          "name": "router spread",
+          "maxAbsoluteError": 6.321183784741002e-9
+        },
+        {
+          "name": "2560-wide projection",
+          "maxAbsoluteError": 5.479781449435617e-8
+        },
+        {
+          "name": "S2 signed scales and offset plane",
+          "maxAbsoluteError": 4.8147357989414274e-8
+        },
+        {
+          "name": "S4 signed scales and offset plane",
+          "maxAbsoluteError": 4.784743088404042e-7
+        },
+        {
+          "name": "S8 signed scales and offset plane",
+          "maxAbsoluteError": 0.0000021148506377244303
+        },
+        {
+          "name": "GDN production state step 0",
+          "maxAbsoluteError": 1.2652152134133565e-9
+        },
+        {
+          "name": "GDN production state step 1",
+          "maxAbsoluteError": 1.7083762477582143e-9
+        },
+        {
+          "name": "GDN production state step 2",
+          "maxAbsoluteError": 2.081172082108243e-9
+        },
+        {
+          "name": "GDN persistent state",
+          "maxAbsoluteError": 8.077114373172822e-9
+        },
+        {
+          "name": "PLE dilated convolution and 12 history shifts",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "GQA attention selected cells",
+          "maxAbsoluteError": 2.591729764134243e-8
+        },
+        {
+          "name": "GQA attention 70 dimensions and 65 cells",
+          "maxAbsoluteError": 4.268733887202725e-8
+        },
+        {
+          "name": "GQA attention 256 dimensions and 2048 cells",
+          "maxAbsoluteError": 8.429795212566704e-9
+        },
+        {
+          "name": "Partial NeoX RoPE",
+          "maxAbsoluteError": 5.5643095686619404e-8
+        },
+        {
+          "name": "4-layer GDN + QSA + PLE + HC + MoE decode, 5 tokens",
+          "maxAbsoluteError": 3.402995987777935e-8
+        },
+        {
+          "name": "Checkpoint restore replays logits",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "Reset clears recurrent, KV and PLE state",
+          "maxAbsoluteError": 2.0507374250133825e-8
+        },
+        {
+          "name": "Prompt-only state updates preserve final logits",
+          "maxAbsoluteError": 3.402995987777935e-8
+        },
+        {
+          "name": "Batched prompt chunk 1 at nonzero position",
+          "maxAbsoluteError": 2.4762945496871122e-8
+        },
+        {
+          "name": "Decode after prompt chunk 1",
+          "maxAbsoluteError": 2.9054539329997908e-8
+        },
+        {
+          "name": "Batched prompt chunk 2 at nonzero position",
+          "maxAbsoluteError": 2.4762945496871122e-8
+        },
+        {
+          "name": "Decode after prompt chunk 2",
+          "maxAbsoluteError": 2.9054539329997908e-8
+        },
+        {
+          "name": "Batched prompt chunk 5 at nonzero position",
+          "maxAbsoluteError": 2.4762945496871122e-8
+        },
+        {
+          "name": "Decode after prompt chunk 5",
+          "maxAbsoluteError": 2.9054539329997908e-8
+        },
+        {
+          "name": "Resident tiled weights with batched prompt",
+          "maxAbsoluteError": 3.402995987777935e-8
+        },
+        {
+          "name": "Lossless compact BF16 projections",
+          "maxAbsoluteError": 3.569473150388802e-8
+        }
+      ],
+      "tokens": [
+        29,
+        2,
+        15,
+        9,
+        15
+      ],
+      "stats": {
+        "tokens": 32,
+        "gpuExperts": 256,
+        "cpuExperts": 0,
+        "promotions": 0,
+        "routes": [
+          {
+            "layer": 0,
+            "ids": [
+              0,
+              5
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          },
+          {
+            "layer": 1,
+            "ids": [
+              5,
+              3
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          },
+          {
+            "layer": 2,
+            "ids": [
+              4,
+              1
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          },
+          {
+            "layer": 3,
+            "ids": [
+              4,
+              5
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          }
+        ],
+        "lastMs": 16.62999999523163,
+        "weightCacheHits": 2279,
+        "weightCacheMisses": 131
+      }
+    },
+    {
+      "mode": "wasm",
+      "backend": {
+        "backend": "wasm",
+        "threads": 4,
+        "dispatches": 5242,
+        "workerGroups": [
+          27898,
+          16772,
+          16947,
+          17052
+        ],
+        "heapBytes": 268435456
+      },
+      "checks": [
+        {
+          "name": "All 65536 packed FP16 bit patterns",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "Packed Q2 gate with strided prompt output",
+          "maxAbsoluteError": 4.709581844508648e-7
+        },
+        {
+          "name": "Packed Q2 up with strided prompt output",
+          "maxAbsoluteError": 7.806374924257398e-7
+        },
+        {
+          "name": "Packed Q2 down with strided prompt output",
+          "maxAbsoluteError": 7.806374924257398e-7
+        },
+        {
+          "name": "router ties",
+          "maxAbsoluteError": 1.4901161138336505e-9
+        },
+        {
+          "name": "router spread",
+          "maxAbsoluteError": 6.321183784741002e-9
+        },
+        {
+          "name": "2560-wide projection",
+          "maxAbsoluteError": 5.479781449435617e-8
+        },
+        {
+          "name": "S2 signed scales and offset plane",
+          "maxAbsoluteError": 4.8147357989414274e-8
+        },
+        {
+          "name": "S4 signed scales and offset plane",
+          "maxAbsoluteError": 4.784743088404042e-7
+        },
+        {
+          "name": "S8 signed scales and offset plane",
+          "maxAbsoluteError": 0.0000021148506377244303
+        },
+        {
+          "name": "GDN production state step 0",
+          "maxAbsoluteError": 1.2652152134133565e-9
+        },
+        {
+          "name": "GDN production state step 1",
+          "maxAbsoluteError": 1.7083762477582143e-9
+        },
+        {
+          "name": "GDN production state step 2",
+          "maxAbsoluteError": 2.081172082108243e-9
+        },
+        {
+          "name": "GDN persistent state",
+          "maxAbsoluteError": 8.077114373172822e-9
+        },
+        {
+          "name": "PLE dilated convolution and 12 history shifts",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "GQA attention selected cells",
+          "maxAbsoluteError": 1.705779532901186e-8
+        },
+        {
+          "name": "GQA attention 70 dimensions and 65 cells",
+          "maxAbsoluteError": 3.007641314473064e-8
+        },
+        {
+          "name": "GQA attention 256 dimensions and 2048 cells",
+          "maxAbsoluteError": 8.306236644675669e-9
+        },
+        {
+          "name": "Partial NeoX RoPE",
+          "maxAbsoluteError": 5.5643095686619404e-8
+        },
+        {
+          "name": "4-layer GDN + QSA + PLE + HC + MoE decode, 5 tokens",
+          "maxAbsoluteError": 3.3132404403390936e-8
+        },
+        {
+          "name": "Checkpoint restore replays logits",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "Reset clears recurrent, KV and PLE state",
+          "maxAbsoluteError": 1.818672763775897e-8
+        },
+        {
+          "name": "Prompt-only state updates preserve final logits",
+          "maxAbsoluteError": 2.747943464442848e-8
+        },
+        {
+          "name": "Batched prompt chunk 1 at nonzero position",
+          "maxAbsoluteError": 3.7970341010273856e-8
+        },
+        {
+          "name": "Decode after prompt chunk 1",
+          "maxAbsoluteError": 1.7513583819295242e-8
+        },
+        {
+          "name": "Batched prompt chunk 2 at nonzero position",
+          "maxAbsoluteError": 3.7970341010273856e-8
+        },
+        {
+          "name": "Decode after prompt chunk 2",
+          "maxAbsoluteError": 1.7513583819295242e-8
+        },
+        {
+          "name": "Batched prompt chunk 5 at nonzero position",
+          "maxAbsoluteError": 3.7970341010273856e-8
+        },
+        {
+          "name": "Decode after prompt chunk 5",
+          "maxAbsoluteError": 1.7513583819295242e-8
+        }
+      ],
+      "tokens": [
+        29,
+        2,
+        15,
+        9,
+        15
+      ],
+      "stats": {
+        "tokens": 32,
+        "gpuExperts": 0,
+        "cpuExperts": 256,
+        "promotions": 0,
+        "routes": [
+          {
+            "layer": 0,
+            "ids": [
+              0,
+              5
+            ],
+            "devices": [
+              "wasm",
+              "wasm"
+            ]
+          },
+          {
+            "layer": 1,
+            "ids": [
+              5,
+              3
+            ],
+            "devices": [
+              "wasm",
+              "wasm"
+            ]
+          },
+          {
+            "layer": 2,
+            "ids": [
+              4,
+              1
+            ],
+            "devices": [
+              "wasm",
+              "wasm"
+            ]
+          },
+          {
+            "layer": 3,
+            "ids": [
+              4,
+              5
+            ],
+            "devices": [
+              "wasm",
+              "wasm"
+            ]
+          }
+        ],
+        "lastMs": 9.959999978542328,
+        "weightCacheHits": 2279,
+        "weightCacheMisses": 131
+      }
+    },
+    {
+      "mode": "hybrid",
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "subgroups",
+          "float32-filterable",
+          "shader-f16",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 41,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 5282,
+        "submissions": 291,
+        "dispatches": 6886,
+        "uniformBytesUploaded": 1693360,
+        "dataBytesUploaded": 13540160,
+        "readbackBytes": 3510276,
+        "pooledBytes": 371564,
+        "poolHits": 5504,
+        "bindingCacheHits": 1604
+      },
+      "checks": [
+        {
+          "name": "All 65536 packed FP16 bit patterns",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "Packed Q2 gate with strided prompt output",
+          "maxAbsoluteError": 4.709581844508648e-7
+        },
+        {
+          "name": "Packed Q2 up with strided prompt output",
+          "maxAbsoluteError": 7.806374924257398e-7
+        },
+        {
+          "name": "Packed Q2 down with strided prompt output",
+          "maxAbsoluteError": 7.806374924257398e-7
+        },
+        {
+          "name": "router ties",
+          "maxAbsoluteError": 1.4901161138336505e-9
+        },
+        {
+          "name": "router spread",
+          "maxAbsoluteError": 6.321183784741002e-9
+        },
+        {
+          "name": "2560-wide projection",
+          "maxAbsoluteError": 5.479781449435617e-8
+        },
+        {
+          "name": "S2 signed scales and offset plane",
+          "maxAbsoluteError": 4.8147357989414274e-8
+        },
+        {
+          "name": "S4 signed scales and offset plane",
+          "maxAbsoluteError": 4.784743088404042e-7
+        },
+        {
+          "name": "S8 signed scales and offset plane",
+          "maxAbsoluteError": 0.0000021148506377244303
+        },
+        {
+          "name": "GDN production state step 0",
+          "maxAbsoluteError": 1.2652152134133565e-9
+        },
+        {
+          "name": "GDN production state step 1",
+          "maxAbsoluteError": 1.7083762477582143e-9
+        },
+        {
+          "name": "GDN production state step 2",
+          "maxAbsoluteError": 2.081172082108243e-9
+        },
+        {
+          "name": "GDN persistent state",
+          "maxAbsoluteError": 8.077114373172822e-9
+        },
+        {
+          "name": "PLE dilated convolution and 12 history shifts",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "GQA attention selected cells",
+          "maxAbsoluteError": 2.591729764134243e-8
+        },
+        {
+          "name": "GQA attention 70 dimensions and 65 cells",
+          "maxAbsoluteError": 4.268733887202725e-8
+        },
+        {
+          "name": "GQA attention 256 dimensions and 2048 cells",
+          "maxAbsoluteError": 8.429795212566704e-9
+        },
+        {
+          "name": "Partial NeoX RoPE",
+          "maxAbsoluteError": 5.5643095686619404e-8
+        },
+        {
+          "name": "4-layer GDN + QSA + PLE + HC + MoE decode, 5 tokens",
+          "maxAbsoluteError": 3.402995987777935e-8
+        },
+        {
+          "name": "Checkpoint restore replays logits",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "Reset clears recurrent, KV and PLE state",
+          "maxAbsoluteError": 2.0507374250133825e-8
+        },
+        {
+          "name": "Prompt-only state updates preserve final logits",
+          "maxAbsoluteError": 3.402995987777935e-8
+        },
+        {
+          "name": "Batched prompt chunk 1 at nonzero position",
+          "maxAbsoluteError": 2.4762945496871122e-8
+        },
+        {
+          "name": "Decode after prompt chunk 1",
+          "maxAbsoluteError": 2.9054539329997908e-8
+        },
+        {
+          "name": "Batched prompt chunk 2 at nonzero position",
+          "maxAbsoluteError": 2.4762945496871122e-8
+        },
+        {
+          "name": "Decode after prompt chunk 2",
+          "maxAbsoluteError": 2.9054539329997908e-8
+        },
+        {
+          "name": "Batched prompt chunk 5 at nonzero position",
+          "maxAbsoluteError": 2.4762945496871122e-8
+        },
+        {
+          "name": "Decode after prompt chunk 5",
+          "maxAbsoluteError": 2.9054539329997908e-8
+        },
+        {
+          "name": "Resident tiled weights with batched prompt",
+          "maxAbsoluteError": 3.402995987777935e-8
+        },
+        {
+          "name": "Lossless compact BF16 projections",
+          "maxAbsoluteError": 3.569473150388802e-8
+        }
+      ],
+      "tokens": [
+        29,
+        2,
+        15,
+        9,
+        15
+      ],
+      "stats": {
+        "tokens": 32,
+        "gpuExperts": 215,
+        "cpuExperts": 41,
+        "promotions": 20,
+        "routes": [
+          {
+            "layer": 0,
+            "ids": [
+              0,
+              5
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          },
+          {
+            "layer": 1,
+            "ids": [
+              5,
+              3
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          },
+          {
+            "layer": 2,
+            "ids": [
+              4,
+              1
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          },
+          {
+            "layer": 3,
+            "ids": [
+              4,
+              5
+            ],
+            "devices": [
+              "webgpu",
+              "webgpu"
+            ]
+          }
+        ],
+        "lastMs": 15.854999959468842,
+        "weightCacheHits": 2156,
+        "weightCacheMisses": 131
+      }
+    }
+  ],
+  "fileDecode": {
+    "generated": [
+      15,
+      18,
+      3,
+      15
+    ],
+    "position": 6,
+    "stats": {
+      "tokens": 6,
+      "gpuExperts": 8,
+      "cpuExperts": 40,
+      "promotions": 36,
+      "routes": [
+        {
+          "layer": 0,
+          "ids": [
+            0,
+            1
+          ],
+          "devices": [
+            "wasm",
+            "wasm"
+          ]
+        },
+        {
+          "layer": 1,
+          "ids": [
+            4,
+            0
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 2,
+          "ids": [
+            3,
+            0
+          ],
+          "devices": [
+            "webgpu",
+            "wasm"
+          ]
+        },
+        {
+          "layer": 3,
+          "ids": [
+            5,
+            3
+          ],
+          "devices": [
+            "wasm",
+            "webgpu"
+          ]
+        }
+      ],
+      "lastMs": 29.084999978542328
+    }
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "backend": {
+    "backend": "wasm",
+    "threads": 4,
+    "dispatches": 5242,
+    "workerGroups": [
+      29337,
+      16227,
+      16530,
+      16575
+    ],
+    "heapBytes": 268435456
+  },
+  "checks": [
+    {
+      "name": "All 65536 packed FP16 bit patterns",
+      "maxAbsoluteError": 0
+    },
+    {
+      "name": "Packed Q2 gate with strided prompt output",
+      "maxAbsoluteError": 4.709581844508648e-7
+    },
+    {
+      "name": "Packed Q2 up with strided prompt output",
+      "maxAbsoluteError": 7.806374924257398e-7
+    },
+    {
+      "name": "Packed Q2 down with strided prompt output",
+      "maxAbsoluteError": 7.806374924257398e-7
+    },
+    {
+      "name": "router ties",
+      "maxAbsoluteError": 1.4901161138336505e-9
+    },
+    {
+      "name": "router spread",
+      "maxAbsoluteError": 6.32118379861879e-9
+    },
+    {
+      "name": "2560-wide projection",
+      "maxAbsoluteError": 5.479781449435617e-8
+    },
+    {
+      "name": "S2 signed scales and offset plane",
+      "maxAbsoluteError": 4.8147357989414274e-8
+    },
+    {
+      "name": "S4 signed scales and offset plane",
+      "maxAbsoluteError": 4.784743088404042e-7
+    },
+    {
+      "name": "S8 signed scales and offset plane",
+      "maxAbsoluteError": 0.0000021148506377244303
+    },
+    {
+      "name": "GDN production state step 0",
+      "maxAbsoluteError": 1.2652152134133565e-9
+    },
+    {
+      "name": "GDN production state step 1",
+      "maxAbsoluteError": 1.7083762477582143e-9
+    },
+    {
+      "name": "GDN production state step 2",
+      "maxAbsoluteError": 2.081172082108243e-9
+    },
+    {
+      "name": "GDN persistent state",
+      "maxAbsoluteError": 8.077114373172822e-9
+    },
+    {
+      "name": "PLE dilated convolution and 12 history shifts",
+      "maxAbsoluteError": 0
+    },
+    {
+      "name": "GQA attention selected cells",
+      "maxAbsoluteError": 1.705779532901186e-8
+    },
+    {
+      "name": "GQA attention 70 dimensions and 65 cells",
+      "maxAbsoluteError": 3.007641314473064e-8
+    },
+    {
+      "name": "GQA attention 256 dimensions and 2048 cells",
+      "maxAbsoluteError": 8.306236644675669e-9
+    },
+    {
+      "name": "Partial NeoX RoPE",
+      "maxAbsoluteError": 5.5643095686619404e-8
+    },
+    {
+      "name": "4-layer GDN + QSA + PLE + HC + MoE decode, 5 tokens",
+      "maxAbsoluteError": 3.313240437563536e-8
+    },
+    {
+      "name": "Checkpoint restore replays logits",
+      "maxAbsoluteError": 0
+    },
+    {
+      "name": "Reset clears recurrent, KV and PLE state",
+      "maxAbsoluteError": 1.8186727630820076e-8
+    },
+    {
+      "name": "Prompt-only state updates preserve final logits",
+      "maxAbsoluteError": 2.7479434658306268e-8
+    },
+    {
+      "name": "Batched prompt chunk 1 at nonzero position",
+      "maxAbsoluteError": 3.797034098251828e-8
+    },
+    {
+      "name": "Decode after prompt chunk 1",
+      "maxAbsoluteError": 1.751358383317303e-8
+    },
+    {
+      "name": "Batched prompt chunk 2 at nonzero position",
+      "maxAbsoluteError": 3.797034098251828e-8
+    },
+    {
+      "name": "Decode after prompt chunk 2",
+      "maxAbsoluteError": 1.751358383317303e-8
+    },
+    {
+      "name": "Batched prompt chunk 5 at nonzero position",
+      "maxAbsoluteError": 3.797034098251828e-8
+    },
+    {
+      "name": "Decode after prompt chunk 5",
+      "maxAbsoluteError": 1.751358383317303e-8
+    }
+  ],
+  "tokens": [
+    29,
+    2,
+    15,
+    9,
+    15
+  ],
+  "stats": {
+    "tokens": 32,
+    "gpuExperts": 0,
+    "cpuExperts": 256,
+    "promotions": 0,
+    "routes": [
+      {
+        "layer": 0,
+        "ids": [
+          0,
+          5
+        ],
+        "devices": [
+          "wasm",
+          "wasm"
+        ]
+      },
+      {
+        "layer": 1,
+        "ids": [
+          5,
+          3
+        ],
+        "devices": [
+          "wasm",
+          "wasm"
+        ]
+      },
+      {
+        "layer": 2,
+        "ids": [
+          4,
+          1
+        ],
+        "devices": [
+          "wasm",
+          "wasm"
+        ]
+      },
+      {
+        "layer": 3,
+        "ids": [
+          4,
+          5
+        ],
+        "devices": [
+          "wasm",
+          "wasm"
+        ]
+      }
+    ],
+    "lastMs": 6.097700000000032,
+    "weightCacheHits": 2279,
+    "weightCacheMisses": 131
+  }
+}

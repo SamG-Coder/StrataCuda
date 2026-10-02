@@ -1,0 +1,67 @@
+{
+  "inputs": [
+    760,
+    6511,
+    314,
+    9338,
+    369,
+    11751
+  ],
+  "logitCount": 248320,
+  "reference": "benchmark-baseline.json (original portable F32 engine, not native Strata)",
+  "comparisons": [
+    {
+      "label": "baseline",
+      "kernelSourceSha256": "caadb9622f18afaa6dd7ca72fe6a6998711d503a983196951439c29a31524652",
+      "finalLogitsSha256": "88fd69736db3148099c8c4627cc5c30f78c45de5f99255a9e526602fdaacab19",
+      "bitExactToBaseline": true,
+      "maxAbsoluteError": 0.0,
+      "rmsError": 0.0,
+      "orderedRoutingMatches": 288,
+      "routingRows": 288,
+      "selectedExpertDevices": {
+        "webgpu": 2880
+      }
+    },
+    {
+      "label": "release",
+      "kernelSourceSha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
+      "finalLogitsSha256": "88fd69736db3148099c8c4627cc5c30f78c45de5f99255a9e526602fdaacab19",
+      "bitExactToBaseline": true,
+      "maxAbsoluteError": 0.0,
+      "rmsError": 0.0,
+      "orderedRoutingMatches": 288,
+      "routingRows": 288,
+      "selectedExpertDevices": {
+        "webgpu": 2880
+      }
+    },
+    {
+      "label": "wasm-prefill",
+      "kernelSourceSha256": "b0119b7b623371a59248f21aa86a46fb901fdace77ea18542a2c87b2d1dc0e72",
+      "finalLogitsSha256": "e272d6196ae53c5110d9850c455ce5b3a2530f6ee1b55ba2420d65f0109eacfc",
+      "bitExactToBaseline": false,
+      "maxAbsoluteError": 7.867813110351562e-06,
+      "rmsError": 1.3535694366591968e-06,
+      "orderedRoutingMatches": 288,
+      "routingRows": 288,
+      "selectedExpertDevices": {
+        "wasm": 2880
+      }
+    },
+    {
+      "label": "hybrid-prefill",
+      "kernelSourceSha256": "b0119b7b623371a59248f21aa86a46fb901fdace77ea18542a2c87b2d1dc0e72",
+      "finalLogitsSha256": "f0b455f11f34541168edfcb40716c335b2ed95d8b6ee2e5ce99c979ef190a421",
+      "bitExactToBaseline": false,
+      "maxAbsoluteError": 6.67572021484375e-06,
+      "rmsError": 1.1518589743592425e-06,
+      "orderedRoutingMatches": 288,
+      "routingRows": 288,
+      "selectedExpertDevices": {
+        "webgpu": 2726,
+        "wasm": 154
+      }
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Real Qwen model validation — 2 October 2026
 
+This records the original streaming baseline and first text interface. The later resident-weight implementation, batched prompt processing and native Strata comparison are recorded in [execution-port.md](execution-port.md). The original timings below are historical, not the current execution path.
+
 The downloaded Qwen3.8-Flash-Next GSQ-RCO Q2_0 model was converted to a canonical pack and executed through the real browser file picker. Inference uses the 21 kernels compiled from `kernels/strata.cu`. The three initial raw-completion runs use Python only to tokenize/decode; the separate main-page chat test performs all text I/O in the browser.
 
 ## Source and conversion integrity

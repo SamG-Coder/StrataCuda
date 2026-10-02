@@ -1,5 +1,7 @@
 # Performance and bug audit — 2 October 2026
 
+This is the original attention-kernel audit. Subsequent weight-residency, prompt-batching and full-model measurements are in [execution-port.md](execution-port.md).
+
 The attention kernel previously recomputed each query/key dot product once for every output component. It now computes scores cooperatively, shares scores and softmax values within a 64-component output tile, and retains the 2048-cell context limit. The same CUDA source compiles for both backends; no vendored WebCuda compiler/runtime files changed.
 
 The benchmark uses 24 query heads, 2 KV heads and 256 components per head, matching the production attention geometry. Inputs are deterministic synthetic arrays. Values below are median warm dispatch-plus-completion wall times, excluding buffer upload, readback and the scalar correctness oracle. WebGPU uses seven batches of five dispatches; four-thread WASM uses five single-dispatch samples. The model download was active during measurement.

@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-10-02T04:26:56.482Z",
+  "model": "Qwen3.8-Flash-Next GSQ-RCO Q2_0",
+  "context": 512,
+  "backend": {
+    "backend": "webgpu",
+    "vendor": "nvidia",
+    "architecture": "blackwell",
+    "device": "",
+    "description": "",
+    "features": [
+      "core-features-and-limits",
+      "subgroup-size-control",
+      "shader-f16",
+      "float32-filterable",
+      "timestamp-query",
+      "subgroups"
+    ],
+    "timestampQuery": true,
+    "limits": {
+      "maxComputeInvocationsPerWorkgroup": 1024,
+      "maxComputeWorkgroupStorageSize": 16384,
+      "maxStorageBufferBindingSize": 2147483644
+    },
+    "pipelineCompiles": 41,
+    "pipelineCacheHits": 0,
+    "bindGroupsCreated": 0,
+    "submissions": 0,
+    "dispatches": 0,
+    "uniformBytesUploaded": 0,
+    "dataBytesUploaded": 0,
+    "readbackBytes": 0,
+    "pooledBytes": 0,
+    "poolHits": 0,
+    "bindingCacheHits": 0
+  },
+  "stopSeconds": 0.632,
+  "result": {
+    "text": "Hello!",
+    "generated": [
+      9419,
+      0
+    ],
+    "promptTokens": 13,
+    "position": 14,
+    "stop": "limit",
+    "seconds": 26.245664999961853,
+    "residency": {
+      "budgetBytes": 8589934592,
+      "densePlannedBytes": 4339198220,
+      "denseResidentBytes": 4339198220,
+      "expertResidentBytes": 3156019200,
+      "residentExperts": 2283,
+      "hits": 9926,
+      "misses": 4217,
+      "evictions": 0,
+      "hostExpertCacheBytes": 0,
+      "hostExpertCache": {
+        "hits": 0,
+        "misses": 2283,
+        "bytesRead": 3156019200
+      }
+    }
+  },
+  "errors": []
+}

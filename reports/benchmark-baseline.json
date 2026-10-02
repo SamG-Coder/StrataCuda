@@ -1,0 +1,8138 @@
+{
+  "timestamp": "2026-10-02T04:02:14.977Z",
+  "resident": 0,
+  "batch": false,
+  "prefill": false,
+  "inputs": [
+    760,
+    6511,
+    314,
+    9338,
+    369,
+    11751
+  ],
+  "initializedMs": 35.80500000715256,
+  "seconds": 316.01647500002383,
+  "steps": [
+    {
+      "input": 760,
+      "position": 0,
+      "ms": 54799.439999997616,
+      "counters": {
+        "sourceBytes": 6046816032,
+        "sourceReads": 28947,
+        "sourceMs": 62957.91000235081,
+        "decodeMs": 49799.2799987793,
+        "uploads": 40372,
+        "uploadBytes": 5691807748,
+        "fences": 6645,
+        "fenceMs": 3159.2500038146973
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 21,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 17722,
+        "submissions": 17722,
+        "dispatches": 17722,
+        "uniformBytesUploaded": 477776,
+        "dataBytesUploaded": 5691807748,
+        "readbackBytes": 1920
+      },
+      "residency": {
+        "used": 65874612,
+        "hits": 0,
+        "misses": 16250
+      },
+      "routes": [
+        {
+          "layer": 0,
+          "ids": [
+            71,
+            215,
+            32,
+            286,
+            130,
+            342,
+            309,
+            160,
+            46,
+            226
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 1,
+          "ids": [
+            157,
+            19,
+            320,
+            225,
+            86,
+            60,
+            165,
+            131,
+            171,
+            128
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 2,
+          "ids": [
+            75,
+            12,
+            209,
+            380,
+            286,
+            87,
+            257,
+            338,
+            255,
+            84
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 3,
+          "ids": [
+            354,
+            405,
+            357,
+            143,
+            470,
+            205,
+            216,
+            272,
+            190,
+            153
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 4,
+          "ids": [
+            196,
+            309,
+            349,
+            245,
+            252,
+            440,
+            469,
+            106,
+            410,
+            110
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 5,
+          "ids": [
+            456,
+            96,
+            180,
+            20,
+            71,
+            236,
+            397,
+            162,
+            11,
+            216
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 6,
+          "ids": [
+            223,
+            33,
+            283,
+            179,
+            452,
+            189,
+            346,
+            256,
+            285,
+            159
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 7,
+          "ids": [
+            174,
+            303,
+            327,
+            346,
+            26,
+            432,
+            242,
+            268,
+            357,
+            144
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 8,
+          "ids": [
+            308,
+            456,
+            175,
+            439,
+            263,
+            370,
+            181,
+            3,
+            422,
+            387
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 9,
+          "ids": [
+            368,
+            325,
+            411,
+            192,
+            203,
+            27,
+            131,
+            321,
+            350,
+            298
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 10,
+          "ids": [
+            325,
+            461,
+            107,
+            322,
+            508,
+            148,
+            246,
+            495,
+            379,
+            243
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 11,
+          "ids": [
+            130,
+            132,
+            104,
+            4,
+            464,
+            430,
+            393,
+            108,
+            361,
+            180
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 12,
+          "ids": [
+            28,
+            139,
+            406,
+            300,
+            248,
+            433,
+            364,
+            509,
+            263,
+            297
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 13,
+          "ids": [
+            293,
+            466,
+            68,
+            366,
+            219,
+            268,
+            85,
+            170,
+            67,
+            294
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 14,
+          "ids": [
+            398,
+            339,
+            29,
+            495,
+            17,
+            138,
+            40,
+            312,
+            266,
+            180
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 15,
+          "ids": [
+            283,
+            174,
+            215,
+            103,
+            38,
+            188,
+            342,
+            330,
+            107,
+            200
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 16,
+          "ids": [
+            228,
+            132,
+            487,
+            243,
+            473,
+            32,
+            392,
+            361,
+            272,
+            379
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 17,
+          "ids": [
+            510,
+            486,
+            136,
+            209,
+            135,
+            28,
+            330,
+            15,
+            243,
+            48
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 18,
+          "ids": [
+            449,
+            185,
+            464,
+            35,
+            46,
+            420,
+            116,
+            19,
+            124,
+            128
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 19,
+          "ids": [
+            406,
+            293,
+            375,
+            434,
+            413,
+            474,
+            500,
+            342,
+            4,
+            462
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 20,
+          "ids": [
+            451,
+            497,
+            179,
+            363,
+            155,
+            39,
+            296,
+            500,
+            76,
+            40
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 21,
+          "ids": [
+            297,
+            176,
+            235,
+            437,
+            505,
+            507,
+            379,
+            25,
+            303,
+            267
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 22,
+          "ids": [
+            456,
+            461,
+            426,
+            218,
+            351,
+            54,
+            402,
+            276,
+            150,
+            422
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 23,
+          "ids": [
+            356,
+            470,
+            299,
+            338,
+            285,
+            199,
+            450,
+            150,
+            325,
+            273
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 24,
+          "ids": [
+            308,
+            456,
+            175,
+            439,
+            263,
+            181,
+            46,
+            279,
+            370,
+            387
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 25,
+          "ids": [
+            192,
+            370,
+            150,
+            229,
+            322,
+            350,
+            182,
+            321,
+            298,
+            147
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 26,
+          "ids": [
+            461,
+            107,
+            325,
+            508,
+            379,
+            495,
+            228,
+            204,
+            438,
+            167
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 27,
+          "ids": [
+            430,
+            361,
+            130,
+            108,
+            132,
+            400,
+            424,
+            307,
+            104,
+            472
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 28,
+          "ids": [
+            28,
+            139,
+            406,
+            300,
+            297,
+            248,
+            364,
+            20,
+            348,
+            310
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 29,
+          "ids": [
+            293,
+            466,
+            170,
+            262,
+            219,
+            294,
+            68,
+            192,
+            285,
+            400
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 30,
+          "ids": [
+            40,
+            266,
+            312,
+            398,
+            490,
+            29,
+            137,
+            168,
+            180,
+            148
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 31,
+          "ids": [
+            283,
+            174,
+            38,
+            215,
+            330,
+            55,
+            411,
+            199,
+            50,
+            34
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 32,
+          "ids": [
+            228,
+            132,
+            243,
+            487,
+            272,
+            392,
+            58,
+            256,
+            142,
+            117
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 33,
+          "ids": [
+            136,
+            486,
+            510,
+            28,
+            427,
+            209,
+            243,
+            504,
+            105,
+            365
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 34,
+          "ids": [
+            449,
+            185,
+            201,
+            464,
+            420,
+            46,
+            19,
+            116,
+            194,
+            448
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 35,
+          "ids": [
+            406,
+            434,
+            342,
+            375,
+            293,
+            118,
+            4,
+            31,
+            372,
+            492
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 36,
+          "ids": [
+            363,
+            451,
+            497,
+            407,
+            76,
+            155,
+            354,
+            439,
+            248,
+            296
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 37,
+          "ids": [
+            379,
+            255,
+            46,
+            303,
+            420,
+            284,
+            437,
+            3,
+            346,
+            267
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 38,
+          "ids": [
+            456,
+            54,
+            461,
+            426,
+            422,
+            276,
+            351,
+            112,
+            150,
+            279
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 39,
+          "ids": [
+            356,
+            323,
+            470,
+            334,
+            338,
+            450,
+            199,
+            325,
+            217,
+            129
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 40,
+          "ids": [
+            309,
+            87,
+            341,
+            178,
+            425,
+            107,
+            229,
+            185,
+            492,
+            40
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 41,
+          "ids": [
+            501,
+            283,
+            5,
+            440,
+            443,
+            240,
+            391,
+            206,
+            213,
+            354
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 42,
+          "ids": [
+            83,
+            426,
+            56,
+            55,
+            225,
+            212,
+            105,
+            151,
+            366,
+            217
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 43,
+          "ids": [
+            300,
+            391,
+            388,
+            86,
+            428,
+            413,
+            508,
+            156,
+            91,
+            366
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 44,
+          "ids": [
+            167,
+            79,
+            119,
+            33,
+            56,
+            24,
+            209,
+            141,
+            483,
+            364
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 45,
+          "ids": [
+            237,
+            452,
+            172,
+            475,
+            280,
+            303,
+            193,
+            397,
+            86,
+            443
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 46,
+          "ids": [
+            196,
+            25,
+            283,
+            404,
+            128,
+            348,
+            319,
+            93,
+            7,
+            186
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 47,
+          "ids": [
+            88,
+            391,
+            450,
+            188,
+            8,
+            82,
+            265,
+            357,
+            26,
+            302
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        }
+      ]
+    },
+    {
+      "input": 6511,
+      "position": 1,
+      "ms": 49631.55500000715,
+      "counters": {
+        "sourceBytes": 12093632064,
+        "sourceReads": 57894,
+        "sourceMs": 118851.71500504017,
+        "decodeMs": 94555.5749977827,
+        "uploads": 80744,
+        "uploadBytes": 11383615544,
+        "fences": 13352,
+        "fenceMs": 6289.725003063679
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 21,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 35444,
+        "submissions": 35444,
+        "dispatches": 35444,
+        "uniformBytesUploaded": 955552,
+        "dataBytesUploaded": 11383615544,
+        "readbackBytes": 3840
+      },
+      "residency": {
+        "used": 65874612,
+        "hits": 0,
+        "misses": 32500
+      },
+      "routes": [
+        {
+          "layer": 0,
+          "ids": [
+            338,
+            369,
+            293,
+            471,
+            441,
+            386,
+            68,
+            492,
+            289,
+            119
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 1,
+          "ids": [
+            465,
+            243,
+            320,
+            48,
+            319,
+            65,
+            19,
+            58,
+            16,
+            84
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 2,
+          "ids": [
+            473,
+            75,
+            148,
+            415,
+            83,
+            370,
+            381,
+            8,
+            408,
+            84
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 3,
+          "ids": [
+            405,
+            186,
+            476,
+            253,
+            418,
+            302,
+            421,
+            122,
+            205,
+            143
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 4,
+          "ids": [
+            309,
+            133,
+            252,
+            469,
+            360,
+            488,
+            419,
+            205,
+            200,
+            273
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 5,
+          "ids": [
+            162,
+            253,
+            220,
+            450,
+            218,
+            91,
+            324,
+            329,
+            43,
+            439
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 6,
+          "ids": [
+            258,
+            33,
+            121,
+            86,
+            44,
+            437,
+            223,
+            92,
+            124,
+            69
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 7,
+          "ids": [
+            303,
+            269,
+            261,
+            346,
+            97,
+            510,
+            61,
+            228,
+            301,
+            435
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 8,
+          "ids": [
+            308,
+            94,
+            301,
+            414,
+            167,
+            231,
+            11,
+            456,
+            362,
+            263
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 9,
+          "ids": [
+            509,
+            75,
+            466,
+            159,
+            424,
+            52,
+            453,
+            462,
+            281,
+            406
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 10,
+          "ids": [
+            325,
+            461,
+            299,
+            255,
+            271,
+            296,
+            419,
+            251,
+            176,
+            203
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 11,
+          "ids": [
+            108,
+            201,
+            31,
+            268,
+            90,
+            261,
+            293,
+            397,
+            477,
+            238
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 12,
+          "ids": [
+            352,
+            139,
+            442,
+            266,
+            339,
+            180,
+            381,
+            176,
+            344,
+            436
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 13,
+          "ids": [
+            293,
+            387,
+            290,
+            148,
+            296,
+            469,
+            488,
+            343,
+            273,
+            162
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 14,
+          "ids": [
+            181,
+            173,
+            106,
+            398,
+            400,
+            403,
+            280,
+            138,
+            318,
+            252
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 15,
+          "ids": [
+            34,
+            490,
+            100,
+            254,
+            96,
+            371,
+            50,
+            318,
+            153,
+            258
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 16,
+          "ids": [
+            228,
+            487,
+            92,
+            307,
+            141,
+            366,
+            392,
+            497,
+            132,
+            272
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 17,
+          "ids": [
+            136,
+            469,
+            84,
+            363,
+            486,
+            160,
+            105,
+            510,
+            107,
+            290
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 18,
+          "ids": [
+            39,
+            196,
+            185,
+            111,
+            201,
+            459,
+            3,
+            29,
+            194,
+            294
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 19,
+          "ids": [
+            434,
+            118,
+            161,
+            96,
+            31,
+            426,
+            170,
+            341,
+            202,
+            342
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 20,
+          "ids": [
+            73,
+            76,
+            155,
+            323,
+            329,
+            187,
+            363,
+            126,
+            444,
+            261
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 21,
+          "ids": [
+            473,
+            458,
+            98,
+            43,
+            510,
+            284,
+            189,
+            306,
+            393,
+            423
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 22,
+          "ids": [
+            305,
+            376,
+            36,
+            456,
+            218,
+            348,
+            302,
+            352,
+            15,
+            230
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 23,
+          "ids": [
+            356,
+            470,
+            466,
+            67,
+            13,
+            185,
+            39,
+            28,
+            17,
+            351
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 24,
+          "ids": [
+            94,
+            308,
+            301,
+            167,
+            231,
+            175,
+            362,
+            247,
+            224,
+            341
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 25,
+          "ids": [
+            509,
+            424,
+            52,
+            466,
+            75,
+            453,
+            159,
+            507,
+            318,
+            406
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 26,
+          "ids": [
+            461,
+            299,
+            325,
+            203,
+            296,
+            172,
+            176,
+            255,
+            278,
+            142
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 27,
+          "ids": [
+            201,
+            397,
+            261,
+            108,
+            90,
+            350,
+            265,
+            268,
+            30,
+            477
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 28,
+          "ids": [
+            352,
+            139,
+            180,
+            442,
+            90,
+            339,
+            150,
+            381,
+            344,
+            297
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 29,
+          "ids": [
+            290,
+            387,
+            293,
+            343,
+            148,
+            70,
+            273,
+            488,
+            474,
+            463
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 30,
+          "ids": [
+            106,
+            280,
+            403,
+            173,
+            424,
+            400,
+            181,
+            40,
+            297,
+            6
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 31,
+          "ids": [
+            490,
+            96,
+            354,
+            351,
+            120,
+            180,
+            259,
+            251,
+            34,
+            501
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 32,
+          "ids": [
+            228,
+            92,
+            272,
+            38,
+            206,
+            487,
+            314,
+            40,
+            274,
+            132
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 33,
+          "ids": [
+            136,
+            469,
+            160,
+            105,
+            131,
+            107,
+            363,
+            387,
+            84,
+            380
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 34,
+          "ids": [
+            39,
+            201,
+            459,
+            185,
+            194,
+            196,
+            3,
+            29,
+            111,
+            501
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 35,
+          "ids": [
+            161,
+            434,
+            118,
+            372,
+            226,
+            426,
+            202,
+            31,
+            221,
+            341
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 36,
+          "ids": [
+            76,
+            323,
+            73,
+            444,
+            46,
+            218,
+            155,
+            143,
+            35,
+            496
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 37,
+          "ids": [
+            98,
+            473,
+            458,
+            189,
+            43,
+            152,
+            146,
+            284,
+            510,
+            393
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 38,
+          "ids": [
+            456,
+            305,
+            376,
+            348,
+            36,
+            498,
+            66,
+            218,
+            352,
+            247
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 39,
+          "ids": [
+            356,
+            351,
+            67,
+            227,
+            140,
+            235,
+            199,
+            68,
+            39,
+            217
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 40,
+          "ids": [
+            218,
+            8,
+            130,
+            202,
+            328,
+            509,
+            511,
+            373,
+            356,
+            499
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 41,
+          "ids": [
+            218,
+            292,
+            238,
+            289,
+            199,
+            422,
+            387,
+            328,
+            443,
+            371
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 42,
+          "ids": [
+            68,
+            81,
+            83,
+            127,
+            478,
+            222,
+            490,
+            55,
+            84,
+            251
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 43,
+          "ids": [
+            300,
+            366,
+            42,
+            297,
+            442,
+            175,
+            232,
+            194,
+            405,
+            213
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 44,
+          "ids": [
+            339,
+            509,
+            90,
+            426,
+            420,
+            27,
+            383,
+            320,
+            204,
+            470
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 45,
+          "ids": [
+            210,
+            429,
+            306,
+            493,
+            237,
+            86,
+            360,
+            372,
+            41,
+            288
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 46,
+          "ids": [
+            26,
+            260,
+            283,
+            508,
+            221,
+            245,
+            175,
+            138,
+            25,
+            17
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 47,
+          "ids": [
+            439,
+            76,
+            42,
+            506,
+            232,
+            89,
+            241,
+            61,
+            265,
+            404
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        }
+      ]
+    },
+    {
+      "input": 314,
+      "position": 2,
+      "ms": 52836.04500001669,
+      "counters": {
+        "sourceBytes": 18140448096,
+        "sourceReads": 86841,
+        "sourceMs": 177992.35500717163,
+        "decodeMs": 141509.08000087738,
+        "uploads": 121116,
+        "uploadBytes": 17075423388,
+        "fences": 20059,
+        "fenceMs": 10394.055002391338
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 21,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 53166,
+        "submissions": 53166,
+        "dispatches": 53166,
+        "uniformBytesUploaded": 1433328,
+        "dataBytesUploaded": 17075423388,
+        "readbackBytes": 5760
+      },
+      "residency": {
+        "used": 65874612,
+        "hits": 0,
+        "misses": 48750
+      },
+      "routes": [
+        {
+          "layer": 0,
+          "ids": [
+            361,
+            301,
+            76,
+            101,
+            293,
+            265,
+            21,
+            314,
+            338,
+            64
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 1,
+          "ids": [
+            493,
+            250,
+            320,
+            16,
+            230,
+            19,
+            83,
+            61,
+            58,
+            48
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 2,
+          "ids": [
+            473,
+            83,
+            84,
+            408,
+            370,
+            415,
+            153,
+            75,
+            226,
+            381
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 3,
+          "ids": [
+            476,
+            253,
+            252,
+            432,
+            302,
+            122,
+            421,
+            153,
+            405,
+            418
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 4,
+          "ids": [
+            309,
+            175,
+            265,
+            133,
+            469,
+            449,
+            252,
+            123,
+            17,
+            410
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 5,
+          "ids": [
+            220,
+            206,
+            450,
+            218,
+            296,
+            162,
+            135,
+            20,
+            253,
+            421
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 6,
+          "ids": [
+            382,
+            175,
+            236,
+            87,
+            44,
+            124,
+            92,
+            323,
+            86,
+            135
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 7,
+          "ids": [
+            66,
+            303,
+            470,
+            346,
+            97,
+            269,
+            439,
+            458,
+            337,
+            61
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 8,
+          "ids": [
+            224,
+            94,
+            167,
+            231,
+            301,
+            308,
+            414,
+            337,
+            280,
+            341
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 9,
+          "ids": [
+            424,
+            509,
+            281,
+            52,
+            462,
+            159,
+            238,
+            75,
+            406,
+            453
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 10,
+          "ids": [
+            172,
+            461,
+            325,
+            296,
+            299,
+            203,
+            393,
+            446,
+            419,
+            207
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 11,
+          "ids": [
+            201,
+            238,
+            495,
+            108,
+            18,
+            261,
+            477,
+            397,
+            30,
+            293
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 12,
+          "ids": [
+            180,
+            139,
+            243,
+            344,
+            352,
+            176,
+            407,
+            90,
+            278,
+            442
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 13,
+          "ids": [
+            290,
+            387,
+            488,
+            418,
+            296,
+            343,
+            273,
+            282,
+            35,
+            148
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 14,
+          "ids": [
+            106,
+            400,
+            299,
+            297,
+            273,
+            403,
+            173,
+            371,
+            181,
+            424
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 15,
+          "ids": [
+            490,
+            443,
+            259,
+            180,
+            120,
+            460,
+            354,
+            96,
+            251,
+            351
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 16,
+          "ids": [
+            228,
+            92,
+            307,
+            206,
+            314,
+            497,
+            392,
+            274,
+            232,
+            40
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 17,
+          "ids": [
+            131,
+            107,
+            363,
+            469,
+            136,
+            105,
+            160,
+            412,
+            380,
+            486
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 18,
+          "ids": [
+            201,
+            39,
+            194,
+            196,
+            384,
+            3,
+            183,
+            185,
+            255,
+            340
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 19,
+          "ids": [
+            434,
+            202,
+            403,
+            30,
+            96,
+            226,
+            31,
+            321,
+            203,
+            426
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 20,
+          "ids": [
+            73,
+            323,
+            155,
+            329,
+            76,
+            35,
+            282,
+            382,
+            444,
+            496
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 21,
+          "ids": [
+            98,
+            299,
+            510,
+            189,
+            473,
+            225,
+            393,
+            425,
+            488,
+            111
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 22,
+          "ids": [
+            36,
+            221,
+            348,
+            433,
+            297,
+            218,
+            165,
+            441,
+            440,
+            456
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 23,
+          "ids": [
+            356,
+            39,
+            67,
+            466,
+            51,
+            470,
+            17,
+            169,
+            391,
+            369
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 24,
+          "ids": [
+            231,
+            167,
+            308,
+            94,
+            301,
+            337,
+            247,
+            224,
+            444,
+            414
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 25,
+          "ids": [
+            509,
+            424,
+            284,
+            52,
+            462,
+            159,
+            238,
+            281,
+            75,
+            507
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 26,
+          "ids": [
+            461,
+            172,
+            299,
+            325,
+            296,
+            203,
+            393,
+            446,
+            176,
+            433
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 27,
+          "ids": [
+            201,
+            261,
+            397,
+            108,
+            477,
+            18,
+            293,
+            350,
+            21,
+            30
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 28,
+          "ids": [
+            180,
+            139,
+            243,
+            90,
+            352,
+            297,
+            150,
+            67,
+            176,
+            474
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 29,
+          "ids": [
+            290,
+            387,
+            488,
+            148,
+            463,
+            343,
+            282,
+            70,
+            418,
+            35
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 30,
+          "ids": [
+            106,
+            424,
+            400,
+            297,
+            299,
+            273,
+            173,
+            135,
+            403,
+            380
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 31,
+          "ids": [
+            490,
+            354,
+            251,
+            443,
+            120,
+            180,
+            259,
+            351,
+            496,
+            460
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 32,
+          "ids": [
+            228,
+            40,
+            92,
+            150,
+            206,
+            314,
+            339,
+            38,
+            274,
+            232
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 33,
+          "ids": [
+            160,
+            131,
+            107,
+            136,
+            105,
+            363,
+            469,
+            137,
+            380,
+            299
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 34,
+          "ids": [
+            194,
+            201,
+            183,
+            255,
+            3,
+            185,
+            39,
+            130,
+            501,
+            384
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 35,
+          "ids": [
+            434,
+            202,
+            226,
+            30,
+            234,
+            203,
+            343,
+            426,
+            372,
+            403
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 36,
+          "ids": [
+            323,
+            73,
+            35,
+            76,
+            282,
+            444,
+            46,
+            155,
+            329,
+            284
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 37,
+          "ids": [
+            393,
+            425,
+            189,
+            111,
+            98,
+            299,
+            510,
+            231,
+            243,
+            473
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 38,
+          "ids": [
+            36,
+            165,
+            221,
+            433,
+            297,
+            348,
+            211,
+            441,
+            282,
+            416
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 39,
+          "ids": [
+            356,
+            67,
+            342,
+            39,
+            219,
+            466,
+            169,
+            28,
+            391,
+            80
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 40,
+          "ids": [
+            511,
+            356,
+            69,
+            328,
+            398,
+            27,
+            286,
+            373,
+            341,
+            4
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 41,
+          "ids": [
+            99,
+            53,
+            149,
+            422,
+            270,
+            426,
+            189,
+            43,
+            227,
+            206
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 42,
+          "ids": [
+            84,
+            83,
+            216,
+            387,
+            201,
+            369,
+            96,
+            274,
+            464,
+            134
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 43,
+          "ids": [
+            300,
+            175,
+            232,
+            132,
+            366,
+            357,
+            127,
+            113,
+            314,
+            216
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 44,
+          "ids": [
+            420,
+            119,
+            468,
+            401,
+            384,
+            503,
+            150,
+            304,
+            233,
+            228
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 45,
+          "ids": [
+            360,
+            86,
+            237,
+            199,
+            200,
+            105,
+            296,
+            384,
+            395,
+            191
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 46,
+          "ids": [
+            26,
+            353,
+            283,
+            292,
+            386,
+            293,
+            17,
+            218,
+            348,
+            122
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 47,
+          "ids": [
+            450,
+            506,
+            24,
+            39,
+            222,
+            302,
+            1,
+            446,
+            8,
+            109
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        }
+      ]
+    },
+    {
+      "input": 9338,
+      "position": 3,
+      "ms": 54292.660000026226,
+      "counters": {
+        "sourceBytes": 24187264128,
+        "sourceReads": 115788,
+        "sourceMs": 241813.33500361443,
+        "decodeMs": 191684.7000040412,
+        "uploads": 161488,
+        "uploadBytes": 22767231280,
+        "fences": 26766,
+        "fenceMs": 12567.80000013113
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 21,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 70888,
+        "submissions": 70888,
+        "dispatches": 70888,
+        "uniformBytesUploaded": 1911104,
+        "dataBytesUploaded": 22767231280,
+        "readbackBytes": 7680
+      },
+      "residency": {
+        "used": 65874612,
+        "hits": 0,
+        "misses": 65000
+      },
+      "routes": [
+        {
+          "layer": 0,
+          "ids": [
+            434,
+            446,
+            386,
+            211,
+            503,
+            367,
+            414,
+            226,
+            366,
+            507
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 1,
+          "ids": [
+            266,
+            83,
+            114,
+            415,
+            320,
+            504,
+            47,
+            243,
+            273,
+            357
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 2,
+          "ids": [
+            487,
+            473,
+            100,
+            83,
+            75,
+            446,
+            29,
+            163,
+            218,
+            485
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 3,
+          "ids": [
+            302,
+            432,
+            295,
+            476,
+            83,
+            26,
+            366,
+            405,
+            118,
+            253
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 4,
+          "ids": [
+            78,
+            309,
+            313,
+            205,
+            133,
+            415,
+            469,
+            123,
+            410,
+            41
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 5,
+          "ids": [
+            507,
+            6,
+            254,
+            421,
+            220,
+            43,
+            338,
+            423,
+            460,
+            157
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 6,
+          "ids": [
+            92,
+            228,
+            236,
+            177,
+            270,
+            169,
+            377,
+            86,
+            135,
+            282
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 7,
+          "ids": [
+            435,
+            510,
+            303,
+            481,
+            346,
+            66,
+            148,
+            104,
+            225,
+            31
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 8,
+          "ids": [
+            280,
+            231,
+            167,
+            355,
+            455,
+            224,
+            382,
+            333,
+            94,
+            414
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 9,
+          "ids": [
+            406,
+            509,
+            424,
+            462,
+            281,
+            356,
+            52,
+            453,
+            75,
+            486
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 10,
+          "ids": [
+            448,
+            461,
+            80,
+            366,
+            299,
+            120,
+            399,
+            325,
+            296,
+            27
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 11,
+          "ids": [
+            293,
+            201,
+            261,
+            30,
+            163,
+            238,
+            477,
+            310,
+            397,
+            90
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 12,
+          "ids": [
+            436,
+            139,
+            180,
+            10,
+            281,
+            433,
+            302,
+            257,
+            344,
+            489
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 13,
+          "ids": [
+            453,
+            250,
+            290,
+            488,
+            418,
+            397,
+            387,
+            148,
+            296,
+            259
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 14,
+          "ids": [
+            415,
+            181,
+            297,
+            299,
+            173,
+            361,
+            135,
+            106,
+            400,
+            380
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 15,
+          "ids": [
+            490,
+            470,
+            443,
+            251,
+            93,
+            120,
+            319,
+            50,
+            496,
+            243
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 16,
+          "ids": [
+            350,
+            228,
+            274,
+            206,
+            314,
+            504,
+            497,
+            40,
+            239,
+            489
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 17,
+          "ids": [
+            412,
+            469,
+            131,
+            363,
+            107,
+            105,
+            129,
+            132,
+            84,
+            160
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 18,
+          "ids": [
+            401,
+            278,
+            201,
+            76,
+            194,
+            39,
+            3,
+            408,
+            36,
+            350
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 19,
+          "ids": [
+            434,
+            202,
+            111,
+            343,
+            30,
+            146,
+            147,
+            394,
+            328,
+            64
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 20,
+          "ids": [
+            323,
+            73,
+            225,
+            308,
+            443,
+            265,
+            35,
+            329,
+            240,
+            155
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 21,
+          "ids": [
+            309,
+            189,
+            225,
+            161,
+            329,
+            393,
+            98,
+            510,
+            146,
+            373
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 22,
+          "ids": [
+            456,
+            201,
+            116,
+            433,
+            247,
+            346,
+            36,
+            165,
+            483,
+            123
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 23,
+          "ids": [
+            49,
+            67,
+            391,
+            39,
+            26,
+            177,
+            185,
+            356,
+            342,
+            51
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 24,
+          "ids": [
+            231,
+            280,
+            167,
+            333,
+            94,
+            355,
+            247,
+            454,
+            455,
+            308
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 25,
+          "ids": [
+            406,
+            509,
+            281,
+            464,
+            356,
+            52,
+            318,
+            321,
+            462,
+            434
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 26,
+          "ids": [
+            461,
+            448,
+            203,
+            296,
+            172,
+            299,
+            399,
+            366,
+            27,
+            322
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 27,
+          "ids": [
+            261,
+            293,
+            397,
+            201,
+            477,
+            84,
+            268,
+            238,
+            108,
+            350
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 28,
+          "ids": [
+            139,
+            180,
+            436,
+            10,
+            489,
+            90,
+            67,
+            297,
+            281,
+            0
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 29,
+          "ids": [
+            453,
+            290,
+            488,
+            148,
+            387,
+            161,
+            418,
+            250,
+            463,
+            282
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 30,
+          "ids": [
+            415,
+            299,
+            181,
+            106,
+            297,
+            341,
+            400,
+            300,
+            424,
+            135
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 31,
+          "ids": [
+            490,
+            470,
+            120,
+            443,
+            116,
+            251,
+            319,
+            496,
+            317,
+            460
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 32,
+          "ids": [
+            350,
+            228,
+            206,
+            314,
+            392,
+            274,
+            489,
+            487,
+            497,
+            40
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 33,
+          "ids": [
+            160,
+            363,
+            299,
+            131,
+            107,
+            412,
+            105,
+            469,
+            136,
+            84
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 34,
+          "ids": [
+            194,
+            201,
+            278,
+            401,
+            76,
+            3,
+            428,
+            501,
+            442,
+            39
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 35,
+          "ids": [
+            434,
+            30,
+            202,
+            25,
+            372,
+            343,
+            328,
+            31,
+            394,
+            454
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 36,
+          "ids": [
+            73,
+            323,
+            265,
+            258,
+            190,
+            444,
+            443,
+            35,
+            155,
+            46
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 37,
+          "ids": [
+            189,
+            98,
+            309,
+            284,
+            155,
+            346,
+            243,
+            146,
+            142,
+            225
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 38,
+          "ids": [
+            456,
+            165,
+            348,
+            116,
+            247,
+            201,
+            433,
+            20,
+            415,
+            36
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 39,
+          "ids": [
+            67,
+            49,
+            39,
+            119,
+            417,
+            74,
+            478,
+            100,
+            356,
+            26
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 40,
+          "ids": [
+            337,
+            418,
+            393,
+            87,
+            373,
+            69,
+            328,
+            356,
+            398,
+            511
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 41,
+          "ids": [
+            53,
+            99,
+            408,
+            422,
+            277,
+            121,
+            443,
+            149,
+            40,
+            308
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 42,
+          "ids": [
+            83,
+            478,
+            5,
+            232,
+            42,
+            410,
+            222,
+            342,
+            197,
+            3
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 43,
+          "ids": [
+            300,
+            175,
+            481,
+            123,
+            357,
+            159,
+            354,
+            475,
+            21,
+            119
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 44,
+          "ids": [
+            196,
+            24,
+            191,
+            383,
+            134,
+            272,
+            446,
+            223,
+            119,
+            120
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 45,
+          "ids": [
+            237,
+            86,
+            2,
+            111,
+            443,
+            194,
+            15,
+            229,
+            360,
+            84
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 46,
+          "ids": [
+            25,
+            30,
+            198,
+            283,
+            348,
+            343,
+            26,
+            421,
+            17,
+            425
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 47,
+          "ids": [
+            297,
+            144,
+            506,
+            230,
+            202,
+            149,
+            338,
+            214,
+            157,
+            370
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        }
+      ]
+    },
+    {
+      "input": 369,
+      "output": 11751,
+      "position": 4,
+      "ms": 53109.08499997854,
+      "counters": {
+        "sourceBytes": 31054959520,
+        "sourceReads": 147688,
+        "sourceMs": 303811.4200049639,
+        "decodeMs": 238082.75000858307,
+        "uploads": 204813,
+        "uploadBytes": 29279918580,
+        "fences": 34427,
+        "fenceMs": 17319.394998013973
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 21,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 89626,
+        "submissions": 89626,
+        "dispatches": 89626,
+        "uniformBytesUploaded": 2420672,
+        "dataBytesUploaded": 29279918580,
+        "readbackBytes": 1002884
+      },
+      "residency": {
+        "used": 66355200,
+        "hits": 0,
+        "misses": 82262
+      },
+      "routes": [
+        {
+          "layer": 0,
+          "ids": [
+            463,
+            378,
+            337,
+            265,
+            406,
+            21,
+            96,
+            462,
+            88,
+            148
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 1,
+          "ids": [
+            370,
+            294,
+            265,
+            320,
+            378,
+            18,
+            19,
+            383,
+            95,
+            83
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 2,
+          "ids": [
+            83,
+            84,
+            63,
+            473,
+            403,
+            100,
+            106,
+            30,
+            370,
+            487
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 3,
+          "ids": [
+            476,
+            432,
+            302,
+            26,
+            418,
+            253,
+            374,
+            441,
+            335,
+            156
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 4,
+          "ids": [
+            252,
+            469,
+            410,
+            393,
+            41,
+            309,
+            133,
+            488,
+            102,
+            68
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 5,
+          "ids": [
+            421,
+            460,
+            493,
+            236,
+            220,
+            450,
+            254,
+            162,
+            135,
+            278
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 6,
+          "ids": [
+            168,
+            145,
+            92,
+            377,
+            501,
+            305,
+            118,
+            177,
+            124,
+            86
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 7,
+          "ids": [
+            66,
+            303,
+            93,
+            72,
+            346,
+            20,
+            337,
+            374,
+            458,
+            435
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 8,
+          "ids": [
+            167,
+            231,
+            94,
+            462,
+            224,
+            414,
+            308,
+            422,
+            280,
+            275
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 9,
+          "ids": [
+            424,
+            509,
+            462,
+            75,
+            139,
+            52,
+            321,
+            391,
+            68,
+            238
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 10,
+          "ids": [
+            296,
+            393,
+            299,
+            461,
+            203,
+            405,
+            172,
+            255,
+            419,
+            207
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 11,
+          "ids": [
+            30,
+            238,
+            397,
+            108,
+            84,
+            201,
+            253,
+            500,
+            90,
+            261
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 12,
+          "ids": [
+            433,
+            180,
+            154,
+            139,
+            395,
+            491,
+            90,
+            489,
+            10,
+            150
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 13,
+          "ids": [
+            387,
+            250,
+            488,
+            273,
+            265,
+            148,
+            290,
+            282,
+            343,
+            162
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 14,
+          "ids": [
+            106,
+            138,
+            160,
+            173,
+            212,
+            400,
+            299,
+            409,
+            117,
+            415
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 15,
+          "ids": [
+            490,
+            351,
+            501,
+            100,
+            470,
+            318,
+            120,
+            199,
+            437,
+            399
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 16,
+          "ids": [
+            277,
+            228,
+            92,
+            392,
+            487,
+            350,
+            272,
+            497,
+            429,
+            274
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 17,
+          "ids": [
+            363,
+            299,
+            105,
+            160,
+            469,
+            136,
+            209,
+            498,
+            243,
+            194
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 18,
+          "ids": [
+            92,
+            194,
+            201,
+            116,
+            428,
+            93,
+            226,
+            139,
+            501,
+            314
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 19,
+          "ids": [
+            434,
+            30,
+            31,
+            454,
+            343,
+            375,
+            221,
+            64,
+            84,
+            342
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 20,
+          "ids": [
+            265,
+            258,
+            73,
+            240,
+            63,
+            248,
+            323,
+            444,
+            76,
+            443
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 21,
+          "ids": [
+            189,
+            98,
+            167,
+            412,
+            225,
+            329,
+            67,
+            296,
+            152,
+            473
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 22,
+          "ids": [
+            165,
+            35,
+            456,
+            321,
+            224,
+            45,
+            121,
+            304,
+            348,
+            483
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 23,
+          "ids": [
+            67,
+            49,
+            281,
+            356,
+            51,
+            39,
+            26,
+            128,
+            470,
+            372
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 24,
+          "ids": [
+            231,
+            462,
+            308,
+            224,
+            448,
+            94,
+            167,
+            359,
+            275,
+            247
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 25,
+          "ids": [
+            466,
+            139,
+            68,
+            511,
+            111,
+            509,
+            75,
+            391,
+            423,
+            462
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 26,
+          "ids": [
+            296,
+            461,
+            142,
+            203,
+            299,
+            393,
+            238,
+            322,
+            451,
+            357
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 27,
+          "ids": [
+            397,
+            261,
+            273,
+            84,
+            437,
+            406,
+            201,
+            477,
+            350,
+            268
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 28,
+          "ids": [
+            489,
+            139,
+            180,
+            297,
+            508,
+            63,
+            0,
+            154,
+            90,
+            67
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 29,
+          "ids": [
+            387,
+            463,
+            488,
+            385,
+            282,
+            148,
+            290,
+            273,
+            53,
+            343
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 30,
+          "ids": [
+            138,
+            173,
+            212,
+            424,
+            106,
+            243,
+            86,
+            160,
+            402,
+            82
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 31,
+          "ids": [
+            351,
+            494,
+            501,
+            490,
+            199,
+            436,
+            289,
+            12,
+            459,
+            432
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 32,
+          "ids": [
+            92,
+            480,
+            277,
+            228,
+            392,
+            429,
+            130,
+            272,
+            320,
+            487
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 33,
+          "ids": [
+            299,
+            363,
+            160,
+            105,
+            347,
+            194,
+            136,
+            498,
+            499,
+            139
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 34,
+          "ids": [
+            194,
+            201,
+            92,
+            264,
+            314,
+            139,
+            501,
+            116,
+            93,
+            185
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 35,
+          "ids": [
+            434,
+            30,
+            375,
+            136,
+            343,
+            372,
+            15,
+            454,
+            234,
+            288
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 36,
+          "ids": [
+            265,
+            323,
+            73,
+            258,
+            46,
+            35,
+            25,
+            240,
+            63,
+            443
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 37,
+          "ids": [
+            189,
+            155,
+            167,
+            118,
+            255,
+            346,
+            369,
+            393,
+            79,
+            162
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 38,
+          "ids": [
+            165,
+            35,
+            45,
+            224,
+            321,
+            121,
+            456,
+            348,
+            36,
+            463
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 39,
+          "ids": [
+            49,
+            67,
+            342,
+            39,
+            391,
+            281,
+            356,
+            32,
+            26,
+            177
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 40,
+          "ids": [
+            337,
+            398,
+            393,
+            511,
+            4,
+            87,
+            418,
+            373,
+            69,
+            459
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 41,
+          "ids": [
+            99,
+            121,
+            280,
+            277,
+            149,
+            53,
+            5,
+            352,
+            341,
+            366
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 42,
+          "ids": [
+            83,
+            382,
+            260,
+            130,
+            419,
+            84,
+            113,
+            202,
+            222,
+            3
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 43,
+          "ids": [
+            300,
+            357,
+            175,
+            435,
+            159,
+            21,
+            481,
+            187,
+            475,
+            84
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 44,
+          "ids": [
+            196,
+            383,
+            119,
+            293,
+            495,
+            99,
+            401,
+            228,
+            144,
+            387
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 45,
+          "ids": [
+            237,
+            86,
+            89,
+            360,
+            26,
+            294,
+            122,
+            447,
+            200,
+            194
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 46,
+          "ids": [
+            25,
+            26,
+            348,
+            283,
+            412,
+            291,
+            268,
+            492,
+            323,
+            220
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 47,
+          "ids": [
+            506,
+            2,
+            234,
+            222,
+            149,
+            450,
+            39,
+            1,
+            281,
+            8
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        }
+      ]
+    },
+    {
+      "input": 11751,
+      "output": 13,
+      "position": 5,
+      "ms": 51310.63499999046,
+      "counters": {
+        "sourceBytes": 37922654912,
+        "sourceReads": 179588,
+        "sourceMs": 366909.25000435114,
+        "decodeMs": 285312.9400084615,
+        "uploads": 248138,
+        "uploadBytes": 35792605928,
+        "fences": 42084,
+        "fenceMs": 19476.96500092745
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 21,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 108364,
+        "submissions": 108364,
+        "dispatches": 108364,
+        "uniformBytesUploaded": 2930240,
+        "dataBytesUploaded": 35792605928,
+        "readbackBytes": 1998088
+      },
+      "residency": {
+        "used": 66355200,
+        "hits": 0,
+        "misses": 99524
+      },
+      "routes": [
+        {
+          "layer": 0,
+          "ids": [
+            434,
+            367,
+            308,
+            106,
+            503,
+            386,
+            91,
+            366,
+            466,
+            505
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 1,
+          "ids": [
+            266,
+            504,
+            357,
+            83,
+            222,
+            320,
+            500,
+            53,
+            298,
+            114
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 2,
+          "ids": [
+            487,
+            446,
+            473,
+            29,
+            75,
+            163,
+            327,
+            218,
+            100,
+            484
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 3,
+          "ids": [
+            302,
+            476,
+            83,
+            224,
+            156,
+            366,
+            295,
+            26,
+            143,
+            227
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 4,
+          "ids": [
+            133,
+            78,
+            415,
+            309,
+            313,
+            205,
+            280,
+            160,
+            239,
+            68
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 5,
+          "ids": [
+            421,
+            34,
+            460,
+            6,
+            220,
+            254,
+            476,
+            338,
+            104,
+            216
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 6,
+          "ids": [
+            92,
+            270,
+            424,
+            169,
+            403,
+            228,
+            18,
+            344,
+            177,
+            15
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 7,
+          "ids": [
+            435,
+            104,
+            510,
+            389,
+            303,
+            448,
+            151,
+            31,
+            69,
+            481
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 8,
+          "ids": [
+            94,
+            167,
+            355,
+            462,
+            231,
+            280,
+            455,
+            183,
+            81,
+            362
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 9,
+          "ids": [
+            509,
+            281,
+            17,
+            52,
+            406,
+            321,
+            356,
+            159,
+            463,
+            75
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 10,
+          "ids": [
+            194,
+            139,
+            461,
+            307,
+            399,
+            267,
+            405,
+            207,
+            393,
+            296
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 11,
+          "ids": [
+            30,
+            86,
+            201,
+            246,
+            261,
+            310,
+            238,
+            83,
+            371,
+            31
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 12,
+          "ids": [
+            10,
+            436,
+            36,
+            366,
+            139,
+            180,
+            281,
+            216,
+            67,
+            433
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 13,
+          "ids": [
+            282,
+            259,
+            453,
+            370,
+            250,
+            161,
+            40,
+            241,
+            162,
+            290
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 14,
+          "ids": [
+            2,
+            299,
+            415,
+            400,
+            300,
+            501,
+            106,
+            297,
+            341,
+            135
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 15,
+          "ids": [
+            490,
+            443,
+            470,
+            496,
+            319,
+            317,
+            378,
+            120,
+            251,
+            202
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 16,
+          "ids": [
+            350,
+            206,
+            314,
+            497,
+            141,
+            228,
+            270,
+            392,
+            274,
+            489
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 17,
+          "ids": [
+            412,
+            131,
+            107,
+            299,
+            498,
+            363,
+            469,
+            31,
+            55,
+            291
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 18,
+          "ids": [
+            278,
+            3,
+            201,
+            402,
+            442,
+            350,
+            314,
+            194,
+            418,
+            366
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 19,
+          "ids": [
+            140,
+            434,
+            81,
+            25,
+            328,
+            202,
+            30,
+            343,
+            31,
+            96
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 20,
+          "ids": [
+            73,
+            240,
+            155,
+            265,
+            258,
+            256,
+            323,
+            35,
+            496,
+            225
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 21,
+          "ids": [
+            309,
+            225,
+            461,
+            189,
+            130,
+            286,
+            311,
+            373,
+            488,
+            433
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 22,
+          "ids": [
+            346,
+            433,
+            456,
+            116,
+            159,
+            483,
+            348,
+            506,
+            123,
+            201
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 23,
+          "ids": [
+            49,
+            67,
+            168,
+            39,
+            185,
+            391,
+            442,
+            177,
+            356,
+            369
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 24,
+          "ids": [
+            94,
+            462,
+            231,
+            167,
+            81,
+            358,
+            355,
+            183,
+            333,
+            359
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 25,
+          "ids": [
+            509,
+            406,
+            281,
+            356,
+            52,
+            159,
+            17,
+            463,
+            71,
+            75
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 26,
+          "ids": [
+            194,
+            393,
+            203,
+            296,
+            139,
+            299,
+            399,
+            357,
+            461,
+            322
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 27,
+          "ids": [
+            201,
+            30,
+            261,
+            238,
+            108,
+            69,
+            477,
+            293,
+            430,
+            21
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 28,
+          "ids": [
+            10,
+            139,
+            366,
+            489,
+            436,
+            36,
+            180,
+            0,
+            90,
+            433
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 29,
+          "ids": [
+            282,
+            488,
+            161,
+            250,
+            40,
+            387,
+            290,
+            385,
+            474,
+            7
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 30,
+          "ids": [
+            299,
+            106,
+            415,
+            300,
+            341,
+            400,
+            2,
+            135,
+            181,
+            160
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 31,
+          "ids": [
+            490,
+            470,
+            443,
+            120,
+            496,
+            317,
+            378,
+            96,
+            501,
+            437
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 32,
+          "ids": [
+            350,
+            206,
+            497,
+            416,
+            228,
+            392,
+            314,
+            40,
+            487,
+            270
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 33,
+          "ids": [
+            299,
+            131,
+            107,
+            412,
+            160,
+            105,
+            498,
+            209,
+            363,
+            381
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 34,
+          "ids": [
+            201,
+            278,
+            194,
+            314,
+            3,
+            350,
+            36,
+            366,
+            234,
+            442
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 35,
+          "ids": [
+            434,
+            25,
+            202,
+            343,
+            31,
+            329,
+            235,
+            30,
+            328,
+            140
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 36,
+          "ids": [
+            73,
+            240,
+            78,
+            315,
+            265,
+            436,
+            258,
+            496,
+            464,
+            256
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 37,
+          "ids": [
+            309,
+            461,
+            155,
+            189,
+            242,
+            225,
+            346,
+            117,
+            471,
+            282
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 38,
+          "ids": [
+            116,
+            456,
+            348,
+            346,
+            165,
+            332,
+            433,
+            415,
+            483,
+            159
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 39,
+          "ids": [
+            67,
+            39,
+            49,
+            95,
+            425,
+            185,
+            281,
+            390,
+            417,
+            100
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 40,
+          "ids": [
+            418,
+            337,
+            393,
+            87,
+            143,
+            341,
+            137,
+            471,
+            356,
+            69
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 41,
+          "ids": [
+            99,
+            391,
+            353,
+            40,
+            77,
+            308,
+            149,
+            53,
+            443,
+            245
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 42,
+          "ids": [
+            83,
+            42,
+            479,
+            277,
+            245,
+            53,
+            3,
+            5,
+            222,
+            45
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 43,
+          "ids": [
+            64,
+            300,
+            86,
+            175,
+            294,
+            377,
+            2,
+            357,
+            180,
+            378
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 44,
+          "ids": [
+            405,
+            196,
+            173,
+            24,
+            383,
+            489,
+            191,
+            150,
+            338,
+            270
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 45,
+          "ids": [
+            237,
+            443,
+            86,
+            406,
+            229,
+            194,
+            167,
+            218,
+            22,
+            360
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 46,
+          "ids": [
+            25,
+            283,
+            343,
+            26,
+            30,
+            425,
+            348,
+            76,
+            17,
+            307
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        },
+        {
+          "layer": 47,
+          "ids": [
+            463,
+            340,
+            297,
+            157,
+            506,
+            352,
+            230,
+            334,
+            214,
+            17
+          ],
+          "devices": [
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu",
+            "webgpu"
+          ]
+        }
+      ]
+    }
+  ],
+  "backend": {
+    "backend": "webgpu",
+    "vendor": "nvidia",
+    "architecture": "blackwell",
+    "device": "",
+    "description": "",
+    "features": [
+      "core-features-and-limits",
+      "subgroup-size-control",
+      "shader-f16",
+      "float32-filterable",
+      "subgroups",
+      "timestamp-query"
+    ],
+    "timestampQuery": true,
+    "limits": {
+      "maxComputeInvocationsPerWorkgroup": 1024,
+      "maxComputeWorkgroupStorageSize": 16384,
+      "maxStorageBufferBindingSize": 2147483644
+    },
+    "pipelineCompiles": 21,
+    "pipelineCacheHits": 0,
+    "bindGroupsCreated": 108364,
+    "submissions": 108364,
+    "dispatches": 108364,
+    "uniformBytesUploaded": 2930240,
+    "dataBytesUploaded": 35792605928,
+    "readbackBytes": 1998088
+  },
+  "logits": {
+    "count": 248320,
+    "sha256": "88fd69736db3148099c8c4627cc5c30f78c45de5f99255a9e526602fdaacab19"
+  },
+  "kernelSourceSha256": "caadb9622f18afaa6dd7ca72fe6a6998711d503a983196951439c29a31524652",
+  "sourceCommit": "875ef67",
+  "notes": "Baseline browser loaded original modules before development edits; source hash corrected from that initial build, not the generated files present at benchmark end."
+}
