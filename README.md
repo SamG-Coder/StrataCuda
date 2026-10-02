@@ -72,6 +72,8 @@ The main page's **Load downloaded model** button opens this pack directly. **Cho
 
 For the recorded raw completion, use **Text completion** on the main page with `The capital of France is` and a two-token reply limit. In the Test lab, the equivalent input IDs are `760, 6511, 314, 9338, 369`; output IDs `11751, 13` decode to ` Paris.`. The original streaming implementation took tens of seconds per model token. Resident weights and batched prompts substantially reduce that cost; current measurements, cold-load versus warm reuse, and limitations are in [the CUDA performance report](reports/cuda-performance.md).
 
+A separate [32-token comparison with native upstream](reports/upstream-performance.md) measured **28.8 tokens/s** for Strata 0.1.34 and **1.62–1.71 tokens/s** for retained-weight WebCuda runs on the same RTX 5080. All 32 output IDs matched in these tests. The longer sequence fills WebCuda's expert cache and causes evictions; the short repeated-sequence benchmark does not describe that workload's throughput.
+
 The command-line runner accepts text and automates the same real browser file picker and CUDA inference path:
 
 ```powershell

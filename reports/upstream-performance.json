@@ -1,0 +1,36 @@
+{
+  "upstreamVersion": "0.1.34",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5080",
+    "gpuMemoryMiB": 16303,
+    "driver": "616.64",
+    "cpu": "AMD Ryzen 7 9800X3D",
+    "physicalCores": 8,
+    "ramGiB": 32
+  },
+  "matchedOutputTokens": 32,
+  "nativeMedian": {
+    "processSeconds": 3.6713629000005312,
+    "decodeMs": 1111.1,
+    "tokensPerSecond": 28.8,
+    "prefillMs": 239.3,
+    "timeToFirstTokenMs": 284.1
+  },
+  "cachedNativeMedian": {
+    "processSeconds": 5.4887963000219315,
+    "decodeMs": 1816.1,
+    "tokensPerSecond": 17.62,
+    "prefillMs": 385.4,
+    "timeToFirstTokenMs": 1210.0
+  },
+  "webcudaWarmMedianDecodeMs": 19208.714999973774,
+  "webcudaWarmTokensPerSecond": 1.665910499481287,
+  "decodeSpeedRatio": 17.2880163801402,
+  "sources": [
+    "benchmark-upstream-native-1.json",
+    "benchmark-upstream-native-32.json",
+    "benchmark-upstream-cached-32.json",
+    "benchmark-generation-webgpu.json"
+  ],
+  "note": "Fixed-length benchmark ignores end-of-turn stopping. All 32 generated IDs match in all measured runs. Native samples are fresh processes with preloaded weights before timed inference; WebCuda warm samples reuse weights, subject to its 8 GiB budget. OS file cache retained. No speculative decoding. Does not establish native numerical parity."
+}

@@ -1,5 +1,7 @@
 # CUDA ownership and performance — v0.3.0
 
+For the later fixed 32-token generation test and native Strata comparison, see [upstream-performance.md](upstream-performance.md). Its longer expert working set exposes a larger performance gap than the short repeated sequence measured below.
+
 The live Q2 model path now performs embedding decoding, expert half-scale expansion, IQ4_NL PLE decoding and RoPE frequency/table generation in `kernels/strata.cu`. The same source contains **49 kernels**, compiled to both WebGPU and threaded WebAssembly. Its SHA-256 is `ecad731efa5c67b228efebf4331570e977cc63be512115c5c9722ae99a7cc7b5`.
 
 WebGPU combines expert gate/up projections and SiLU into one kernel, then writes the down projection directly into the selected MoE output slots. Prompt row mappings remove intermediate gather/scatter buffers. WASM retains separate CUDA projection kernels and expands each expert scale plane once with a CUDA kernel.

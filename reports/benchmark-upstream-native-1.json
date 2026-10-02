@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-10-02T05:20:02.957360+00:00",
+  "version": "0.1.34",
+  "upstreamCommit": "1678de333d0e0711bc414ad992b640e1a37dd814",
+  "executableSha256": "f0838beeb5b630483262456b1d0a596c76c7e19633bbb58eebe27ab86b497bb4",
+  "variant": "native",
+  "inputs": [
+    760,
+    6511,
+    314,
+    9338,
+    369,
+    11751
+  ],
+  "command": [
+    "D:\\StrataCuda\\.local\\native-upstream\\bin\\strata.exe",
+    "--pack",
+    "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-WebCuda-Q2_0",
+    "--tokens",
+    "760,6511,314,9338,369,11751",
+    "--max-new",
+    "1",
+    "--max-context",
+    "256",
+    "--mmap-experts",
+    "--pool-workers",
+    "4",
+    "--ple-gguf",
+    "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf",
+    "--native",
+    "D:\\StrataCuda\\models\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0\\Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf"
+  ],
+  "samples": [
+    {
+      "run": 1,
+      "processSeconds": 3.3003315000096336,
+      "generatedTokens": 1,
+      "decodeMs": 56.6,
+      "tokensPerSecond": 17.67,
+      "prefillTokens": 5,
+      "prefillMs": 467.8,
+      "timeToFirstTokenMs": 529.7,
+      "output": [
+        13
+      ],
+      "logSha256": "1aad9aa531eea8b0d1b3bb97a5799daa9351a69112cf2610d8609c3ff99dbe33"
+    },
+    {
+      "run": 2,
+      "processSeconds": 2.0229790000012144,
+      "generatedTokens": 1,
+      "decodeMs": 34.8,
+      "tokensPerSecond": 28.78,
+      "prefillTokens": 5,
+      "prefillMs": 239.9,
+      "timeToFirstTokenMs": 278.9,
+      "output": [
+        13
+      ],
+      "logSha256": "4d2d036adc993c6d8795a706d8b5e314d03f85f650dffe3d20344d1a7fb12de0"
+    },
+    {
+      "run": 3,
+      "processSeconds": 1.9956157999695279,
+      "generatedTokens": 1,
+      "decodeMs": 34.5,
+      "tokensPerSecond": 28.98,
+      "prefillTokens": 5,
+      "prefillMs": 234.5,
+      "timeToFirstTokenMs": 273.5,
+      "output": [
+        13
+      ],
+      "logSha256": "2daf5ba4d12c8fd9f958eb9871d30bf9d1586bbc4e6acb30e8b0e8cefd29e80f"
+    }
+  ],
+  "median": {
+    "processSeconds": 2.0229790000012144,
+    "decodeMs": 34.8,
+    "tokensPerSecond": 28.78,
+    "prefillMs": 239.9,
+    "timeToFirstTokenMs": 278.9
+  },
+  "note": "Each sample starts a fresh process. Upstream decode timing excludes weight loading and initial setup; processSeconds includes them and shutdown. Reported time to first token also excludes weight loading. Fixed generation length continues past end-of-turn tokens. OS file cache is not flushed. Native arithmetic differs from the WebCuda portable F32 contract. No MTP/speculative decoding."
+}
