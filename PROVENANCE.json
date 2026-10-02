@@ -18,7 +18,7 @@
   },
   "port": {
     "source": "kernels/strata.cu",
-    "sha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
+    "sha256": "ecad731efa5c67b228efebf4331570e977cc63be512115c5c9722ae99a7cc7b5",
     "numericContract": "F32 activations/reductions/KV; portable baseline, not native bit parity",
     "upstreamMapping": {
       "projections": [

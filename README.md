@@ -2,9 +2,9 @@
 
 A browser inference port of [Niko1221/Strata](https://github.com/Niko1221/Strata), using [CUDA WebShader](https://github.com/SamG-Coder/cuda-webshader) to run shared CUDA source on WebGPU and threaded WebAssembly. Public source: [SamG-Coder/StrataCuda](https://github.com/SamG-Coder/StrataCuda).
 
-`kernels/strata.cu` is the single source for **41 compute kernels**. CUDA WebShader compiles it to WGSL for WebGPU and to threaded WebAssembly through Emscripten. JavaScript handles files, buffers, dispatch order, cache policy and the browser interface. Matrix products, routing, recurrent updates, attention and expert arithmetic execute in the compiled kernels.
+`kernels/strata.cu` is the single source for **49 compute kernels**. CUDA WebShader compiles it to WGSL for WebGPU and to threaded WebAssembly through Emscripten. JavaScript handles files, buffers, dispatch order, cache policy and the browser interface. Matrix products, routing, recurrent updates, attention and expert arithmetic execute in the compiled kernels. The trained Q2 path also decodes embeddings, expert scales and IQ4_NL PLE rows there, and generates reusable RoPE frequency/position tables in CUDA. GPU execution fuses expert gate/up/SiLU; WASM uses separate CUDA projections to suit its CPU scheduler. JavaScript supplies file ranges, packed row layouts, buffers, geometry and dispatch order; the live trained-model path no longer calculates RoPE trigonometry or expands expert half scales and PLE rows in JavaScript.
 
-This is an initial engine port, **not a complete replacement for upstream Strata**. The application bundles a deterministic, untrained four-layer fixture for conformance checks. The separately downloaded Qwen3.8-Flash-Next GSQ-RCO Q2_0 model has now been converted, exhaustively verified, and run through all 48 layers on WebGPU, threaded WebAssembly and hybrid execution. All three generated ` Paris.` from `The capital of France is`, with matching routed experts and less than 0.000008 maximum difference between final logits. The optimized GPU path preserves the streaming baseline logits exactly on the recorded real-model prompt. Native Strata 0.1.34 chooses the same final token but has different logits and some different routed experts; native numerical parity has not been achieved. See [execution and performance validation](reports/execution-port.md) and the [original model validation](reports/model-validation.md).
+This is an initial engine port, **not a complete replacement for upstream Strata**. The application bundles a deterministic, untrained four-layer fixture for conformance checks. The separately downloaded Qwen3.8-Flash-Next GSQ-RCO Q2_0 model has now been converted, exhaustively verified, and run through all 48 layers on WebGPU, threaded WebAssembly and hybrid execution. All three generated ` Paris.` from `The capital of France is`, with matching routed experts and less than 0.000008 maximum difference between final logits. The v0.2 GPU path preserved the streaming baseline logits exactly on the recorded real-model prompt. The current CUDA-generated RoPE tables introduce less than 0.000008 maximum final-logit difference from that baseline; selected experts still match on this test. Native Strata 0.1.34 chooses the same final token but has different logits and some different routed experts; native numerical parity has not been achieved. See [the current CUDA performance update](reports/cuda-performance.md), [the v0.2 execution report](reports/execution-port.md) and the [original model validation](reports/model-validation.md).
 
 ## Run
 
@@ -50,7 +50,7 @@ The original token-ID interface is now the separate **Test lab** at **http://127
 | Files | Bounded random reads, canonical pack import, F16 scale expansion, Q2_0 expert gate/up layout, IQ4_NL PLE rows, GGUF v3 header inspection |
 | Text interface | Browser byte-level BPE, UTF-8 streaming, Qwen text-only chat formatting, optional instructions, context/reply limits, prefix reuse and cancellation between layers |
 
-The default 8 GiB GPU weight budget reserves **4,339,198,220 bytes (4.04 GiB)** for the dense tensors used by this model and uses the remainder for complete expert blobs. Dense tensors become resident on first use and are protected from expert eviction. BF16 source weights regain their original compact storage without changing their values; one packed Q2 allocation serves each expert's gate, up and down projections. A separate bounded **1 GiB host-RAM tier** holds CPU/cold experts, and each WASM tensor cache remains **64 MiB** inside its 512 MiB maximum heap. Scratch-buffer pooling adds at most 128 MiB on GPU. State, staging and browser overhead are separate from the weight budget.
+The default 8 GiB GPU weight budget reserves **4,339,198,220 bytes (4.04 GiB)** for the dense tensors used by this model and uses the remainder for complete expert blobs. Dense tensors become resident on first use and are protected from expert eviction. BF16 source weights regain their original compact storage without changing their values; one packed Q2 allocation serves each expert's gate, up and down projections. A separate bounded **1 GiB host-RAM tier** holds CPU/cold experts, and each WASM tensor cache remains **64 MiB** inside its 512 MiB maximum heap. A bounded dense-file window reads at most 128 MiB of one layer at a time in host memory. Scratch-buffer pooling adds at most 128 MiB on GPU. State, staging and browser overhead are separate from the weight budget.
 
 Choose **Streaming** on a GPU with insufficient free memory. That path retains a small tile cache; the normal resident path does not repeatedly evict dense weights. The browser does not expose total free VRAM, so the budget is explicit. Model files remain random-access sources, and individual tiles remain bounded. This implements a portable tiered-memory policy; CUDA mapped pinned memory and native CPU vector kernels are not available through these browser backends.
 
@@ -70,7 +70,7 @@ The main page's **Load downloaded model** button opens this pack directly. **Cho
 - `experts.bin`
 - `Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf`
 
-For the recorded raw completion, use **Text completion** on the main page with `The capital of France is` and a two-token reply limit. In the Test lab, the equivalent input IDs are `760, 6511, 314, 9338, 369`; output IDs `11751, 13` decode to ` Paris.`. The original streaming implementation took tens of seconds per model token. Resident weights and batched prompts substantially reduce that cost; current measurements, cold-load versus warm reuse, and limitations are in [the execution report](reports/execution-port.md).
+For the recorded raw completion, use **Text completion** on the main page with `The capital of France is` and a two-token reply limit. In the Test lab, the equivalent input IDs are `760, 6511, 314, 9338, 369`; output IDs `11751, 13` decode to ` Paris.`. The original streaming implementation took tens of seconds per model token. Resident weights and batched prompts substantially reduce that cost; current measurements, cold-load versus warm reuse, and limitations are in [the CUDA performance report](reports/cuda-performance.md).
 
 The command-line runner accepts text and automates the same real browser file picker and CUDA inference path:
 
@@ -108,7 +108,7 @@ The following upstream features remain outside this port: native IQ2/IQ3 expert 
 
 ```powershell
 npm test                 # file formats, corrupt-file negatives, hash and layout contracts
-npm run build            # all 41 entries to WGSL and WASM
+npm run build            # all 49 entries to WGSL and WASM
 npm run test:wasm        # threaded module in Node against independent scalar equations
 npm run test:browser     # real Edge: GPU, WASM, hybrid, file picker, UI and responsive layout
 npm run test:upstream    # native C++ oracle from unchanged upstream source (needs clang++)
@@ -127,7 +127,7 @@ Fixture reports are written to `reports/wasm.json`, `reports/browser.json` and `
 
 ## Source map
 
-- `kernels/strata.cu`: all 41 shared compute entries.
+- `kernels/strata.cu`: all 49 shared compute entries.
 - `src/residency.js`: protected dense tensors and whole-expert GPU/RAM placement.
 - `src/prefill.js`: layer-major prompt chunks and grouped expert projections.
 - `scripts/benchmark-model.mjs`: real-model timings, I/O counters and warm-repeat checks.

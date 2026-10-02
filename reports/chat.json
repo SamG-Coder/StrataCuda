@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-02T04:26:56.482Z",
+  "timestamp": "2026-10-02T05:13:21.713Z",
   "model": "Qwen3.8-Flash-Next GSQ-RCO Q2_0",
   "context": 512,
   "backend": {
@@ -11,10 +11,10 @@
     "features": [
       "core-features-and-limits",
       "subgroup-size-control",
-      "shader-f16",
+      "subgroups",
       "float32-filterable",
-      "timestamp-query",
-      "subgroups"
+      "shader-f16",
+      "timestamp-query"
     ],
     "timestampQuery": true,
     "limits": {
@@ -22,7 +22,7 @@
       "maxComputeWorkgroupStorageSize": 16384,
       "maxStorageBufferBindingSize": 2147483644
     },
-    "pipelineCompiles": 41,
+    "pipelineCompiles": 49,
     "pipelineCacheHits": 0,
     "bindGroupsCreated": 0,
     "submissions": 0,
@@ -34,7 +34,7 @@
     "poolHits": 0,
     "bindingCacheHits": 0
   },
-  "stopSeconds": 0.632,
+  "stopSeconds": 0.5,
   "result": {
     "text": "Hello!",
     "generated": [
@@ -44,19 +44,19 @@
     "promptTokens": 13,
     "position": 14,
     "stop": "limit",
-    "seconds": 26.245664999961853,
+    "seconds": 18.229275000035763,
     "residency": {
       "budgetBytes": 8589934592,
       "densePlannedBytes": 4339198220,
       "denseResidentBytes": 4339198220,
       "expertResidentBytes": 3156019200,
       "residentExperts": 2283,
-      "hits": 9926,
+      "hits": 4598,
       "misses": 4217,
       "evictions": 0,
       "hostExpertCacheBytes": 0,
       "hostExpertCache": {
-        "hits": 0,
+        "hits": 2283,
         "misses": 2283,
         "bytesRead": 3156019200
       }

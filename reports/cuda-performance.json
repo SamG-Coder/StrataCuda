@@ -1,0 +1,221 @@
+{
+  "note": "Same six teacher-forced inputs; empty application caches but OS file cache not flushed. Warm figures are medians of five state resets with retained weights. Not a sustained throughput benchmark.",
+  "backends": {
+    "v0.2 control": {
+      "report": "reports/benchmark-v0.2-control.json",
+      "kernelSha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
+      "seconds": 25.059625,
+      "decodeMs": 1005.1850000023842,
+      "warmMedian": {
+        "seconds": 0.5709099999666214,
+        "promptMs": 360.82499998807907,
+        "decodeMs": 209.75999999046326
+      },
+      "maxAbsoluteErrorFromControl": 0.0,
+      "rmsErrorFromControl": 0.0,
+      "maxAbsoluteErrorFromGpu": 7.152557373046875e-06,
+      "orderedRoutingMatches": 288,
+      "counters": {
+        "sourceBytes": 8083532992,
+        "sourceReads": 5035,
+        "sourceMs": 27578.03499907255,
+        "decodeMs": 15106.450000822544,
+        "uploads": 8794,
+        "uploadBytes": 6659044652,
+        "fences": 0,
+        "fenceMs": 0
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 41,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 13554,
+        "submissions": 245,
+        "dispatches": 16386,
+        "uniformBytesUploaded": 4137616,
+        "dataBytesUploaded": 6659044652,
+        "readbackBytes": 1998088,
+        "pooledBytes": 8709404,
+        "poolHits": 12730,
+        "bindingCacheHits": 2832
+      },
+      "expertDevices": {
+        "webgpu": 2880,
+        "wasm": 0
+      }
+    },
+    "webgpu": {
+      "report": "reports/benchmark-cuda-bulk.json",
+      "kernelSha256": "ecad731efa5c67b228efebf4331570e977cc63be512115c5c9722ae99a7cc7b5",
+      "seconds": 19.312479999959468,
+      "decodeMs": 764.8900000452995,
+      "warmMedian": {
+        "seconds": 0.468039999961853,
+        "promptMs": 282.2950000166893,
+        "decodeMs": 185.50499999523163
+      },
+      "maxAbsoluteErrorFromControl": 7.152557373046875e-06,
+      "rmsErrorFromControl": 1.0955072238718108e-06,
+      "maxAbsoluteErrorFromGpu": 0.0,
+      "orderedRoutingMatches": 288,
+      "counters": {
+        "sourceBytes": 8162188480,
+        "sourceReads": 2295,
+        "sourceMs": 27429.794999837875,
+        "decodeMs": 2756.319998919964,
+        "uploads": 7195,
+        "uploadBytes": 6658905096,
+        "fences": 0,
+        "fenceMs": 0
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 49,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 8094,
+        "submissions": 196,
+        "dispatches": 9342,
+        "uniformBytesUploaded": 2344576,
+        "dataBytesUploaded": 6658905096,
+        "readbackBytes": 1998088,
+        "pooledBytes": 6362140,
+        "poolHits": 5470,
+        "bindingCacheHits": 1248
+      },
+      "expertDevices": {
+        "webgpu": 2880,
+        "wasm": 0
+      }
+    },
+    "wasm": {
+      "report": "reports/benchmark-cuda-wasm-final.json",
+      "kernelSha256": "ecad731efa5c67b228efebf4331570e977cc63be512115c5c9722ae99a7cc7b5",
+      "seconds": 66.903655000031,
+      "decodeMs": 21218.490000009537,
+      "warmMedian": null,
+      "maxAbsoluteErrorFromControl": 7.62939453125e-06,
+      "rmsErrorFromControl": 1.2845524209078424e-06,
+      "maxAbsoluteErrorFromGpu": 6.4373016357421875e-06,
+      "orderedRoutingMatches": 288,
+      "counters": {
+        "sourceBytes": 14358584000,
+        "sourceReads": 3060,
+        "sourceMs": 42914.355001330376,
+        "decodeMs": 5784.5950038433075,
+        "uploads": 29033,
+        "uploadBytes": 14321068804,
+        "fences": 3549,
+        "fenceMs": 37139.519997775555
+      },
+      "backend": {
+        "backend": "wasm",
+        "threads": 4,
+        "dispatches": 22410,
+        "workerGroups": [
+          7492686,
+          6543930,
+          6556995,
+          6539678
+        ],
+        "heapBytes": 268435456
+      },
+      "expertDevices": {
+        "webgpu": 0,
+        "wasm": 2880
+      }
+    },
+    "hybrid": {
+      "report": "reports/benchmark-cuda-hybrid.json",
+      "kernelSha256": "ecad731efa5c67b228efebf4331570e977cc63be512115c5c9722ae99a7cc7b5",
+      "seconds": 18.784060000002384,
+      "decodeMs": 1980.2950000166893,
+      "warmMedian": null,
+      "maxAbsoluteErrorFromControl": 6.198883056640625e-06,
+      "rmsErrorFromControl": 1.135615894655383e-06,
+      "maxAbsoluteErrorFromGpu": 6.973743438720703e-06,
+      "orderedRoutingMatches": 288,
+      "counters": {
+        "sourceBytes": 8162188480,
+        "sourceReads": 2295,
+        "sourceMs": 28147.28999823332,
+        "decodeMs": 3090.760000050068,
+        "uploads": 7041,
+        "uploadBytes": 6446015496,
+        "fences": 0,
+        "fenceMs": 0
+      },
+      "backend": {
+        "backend": "webgpu",
+        "vendor": "nvidia",
+        "architecture": "blackwell",
+        "device": "",
+        "description": "",
+        "features": [
+          "core-features-and-limits",
+          "subgroup-size-control",
+          "shader-f16",
+          "float32-filterable",
+          "subgroups",
+          "timestamp-query"
+        ],
+        "timestampQuery": true,
+        "limits": {
+          "maxComputeInvocationsPerWorkgroup": 1024,
+          "maxComputeWorkgroupStorageSize": 16384,
+          "maxStorageBufferBindingSize": 2147483644
+        },
+        "pipelineCompiles": 49,
+        "pipelineCacheHits": 0,
+        "bindGroupsCreated": 7786,
+        "submissions": 244,
+        "dispatches": 9034,
+        "uniformBytesUploaded": 2254976,
+        "dataBytesUploaded": 6447592456,
+        "readbackBytes": 2489608,
+        "pooledBytes": 6362140,
+        "poolHits": 5316,
+        "bindingCacheHits": 1248
+      },
+      "expertDevices": {
+        "webgpu": 2726,
+        "wasm": 154
+      }
+    }
+  }
+}

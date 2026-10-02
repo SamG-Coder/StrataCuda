@@ -17,7 +17,7 @@ export function startServer(port=Number(process.env.PORT||8094)) {
             res.setHeader('Content-Type',mime[path.extname(file)]||'application/octet-stream');res.setHeader('Accept-Ranges','bytes');
             let start=0,end=s.size-1,status=200;
             if(req.headers.range){const m=/^bytes=(\d+)-(\d*)$/.exec(req.headers.range);if(!m||Number(m[1])>=s.size||(m[2]&&Number(m[2])<Number(m[1]))){res.writeHead(416,{'Content-Range':`bytes */${s.size}`});res.end();return;}start=Number(m[1]);end=m[2]?Math.min(Number(m[2]),end):end;status=206;res.setHeader('Content-Range',`bytes ${start}-${end}/${s.size}`);}
-            res.setHeader('Content-Length',Math.max(0,end-start+1));res.writeHead(status);if(req.method==='HEAD'||!s.size){res.end();return;}createReadStream(file,{start,end}).on('error',()=>res.destroy()).pipe(res);
+            res.setHeader('Content-Length',Math.max(0,end-start+1));res.writeHead(status);if(req.method==='HEAD'||!s.size){res.end();return;}createReadStream(file,{start,end,highWaterMark:1024*1024}).on('error',()=>res.destroy()).pipe(res);
         } catch {if(!res.headersSent)res.writeHead(404);res.end('Not found');}
     });
     return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',()=>resolve(server));});

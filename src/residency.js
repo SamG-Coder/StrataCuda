@@ -54,7 +54,7 @@ export class WeightResidency {
         const compact=this.store.describe(names[0]).expert&&this.store.readExpertBlob;
         const bytes=compact?this.store.manifest.experts.blob_bytes:names.reduce((n,name)=>n+this.bytesFor(name),0);
         if(bytes>this.expertBudget)return false;
-        const victims=[...this.experts].sort((a,b)=>(this.frequency.get(a[0])||0)-(this.frequency.get(b[0])||0));
+        const victims=this.expertUsed+bytes>this.expertBudget?[...this.experts].sort((a,b)=>(this.frequency.get(a[0])||0)-(this.frequency.get(b[0])||0)):[];
         let available=this.expertBudget-this.expertUsed;const remove=[];
         for(const [old,entry] of victims){if(available>=bytes)break;if(!force&&(this.frequency.get(old)||0)>=(this.frequency.get(key)||0))return false;remove.push(old);available+=entry.bytes;}
         for(const old of remove)await this.dropExpert(old);

@@ -137,6 +137,17 @@ test('a failed WASM batch rejects readback and future allocations',async()=>{
     const b=new WorkerBackend(worker),out=b.alloc(1);await assert.rejects(b.read(out),/batched allocation/);assert.throws(()=>b.alloc(1),/batched allocation/);await b.dispose();assert.equal(worker.terminated,true);
 });
 
+test('WASM uploads clone only the selected view of a bulk weight buffer',async()=>{
+    const worker=new TestWorker(),sent=[];
+    worker.postMessage=message=>{sent.push(structuredClone(message));queueMicrotask(()=>worker.onmessage({data:{id:message.id,value:null}}));};
+    const b=new WorkerBackend(worker),bulk=new Float32Array(1024*1024).fill(99);bulk.set([3,4,5],17);
+    const view=bulk.subarray(17,20),out=b.alloc(view);b.write(out,view.subarray(1),1);await b.idle();
+    const [allocation,write]=sent[0].args.commands;
+    assert.deepEqual(Array.from(allocation.args.dataOrLength),[3,4,5]);assert.equal(allocation.args.dataOrLength.buffer.byteLength,12);
+    assert.deepEqual(Array.from(write.args.data),[4,5]);assert.equal(write.args.data.buffer.byteLength,8);assert.equal(write.args.offset,1);
+    assert.equal(bulk.byteLength,4*1024*1024);assert.equal(bulk[16],99);await b.dispose();
+});
+
 test('production vocabulary visualization stays bounded and shows the selected token',()=>{
     const values=new Float32Array(248320);values[248319]=9;values[100]=-4;
     const {bars,min,max}=logitBars(values,248319);

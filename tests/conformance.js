@@ -3,6 +3,7 @@ import {createFixture} from '../src/fixture.js';
 import {StrataEngine} from '../src/engine.js';
 import {halfToFloat,PackStore,BlobSource} from '../src/model.js';
 import {encodeFixturePack} from '../src/pack.js';
+import {fusedConformance} from './fused-conformance.js';
 export function compare(actual,expected,tolerance=2e-5,label='values') {
     if(actual.length!==expected.length)throw Error(label+' length mismatch');let maxError=0;
     for(let i=0;i<actual.length;i++){const e=Math.abs(actual[i]-expected[i]);if(!Number.isFinite(actual[i])||e>tolerance*(1+Math.abs(expected[i])))throw Error(`${label}[${i}]: ${actual[i]} versus ${expected[i]}, error ${e}`);maxError=Math.max(maxError,e);}return maxError;
@@ -13,6 +14,7 @@ export async function conformance(b,{cpu=null}={}) {
     const clean=async()=>{await b.idle();for(const x of owned)await b.free(x);owned=[];};
     const pass=(name,error=0)=>checks.push({name,maxAbsoluteError:error});
     try {
+        await fusedConformance(b,{alloc,clean,pass,compare});
         const halves=Uint32Array.from({length:32768},(_,i)=>(2*i)|((2*i+1)<<16)),decoded=await alloc(65536);
         await b.run('strata_unpack_half',{Packed:await alloc(halves,'u32'),Values:decoded,count:65536},[1024,1,1]);
         const actualHalf=await b.read(decoded);for(let h=0;h<65536;h++){const expected=halfToFloat(h);if(!(Number.isNaN(expected)?Number.isNaN(actualHalf[h]):Object.is(actualHalf[h],expected)))throw Error('Packed FP16 decode differs at '+h);}

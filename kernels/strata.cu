@@ -6,6 +6,10 @@
 
 __device__ float strata_sigmoid(float x) { return 1.0f / (1.0f + expf(-x)); }
 __device__ float strata_silu(float x) { return x * strata_sigmoid(x); }
+__device__ int strata_group(int index, int size) {
+    if (size == 16) return index >> 4; if (size == 32) return index >> 5; if (size == 64) return index >> 6;
+    return index / size;
+}
 __device__ float strata_half_bits(unsigned int h) {
     unsigned int sign = (h & 32768u) << 16; unsigned int exponent = (h >> 10) & 31u; unsigned int fraction = h & 1023u;
     if (exponent == 0u) { if (fraction == 0u) return __uint_as_float(sign); float v = (float)fraction * 0.000000059604644775390625f; return sign != 0u ? -v : v; }
@@ -26,7 +30,94 @@ __device__ float strata_iq4(int c) {
     if (c == 14) return 89.0f; return 113.0f;
 }
 
+// Gate/up share the same packed expert and input row. Keep the original
+// 64-lane reduction order, and perform SiLU before materializing one hidden row.
+__global__ void strata_expert_scales(const unsigned int* Blob, float* Scales, int offset, int count) {
+    int i = (int)(blockIdx.x * blockDim.x + threadIdx.x); if (i < count) { int at = offset + i; Scales[i] = strata_half_bits((Blob[at / 2] >> ((at % 2) * 16)) & 65535u); }
+}
+__global__ void strata_q2_gate_up(const float* X, const unsigned int* Blob, const float* Scales, const int* Mapping, float* Hidden,
+    int width, int ff, int tokens, int mapped, int expanded, int codeOffset, int scaleOffset) {
+    __shared__ float gate[64]; __shared__ float up[64];
+    int lane = (int)threadIdx.x; int row = (int)blockIdx.x; int token = (int)blockIdx.y;
+    int inputRow = mapped != 0 ? Mapping[2 * token] : token; float g = 0.0f; float u = 0.0f;
+    for (int i = lane; i < width; i += 64) {
+        int gi = row * 2 * width + i; int ui = gi + width;
+        int gc = (int)((Blob[codeOffset + gi / 16] >> ((gi % 16) * 2)) & 3u) - 1;
+        int uc = (int)((Blob[codeOffset + ui / 16] >> ((ui % 16) * 2)) & 3u) - 1;
+        int gs = scaleOffset + gi / 64; int us = scaleOffset + ui / 64;
+        float gw = (float)gc * (expanded != 0 ? Scales[gs] : strata_half_bits((Blob[gs / 2] >> ((gs % 2) * 16)) & 65535u));
+        float uw = (float)uc * (expanded != 0 ? Scales[us] : strata_half_bits((Blob[us / 2] >> ((us % 2) * 16)) & 65535u));
+        float x = X[inputRow * width + i]; g += gw * x; u += uw * x;
+    }
+    gate[lane] = g; up[lane] = u; __syncthreads();
+    for (int s = 32; s > 0; s >>= 1) { if (lane < s) { gate[lane] += gate[lane + s]; up[lane] += up[lane + s]; } __syncthreads(); }
+    if (lane == 0 && row < ff && token < tokens) Hidden[token * ff + row] = strata_silu(gate[0]) * up[0];
+}
+__global__ void strata_q2_down(const float* Hidden, const unsigned int* Blob, const float* Scales, const int* Mapping, float* Y,
+    int width, int ff, int tokens, int mapped, int expanded, int outputOffset, int codeOffset, int scaleOffset) {
+    __shared__ float partial[64];
+    int lane = (int)threadIdx.x; int row = (int)blockIdx.x; int token = (int)blockIdx.y; float sum = 0.0f;
+    for (int i = lane; i < ff; i += 64) {
+        int index = row * ff + i; int code = (int)((Blob[codeOffset + index / 16] >> ((index % 16) * 2)) & 3u) - 1;
+        int si = scaleOffset + index / 64; float w = (float)code * (expanded != 0 ? Scales[si] : strata_half_bits((Blob[si / 2] >> ((si % 2) * 16)) & 65535u));
+        sum += w * Hidden[token * ff + i];
+    }
+    partial[lane] = sum; __syncthreads();
+    for (int s = 32; s > 0; s >>= 1) { if (lane < s) partial[lane] += partial[lane + s]; __syncthreads(); }
+    int destination = mapped != 0 ? Mapping[2 * token + 1] : token;
+    if (lane == 0 && row < width && token < tokens) Y[outputOffset + destination * width + row] = partial[0];
+}
+
 // Row-major weights, batch-major activations. One workgroup per output row/token.
+__global__ void strata_embedding(const float* Values, const unsigned int* Codes, const float* Scales, const float* Offsets,
+    float* Residual, int width, int streams, int outputOffset, int format, int bits, int groupSize, int bias, int codebook, int hasOffset) {
+    int i = (int)(blockIdx.x * blockDim.x + threadIdx.x); if (i >= width) return; float value = 0.0f;
+    if (format == 0) value = Values[i];
+    else if (format == 1) value = __uint_as_float(((Codes[i / 2] >> ((i % 2) * 16)) & 65535u) << 16);
+    else { int bit = i * bits; int code = (int)((Codes[bit / 32] >> (bit % 32)) & ((1u << bits) - 1u));
+        int group = strata_group(i, groupSize); value = (codebook == 1 ? strata_iq4(code) : (float)(code + bias)) * Scales[group]; if (hasOffset != 0) value += Offsets[group]; }
+    for (int stream = 0; stream < streams; ++stream) Residual[outputOffset + stream * width + i] = value;
+}
+__global__ void strata_ple_decode(const unsigned int* Packed, float* Values, int count) {
+    int i = (int)(blockIdx.x * blockDim.x + threadIdx.x); if (i >= count) return;
+    int block = i / 32; int scaleByte = block * 18; int codeByte = scaleByte + 2 + i % 16;
+    unsigned int halfBits = (Packed[scaleByte / 4] >> ((scaleByte % 4) * 8)) & 65535u;
+    int code = (int)((Packed[codeByte / 4] >> ((codeByte % 4) * 8 + (i % 32 < 16 ? 0 : 4))) & 15u);
+    Values[i] = strata_half_bits(halfBits) * strata_iq4(code);
+}
+// Compute frequencies once with scalar double arithmetic (WebCuda emulates it
+// on WebGPU). Range-reduced series avoid the backend-specific pow approximation.
+__global__ void strata_rope_frequencies(float* High, float* Low, int rotary, float base) {
+    int i = (int)(blockIdx.x * blockDim.x + threadIdx.x); if (i >= rotary / 2) return;
+    double value = (double)base; int exponent = 0;
+    while (value >= 2.0) { value = value * 0.5; exponent += 1; }
+    double y = (value - 1.0) / (value + 1.0); double term = y; double logarithm = 0.0;
+    for (int n = 1; n <= 49; n += 2) { logarithm += term / (double)n; term = term * y * y; }
+    double ln2 = 0.693147180559945309417232121458176568;
+    logarithm = 2.0 * logarithm + (double)exponent * ln2;
+    double power = -logarithm * (double)(2 * i) / (double)rotary;
+    int whole = (int)(float)(power / ln2); double remainder = power - (double)whole * ln2;
+    double result = 1.0; term = 1.0;
+    for (int n = 1; n <= 20; ++n) { term = term * remainder / (double)n; result += term; }
+    while (whole < 0) { result = result * 0.5; whole += 1; }
+    High[i] = (float)result; Low[i] = (float)(result - (double)High[i]);
+}
+__global__ void strata_rope_table(const float* High, const float* Low, float* Cos, float* Sin, int rotary, int context) {
+    int i = (int)(blockIdx.x * blockDim.x + threadIdx.x); int half = rotary / 2; if (i >= context * half) return;
+    int pair = i % half; double angle = (double)(i / half) * ((double)High[pair] + (double)Low[pair]);
+    double turn = 6.283185307179586476925286766559005768;
+    int wraps = (int)(float)(angle / turn + 0.5); float reduced = (float)(angle - (double)wraps * turn);
+    Cos[i] = cosf(reduced); Sin[i] = sinf(reduced);
+}
+// JavaScript supplies geometry and position; both the table and rotation are CUDA.
+__global__ void strata_rope_position(const float* X, const float* Cos, const float* Sin, float* Y, int dim, int heads, int rotary, int position, int tokens) {
+    int i = (int)(blockIdx.x * blockDim.x + threadIdx.x); if (i >= dim * heads * tokens) return;
+    int d = i % dim; if (d >= rotary) { Y[i] = X[i]; return; }
+    int half = rotary / 2; int pair = d % half; int row = i - d;
+    int angle = (position + i / (dim * heads)) * half + pair;
+    float c = Cos[angle]; float s = Sin[angle]; float a = X[row + pair]; float b = X[row + pair + half];
+    Y[i] = d < half ? a * c - b * s : b * c + a * s;
+}
 __global__ void strata_gemv(const float* X, const float* W, float* Y,
                           int cols, int rows, int tokens) {
     __shared__ float partial[64];
@@ -50,7 +141,7 @@ __global__ void strata_quant_gemv(const float* X, const unsigned int* Codes,
         int index = row * cols + i; int bit = index * bits;
         int code = (int)((Codes[bit / 32] >> (bit % 32)) & ((1u << bits) - 1u));
         float value = codebook == 1 ? strata_iq4(code) : (float)(code + bias);
-        int group = index / groupSize;
+        int group = strata_group(index, groupSize);
         float weight = value * Scales[group]; if (hasOffset != 0) weight += Offsets[group];
         sum += weight * X[i];
     }
@@ -110,7 +201,7 @@ __global__ void strata_quant_project(const float* X, const unsigned int* Codes,
         int index = row * cols + i; int bit = index * bits;
         int code = (int)((Codes[bit / 32] >> (bit % 32)) & ((1u << bits) - 1u));
         float value = codebook == 1 ? strata_iq4(code) : (float)(code + bias);
-        int group = index / groupSize;
+        int group = strata_group(index, groupSize);
         float weight = value * Scales[group]; if (hasOffset != 0) weight += Offsets[group];
         sum += weight * X[token * cols + i];
     }

@@ -2,16 +2,56 @@
   "backend": {
     "backend": "wasm",
     "threads": 4,
-    "dispatches": 5242,
+    "dispatches": 5268,
     "workerGroups": [
-      29337,
-      16227,
-      16530,
-      16575
+      29366,
+      17555,
+      17286,
+      16718
     ],
     "heapBytes": 268435456
   },
   "checks": [
+    {
+      "name": "Fused Q2 gate/up/SiLU with reordered input rows",
+      "maxAbsoluteError": 1.0239313797885674e-9
+    },
+    {
+      "name": "Fused Q2 down with sparse destinations and untouched padding",
+      "maxAbsoluteError": 5.309979834305922e-10
+    },
+    {
+      "name": "CUDA-expanded expert scales preserve fused output",
+      "maxAbsoluteError": 5.309979834305922e-10
+    },
+    {
+      "name": "CUDA S2 embedding decode and stream replication",
+      "maxAbsoluteError": 0
+    },
+    {
+      "name": "CUDA S4 embedding decode and stream replication",
+      "maxAbsoluteError": 0
+    },
+    {
+      "name": "CUDA S8 embedding decode and stream replication",
+      "maxAbsoluteError": 0
+    },
+    {
+      "name": "CUDA IQ4_NL PLE decode with unaligned blocks and signed scales",
+      "maxAbsoluteError": 0
+    },
+    {
+      "name": "CUDA RoPE trigonometry at position 0",
+      "maxAbsoluteError": 1.084339706913795e-7
+    },
+    {
+      "name": "CUDA RoPE trigonometry at position 17",
+      "maxAbsoluteError": 1.1323454840450609e-7
+    },
+    {
+      "name": "CUDA RoPE trigonometry at position 2045",
+      "maxAbsoluteError": 1.8010758318087738e-7
+    },
     {
       "name": "All 65536 packed FP16 bit patterns",
       "maxAbsoluteError": 0
@@ -187,8 +227,8 @@
         ]
       }
     ],
-    "lastMs": 6.097700000000032,
-    "weightCacheHits": 2279,
-    "weightCacheMisses": 131
+    "lastMs": 7.79970000000003,
+    "weightCacheHits": 2307,
+    "weightCacheMisses": 135
   }
 }

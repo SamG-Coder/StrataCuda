@@ -84,7 +84,7 @@ export class StrataEngine {
     async hcWrite(output,inject) {const g=this.g;await this.b.run('strata_hc_write',{Residual:this.residual,Output:output,Inject:inject,width:g.width,streams:g.streams},grid(g.width*g.streams));}
     async ple(token) {
         const {g,ops:o,b}=this,p=`blk.${g.pleLayer}.ple_`,hc=g.width*g.streams;
-        const emb=await o.alloc(await this.store.pleRows(token,this.previous));
+        const emb=await o.ple(token,this.previous);
         const rawKey=await o.mat(p+'key.weight',emb),key=await o.norm(rawKey,await o.vector(p+'norm_key.weight'),g.width,g.streams,g.streams);
         const query=await o.norm(this.residual,await o.vector(p+'norm_query.weight'),g.width,g.streams,g.streams);
         const value=await o.mat(p+'value.weight',emb),gate=await o.alloc(g.streams),gated=await o.alloc(hc);
@@ -108,10 +108,7 @@ export class StrataEngine {
         return o.mat(p+'ssm_out.weight',await o.elem(norm,z,4));
     }
     async rotate(x,heads) {
-        const {g,ops:o,b}=this,cos=new Float32Array(g.rotary/2),sin=new Float32Array(g.rotary/2);
-        // Position tables are host-side in upstream Strata too; kernels perform rotation.
-        for(let i=0;i<cos.length;i++){const theta=this.position/g.ropeBase**(2*i/g.rotary);cos[i]=Math.cos(theta);sin[i]=Math.sin(theta);}
-        const y=await o.alloc(x.length);await b.run('strata_rope',{X:x,Cos:await o.alloc(cos),Sin:await o.alloc(sin),Y:y,dim:g.headDim,heads,rotary:g.rotary},grid(x.length));return y;
+        return this.ops.rotate(x,heads,this.position);
     }
     async qsa(layer,x) {
         const {g,ops:o,b}=this,p=`blk.${layer}.`,st=this.states[layer];
@@ -126,6 +123,9 @@ export class StrataEngine {
         return o.mat(p+'attn_output.weight',gated);
     }
     async expert(o,prefix,x,shared=false,tokens=1) {
+        // GPU fusion saves dispatches; the CPU fallback retains separate CUDA
+        // projections and expands each scale plane once in CUDA.
+        if(!shared&&o.b.kind==='webgpu'&&this.store.manifest?.experts?.source_type==='Q2_0'){const {expert}=this.store.describe(prefix+'gate');return o.packedExpert(expert.layer,expert.id,x,tokens);}
         const name=role=>shared?prefix+'ffn_'+role+'_shexp.weight':prefix+role;
         const gate=await o.mat(name('gate'),x,tokens),up=await o.mat(name('up'),x,tokens),activation=await o.elem(gate,up,3);
         return o.mat(name('down'),activation,tokens);
@@ -140,11 +140,12 @@ export class StrataEngine {
         if(resident)for(const id of selected)resident.note(`${layer}:${id}`);
         const parts=await o.alloc(g.width*g.topK),jobs=Array.from(selected,(id,index)=>({id,index,key:`${layer}:${id}`,gpu:!this.cpu||(resident?resident.hasExpert(`${layer}:${id}`):this.hot.has(`${layer}:${id}`))}));
         const cpuX=jobs.some(j=>!j.gpu)?await b.read(x):null;
+        await this.store.prefetchExperts?.(layer,jobs.filter(j=>!resident?.hasExpert(j.key)).map(j=>j.id));
         this.stats.routes.push({layer,ids:Array.from(selected),devices:jobs.map(j=>j.gpu?b.kind:'wasm')});
         // The two independent command queues execute concurrently. Each WASM module
         // has a single ordered stream and persistent pooled weights.
         const lanes=await Promise.allSettled([
-            (async()=>{for(const job of jobs.filter(j=>j.gpu)){await resident?.admit(job.key);const result=await this.expert(o,p+`expert.${job.id}.`,x);await b.copy(result,parts,g.width,0,job.index*g.width);this.stats.gpuExperts+=b.kind==='webgpu'?1:0;this.stats.cpuExperts+=b.kind==='wasm'?1:0;}})(),
+            (async()=>{for(const job of jobs.filter(j=>j.gpu)){await resident?.admit(job.key);if(b.kind==='webgpu'&&this.store.manifest?.experts?.source_type==='Q2_0')await o.packedExpert(layer,job.id,x,1,{output:parts,outputOffset:job.index*g.width});else{const result=await this.expert(o,p+`expert.${job.id}.`,x);await b.copy(result,parts,g.width,0,job.index*g.width);}this.stats.gpuExperts+=b.kind==='webgpu'?1:0;this.stats.cpuExperts+=b.kind==='wasm'?1:0;}})(),
             (async()=>{for(const job of jobs.filter(j=>!j.gpu)){const cx=await this.cpuOps.alloc(cpuX),result=await this.expert(this.cpuOps,p+`expert.${job.id}.`,cx);await b.write(parts,await this.cpu.read(result),job.index*g.width);await this.cpuOps.clearTemporary();this.stats.cpuExperts++;}})()
         ]);
         const failure=lanes.find(lane=>lane.status==='rejected');if(failure)throw failure.reason;
@@ -169,13 +170,14 @@ export class StrataEngine {
         requireInteger(token,'token',0,this.g.vocab-1);if(this.position>=this.g.context)throw Error('Context capacity reached; reset or create a larger session');
         this.busy=true;const start=performance.now();this.stats.routes=[];
         try {
-            const {g,ops:o,b}=this,row=await o.alloc(await this.store.readValues('token_embd.weight',token*g.width,g.width));
-            await b.run('strata_embed',{Row:row,Residual:this.residual,width:g.width,streams:g.streams},grid(g.width*g.streams));
+            const {g,ops:o,b}=this;await o.embedding(token,this.residual);
             for(let l=0;l<g.layers;l++) {
+                await o.prepareLayer(l);
                 if(l===g.pleLayer)await this.ple(token);
                 const attn=await this.hc(`blk.${l}.hc_attn_`),mixed=l%g.qsaInterval===g.qsaInterval-1?await this.qsa(l,attn.mixed):await this.gdn(l,attn.mixed);
                 await this.hcWrite(mixed,attn.inject);
                 const ffn=await this.hc(`blk.${l}.hc_ffn_`);await this.hcWrite(await this.moe(l,ffn.mixed),ffn.inject);
+                o.finishLayer(l);
                 await o.clearTemporary();
                 onProgress?.(l+1,g.layers);signal?.throwIfAborted();
             }

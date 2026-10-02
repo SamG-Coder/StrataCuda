@@ -1,10 +1,12 @@
 {
   "name": "strata-webcuda",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Strata inference primitives and portable decode on CUDA WebShader's WebGPU and threaded WebAssembly backends",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:gpu": "node scripts/build.mjs --gpu-only",
@@ -15,13 +17,15 @@
     "test:upstream": "node scripts/test-upstream.mjs",
     "test:model": "node scripts/test-model.mjs",
     "compare:model": "node scripts/compare-model.mjs",
-    "benchmark:model": "node scripts/benchmark-model.mjs --label=release --resident=8 --prefill=true --repeat=true",
+    "benchmark:model": "node scripts/benchmark-model.mjs --label=cuda-bulk --resident=8 --prefill=true --repeat=true --repeats=5",
     "test:tokenizer": "node scripts/test-tokenizer.mjs",
     "test:chat": "node scripts/test-chat.mjs",
     "test:ui": "node scripts/test-chat.mjs --ui-only",
     "package": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package.ps1",
     "check": "npm test && npm run build && npm run test:wasm && npm run test:browser && npm run test:ui"
   },
-  "devDependencies": { "playwright": "1.56.1" },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  },
   "license": "MIT"
 }

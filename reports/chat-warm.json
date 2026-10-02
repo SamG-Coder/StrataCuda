@@ -13,19 +13,19 @@
   "promptTokens": 13,
   "position": 20,
   "stop": "limit",
-  "seconds": 13.670980000019073,
+  "seconds": 13.958814999997616,
   "residency": {
     "budgetBytes": 8589934592,
     "densePlannedBytes": 4339198220,
     "denseResidentBytes": 4339198220,
     "expertResidentBytes": 4116787200,
     "residentExperts": 2978,
-    "hits": 42030,
+    "hits": 25614,
     "misses": 4912,
     "evictions": 0,
     "hostExpertCacheBytes": 0,
     "hostExpertCache": {
-      "hits": 0,
+      "hits": 2978,
       "misses": 2978,
       "bytesRead": 4116787200
     }

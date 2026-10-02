@@ -1,5 +1,5 @@
 {
-  "sourceSha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
+  "sourceSha256": "ecad731efa5c67b228efebf4331570e977cc63be512115c5c9722ae99a7cc7b5",
   "errors": [],
   "reports": [
     {
@@ -24,19 +24,59 @@
           "maxComputeWorkgroupStorageSize": 16384,
           "maxStorageBufferBindingSize": 2147483644
         },
-        "pipelineCompiles": 41,
+        "pipelineCompiles": 49,
         "pipelineCacheHits": 0,
-        "bindGroupsCreated": 5395,
-        "submissions": 279,
-        "dispatches": 7064,
-        "uniformBytesUploaded": 1741616,
-        "dataBytesUploaded": 13544000,
-        "readbackBytes": 3506820,
-        "pooledBytes": 371564,
-        "poolHits": 5672,
-        "bindingCacheHits": 1669
+        "bindGroupsCreated": 5366,
+        "submissions": 289,
+        "dispatches": 7098,
+        "uniformBytesUploaded": 1748112,
+        "dataBytesUploaded": 13563404,
+        "readbackBytes": 3529080,
+        "pooledBytes": 646380,
+        "poolHits": 5705,
+        "bindingCacheHits": 1732
       },
       "checks": [
+        {
+          "name": "Fused Q2 gate/up/SiLU with reordered input rows",
+          "maxAbsoluteError": 1.0239313797885674e-9
+        },
+        {
+          "name": "Fused Q2 down with sparse destinations and untouched padding",
+          "maxAbsoluteError": 4.145826616036574e-10
+        },
+        {
+          "name": "CUDA-expanded expert scales preserve fused output",
+          "maxAbsoluteError": 4.145826616036574e-10
+        },
+        {
+          "name": "CUDA S2 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA S4 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA S8 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA IQ4_NL PLE decode with unaligned blocks and signed scales",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 0",
+          "maxAbsoluteError": 3.46852549792942e-7
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 17",
+          "maxAbsoluteError": 3.4055397768462115e-7
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 2045",
+          "maxAbsoluteError": 3.4667601300775175e-7
+        },
         {
           "name": "All 65536 packed FP16 bit patterns",
           "maxAbsoluteError": 0
@@ -131,7 +171,7 @@
         },
         {
           "name": "Batched prompt chunk 1 at nonzero position",
-          "maxAbsoluteError": 2.4762945496871122e-8
+          "maxAbsoluteError": 1.961442913644973e-8
         },
         {
           "name": "Decode after prompt chunk 1",
@@ -139,7 +179,7 @@
         },
         {
           "name": "Batched prompt chunk 2 at nonzero position",
-          "maxAbsoluteError": 2.4762945496871122e-8
+          "maxAbsoluteError": 1.961442913644973e-8
         },
         {
           "name": "Decode after prompt chunk 2",
@@ -147,7 +187,7 @@
         },
         {
           "name": "Batched prompt chunk 5 at nonzero position",
-          "maxAbsoluteError": 2.4762945496871122e-8
+          "maxAbsoluteError": 1.961442913644973e-8
         },
         {
           "name": "Decode after prompt chunk 5",
@@ -159,7 +199,7 @@
         },
         {
           "name": "Lossless compact BF16 projections",
-          "maxAbsoluteError": 3.569473150388802e-8
+          "maxAbsoluteError": 5.059589269773568e-8
         }
       ],
       "tokens": [
@@ -220,9 +260,9 @@
             ]
           }
         ],
-        "lastMs": 16.62999999523163,
-        "weightCacheHits": 2279,
-        "weightCacheMisses": 131
+        "lastMs": 13.85999995470047,
+        "weightCacheHits": 2307,
+        "weightCacheMisses": 135
       }
     },
     {
@@ -230,16 +270,56 @@
       "backend": {
         "backend": "wasm",
         "threads": 4,
-        "dispatches": 5242,
+        "dispatches": 5268,
         "workerGroups": [
-          27898,
-          16772,
-          16947,
-          17052
+          27936,
+          17591,
+          17789,
+          17609
         ],
         "heapBytes": 268435456
       },
       "checks": [
+        {
+          "name": "Fused Q2 gate/up/SiLU with reordered input rows",
+          "maxAbsoluteError": 1.0239313797885674e-9
+        },
+        {
+          "name": "Fused Q2 down with sparse destinations and untouched padding",
+          "maxAbsoluteError": 5.309979834305922e-10
+        },
+        {
+          "name": "CUDA-expanded expert scales preserve fused output",
+          "maxAbsoluteError": 5.309979834305922e-10
+        },
+        {
+          "name": "CUDA S2 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA S4 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA S8 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA IQ4_NL PLE decode with unaligned blocks and signed scales",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 0",
+          "maxAbsoluteError": 1.084339706913795e-7
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 17",
+          "maxAbsoluteError": 1.1323454840450609e-7
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 2045",
+          "maxAbsoluteError": 1.8010758318087738e-7
+        },
         {
           "name": "All 65536 packed FP16 bit patterns",
           "maxAbsoluteError": 0
@@ -415,9 +495,9 @@
             ]
           }
         ],
-        "lastMs": 9.959999978542328,
-        "weightCacheHits": 2279,
-        "weightCacheMisses": 131
+        "lastMs": 8.725000023841858,
+        "weightCacheHits": 2307,
+        "weightCacheMisses": 135
       }
     },
     {
@@ -431,9 +511,9 @@
         "features": [
           "core-features-and-limits",
           "subgroup-size-control",
-          "subgroups",
-          "float32-filterable",
           "shader-f16",
+          "float32-filterable",
+          "subgroups",
           "timestamp-query"
         ],
         "timestampQuery": true,
@@ -442,19 +522,59 @@
           "maxComputeWorkgroupStorageSize": 16384,
           "maxStorageBufferBindingSize": 2147483644
         },
-        "pipelineCompiles": 41,
+        "pipelineCompiles": 49,
         "pipelineCacheHits": 0,
         "bindGroupsCreated": 5282,
-        "submissions": 291,
-        "dispatches": 6886,
-        "uniformBytesUploaded": 1693360,
-        "dataBytesUploaded": 13540160,
-        "readbackBytes": 3510276,
-        "pooledBytes": 371564,
-        "poolHits": 5504,
-        "bindingCacheHits": 1604
+        "submissions": 301,
+        "dispatches": 6920,
+        "uniformBytesUploaded": 1699856,
+        "dataBytesUploaded": 13559564,
+        "readbackBytes": 3532536,
+        "pooledBytes": 646380,
+        "poolHits": 5537,
+        "bindingCacheHits": 1638
       },
       "checks": [
+        {
+          "name": "Fused Q2 gate/up/SiLU with reordered input rows",
+          "maxAbsoluteError": 1.0239313797885674e-9
+        },
+        {
+          "name": "Fused Q2 down with sparse destinations and untouched padding",
+          "maxAbsoluteError": 4.145826616036574e-10
+        },
+        {
+          "name": "CUDA-expanded expert scales preserve fused output",
+          "maxAbsoluteError": 4.145826616036574e-10
+        },
+        {
+          "name": "CUDA S2 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA S4 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA S8 embedding decode and stream replication",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA IQ4_NL PLE decode with unaligned blocks and signed scales",
+          "maxAbsoluteError": 0
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 0",
+          "maxAbsoluteError": 3.46852549792942e-7
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 17",
+          "maxAbsoluteError": 3.4055397768462115e-7
+        },
+        {
+          "name": "CUDA RoPE trigonometry at position 2045",
+          "maxAbsoluteError": 3.4667601300775175e-7
+        },
         {
           "name": "All 65536 packed FP16 bit patterns",
           "maxAbsoluteError": 0
@@ -549,7 +669,7 @@
         },
         {
           "name": "Batched prompt chunk 1 at nonzero position",
-          "maxAbsoluteError": 2.4762945496871122e-8
+          "maxAbsoluteError": 1.961442913644973e-8
         },
         {
           "name": "Decode after prompt chunk 1",
@@ -557,7 +677,7 @@
         },
         {
           "name": "Batched prompt chunk 2 at nonzero position",
-          "maxAbsoluteError": 2.4762945496871122e-8
+          "maxAbsoluteError": 1.961442913644973e-8
         },
         {
           "name": "Decode after prompt chunk 2",
@@ -565,7 +685,7 @@
         },
         {
           "name": "Batched prompt chunk 5 at nonzero position",
-          "maxAbsoluteError": 2.4762945496871122e-8
+          "maxAbsoluteError": 1.961442913644973e-8
         },
         {
           "name": "Decode after prompt chunk 5",
@@ -577,7 +697,7 @@
         },
         {
           "name": "Lossless compact BF16 projections",
-          "maxAbsoluteError": 3.569473150388802e-8
+          "maxAbsoluteError": 5.059589269773568e-8
         }
       ],
       "tokens": [
@@ -638,9 +758,9 @@
             ]
           }
         ],
-        "lastMs": 15.854999959468842,
-        "weightCacheHits": 2156,
-        "weightCacheMisses": 131
+        "lastMs": 20.99500000476837,
+        "weightCacheHits": 2184,
+        "weightCacheMisses": 135
       }
     }
   ],
@@ -703,7 +823,7 @@
           ]
         }
       ],
-      "lastMs": 29.084999978542328
+      "lastMs": 40.780000030994415
     }
   }
 }

@@ -131,6 +131,12 @@ export class PackStore {
         })();
         this.expertReads.set(key,work);try{return await work;}finally{this.expertReads.delete(key);}
     }
+    async prefetchExperts(layer,ids) {
+        if(!this.expertCacheBudget||!this.manifest.experts)return;
+        const queue=[...new Set(ids)],limit=Math.min(4,queue.length,Math.floor(this.expertCacheBudget/this.manifest.experts.blob_bytes));let next=0;
+        const results=await Promise.allSettled(Array.from({length:limit},async()=>{while(next<queue.length){const id=queue[next++];await this.prefetchExpert(layer,id);}}));
+        const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
+    }
     forgetExpertBlob(layer,id){const key=`${layer}:${id}`,old=this.expertBlobs?.get(key);if(old){this.expertBlobs.delete(key);this.expertCacheUsed-=old.byteLength;}}
     retainExpertBlob(layer,id,blob){
         if(!this.expertCacheBudget||blob.byteLength>this.expertCacheBudget)return;
@@ -138,7 +144,19 @@ export class PackStore {
         while(this.expertCacheUsed+blob.byteLength>this.expertCacheBudget&&this.expertBlobs.size){const [old,b]=this.expertBlobs.entries().next().value;this.expertBlobs.delete(old);this.expertCacheUsed-=b.byteLength;}
         this.expertBlobs.set(`${layer}:${id}`,blob);this.expertCacheUsed+=blob.byteLength;
     }
-    clearExpertCache(){this.expertBlobs?.clear();this.expertCacheUsed=0;}
+    clearExpertCache(){this.expertBlobs?.clear();this.expertCacheUsed=0;this.denseWindow=null;}
+    async prefetchDenseLayer(layer){
+        this.denseSpans??=new Map();
+        if(!this.denseSpans.has(layer)){
+            const tensors=Object.entries(this.manifest.tensors).filter(([name])=>name.startsWith(`blk.${layer}.`)&&!name.includes('.expert.')).map(([,t])=>t),files=new Set(tensors.map(t=>t.file));
+            const planes=tensors.flatMap(t=>['values','codes','scales','offsets'].map(k=>t[k]).filter(Boolean));
+            const start=Math.min(...planes.map(p=>p.offset)),end=Math.max(...planes.map(p=>p.offset+p.bytes));
+            this.denseSpans.set(layer,files.size===1&&end-start<=128*1024**2?{file:tensors[0].file,start,end}:null);
+        }
+        const span=this.denseSpans.get(layer);this.denseWindow=null;if(!span)return;
+        const raw=await this.source.read(span.file,span.start,span.end-span.start);this.denseWindow={...span,raw};
+    }
+    readSource(file,offset,bytes){const w=this.denseWindow;return w&&file===w.file&&offset>=w.start&&offset+bytes<=w.end?Promise.resolve(w.raw.subarray(offset-w.start,offset-w.start+bytes)):this.source.read(file,offset,bytes);}
     async readExpertBlob(layer,id){
         const ex=this.manifest.experts;if(!ex||ex.source_type!=='Q2_0')return null;
         let raw=await this.prefetchExpert(layer,id);
@@ -147,31 +165,35 @@ export class PackStore {
         for(let i=ex.offsets.gate_up_scales;i<raw.byteLength;i+=2)if((view.getUint16(i,true)&0x7c00)===0x7c00)throw Error('Non-finite expert scales');
         return {raw:words(raw),layout:ex};
     }
-    async readRows(name,start,rows,{compact=false}={}) {
+    async readRows(name,start,rows,{compact=false,packedScales=false}={}) {
         const t=this.describe(name),cols=t.shape[0],total=product(t.shape)/cols;
         if(!Number.isInteger(start)||start<0||!Number.isInteger(rows)||rows<1||start+rows>total)throw Error('Tensor range invalid: '+name);
-        if(t.expert)return this.readExpert(t,start,rows);
+        if(t.expert)return this.readExpert(t,start,rows,{packedScales});
         const count=cols*rows,begin=start*cols;
         if(t.values) {
             const stride=t.values_fp16?2:4;
-            const raw=await this.source.read(t.file,t.values.offset+begin*stride,count*stride);
+            const raw=await this.readSource(t.file,t.values.offset+begin*stride,count*stride);
             if(compact&&t.source_type==='BF16'&&!t.values_fp16){
-                const v=new DataView(raw.buffer,raw.byteOffset,raw.byteLength),codes=new Uint32Array(Math.ceil(count/2));
-                for(let i=0;i<count;i++){const word=v.getUint32(i*4,true);if((word&65535)!==0||(word&0x7f800000)===0x7f800000)throw Error('Invalid canonical BF16 value');codes[i>>>1]|=(word>>>16)<<((i&1)*16);}
+                const values=words(raw),codes=new Uint32Array(Math.ceil(count/2));
+                for(let i=0;i<count;i+=2){const a=values[i],b=i+1<count?values[i+1]:0;if(((a|b)&65535)!==0||(a&0x7f800000)===0x7f800000||(b&0x7f800000)===0x7f800000)throw Error('Invalid canonical BF16 value');codes[i/2]=(a>>>16)|(b&0xffff0000);}
                 return {format:'bf16',shape:[cols,rows],codes};
             }
             return {format:'f32',shape:[cols,rows],data:floats(raw,t.values_fp16)};
         }
         const gs=t.group_elems, groupStart=begin/gs,groups=count/gs;
-        const [c,s,o]=await Promise.all([
-            this.source.read(t.file,t.codes.offset+begin*t.code_bits/8,count*t.code_bits/8),
-            this.source.read(t.file,t.scales.offset+groupStart*(t.scales_fp16?2:4),groups*(t.scales_fp16?2:4)),
-            t.offsets?this.source.read(t.file,t.offsets.offset+groupStart*(t.offsets_fp16?2:4),groups*(t.offsets_fp16?2:4)):null
-        ]);
+        const ranges=[{offset:t.codes.offset+begin*t.code_bits/8,bytes:count*t.code_bits/8},
+            {offset:t.scales.offset+groupStart*(t.scales_fp16?2:4),bytes:groups*(t.scales_fp16?2:4)},
+            t.offsets?{offset:t.offsets.offset+groupStart*(t.offsets_fp16?2:4),bytes:groups*(t.offsets_fp16?2:4)}:null];
+        // Full tensor planes are adjacent in canonical packs. Merge only small
+        // gaps, keeping tiled reads bounded instead of rereading whole tensors.
+        const ordered=ranges.map((r,index)=>r&&({...r,index})).filter(Boolean).sort((a,b)=>a.offset-b.offset),batches=[];
+        for(const range of ordered){const last=batches.at(-1);if(last&&range.offset-last.end<=256&&range.offset+range.bytes-last.offset<=32*1024**2){last.end=Math.max(last.end,range.offset+range.bytes);last.ranges.push(range);}else batches.push({offset:range.offset,end:range.offset+range.bytes,ranges:[range]});}
+        const data=[null,null,null];await Promise.all(batches.map(async part=>{const raw=await this.readSource(t.file,part.offset,part.end-part.offset);for(const r of part.ranges)data[r.index]=raw.subarray(r.offset-part.offset,r.offset-part.offset+r.bytes);}));
+        const [c,s,o]=data;
         return {format:'s',shape:[cols,rows],codes:words(c),scales:floats(s,t.scales_fp16),offsets:o?floats(o,t.offsets_fp16):new Float32Array(1),
             bits:t.code_bits,groupSize:gs,bias:t.code_bias,codebook:t.codebook==='IQ4NL'?1:0,hasOffset:!!t.offsets};
     }
-    async readExpert(t,start,rows) {
+    async readExpert(t,start,rows,{packedScales=false}={}) {
         const {layer,id,role}=t.expert, ex=this.manifest.experts, cols=t.shape[0];
         if(cols%64)throw Error('Q2_0 expert width must be divisible by 64');
         const layerInfo=ex.layers.find(l=>l.layer===layer);if(!layerInfo)throw Error('Missing expert layer');
@@ -181,13 +203,13 @@ export class PackStore {
         const blob=await this.prefetchExpert(layer,id),read=(offset,bytes)=>blob?blob.subarray(offset-base,offset-base+bytes):this.source.read('experts.bin',offset,bytes);
         const [cb,sb]=await Promise.all([read(codeStart+first*cols/4,span*cols/4),read(scaleStart+first*cols/64*2,span*cols/64*2)]);
         // Q2_0 uses consecutive two-bit codes (unlike Q4_0's split halves).
-        const packed=new Uint8Array(rows*cols/4),scales=new Float32Array(rows*cols/64),sv=new DataView(sb.buffer,sb.byteOffset,sb.byteLength);
+        const packed=new Uint8Array(rows*cols/4),scaleCount=rows*cols/64,scales=packedScales?new Uint16Array(Math.ceil(scaleCount/2)*2):new Float32Array(scaleCount),sv=new DataView(sb.buffer,sb.byteOffset,sb.byteLength);
         for(let r=0;r<rows;r++){
             packed.set(cb.subarray(r*stride*cols/4,(r*stride+1)*cols/4),r*cols/4);
-            for(let b=0;b<cols/64;b++)scales[r*cols/64+b]=halfTable[sv.getUint16((r*stride*cols/64+b)*2,true)];
+            for(let b=0;b<cols/64;b++){const half=sv.getUint16((r*stride*cols/64+b)*2,true);if((half&0x7c00)===0x7c00)throw Error('Non-finite expert scales');scales[r*cols/64+b]=packedScales?half:halfTable[half];}
         }
         if(scales.some(x=>!Number.isFinite(x)))throw Error('Non-finite expert scales');
-        return {format:'s',shape:[cols,rows],codes:words(packed),scales,offsets:new Float32Array(1),bits:2,groupSize:64,bias:-1,codebook:0,hasOffset:false};
+        return {format:'s',shape:[cols,rows],codes:words(packed),...(packedScales?{packedScales:new Uint32Array(scales.buffer),scaleCount}:{scales}),offsets:new Float32Array(1),bits:2,groupSize:64,bias:-1,codebook:0,hasOffset:false};
     }
     async readValues(name,start,count) {
         const t=this.describe(name),cols=t.shape[0];
@@ -200,17 +222,23 @@ export class PackStore {
         if(this.manifest.tensors['per_layer_token_embd.weight']) {
             for(let h=0;h<ids.length;h++)out.set(await this.readValues('per_layer_token_embd.weight',ids[h]*g.pleHeadDim,g.pleHeadDim),h*g.pleHeadDim);
         } else {
-            if(!this.ple)throw Error('Select the original PLE GGUF shard as well as the canonical pack files');
-            if(this.ple.type!==20||g.pleHeadDim%32)throw Error('PLE GGUF import currently requires IQ4_NL rows');
-            const rowBytes=g.pleHeadDim/32*18;
-            const rows=await Promise.all(Array.from(ids,async id=>{
+            const packed=await this.plePackedRows(token,previous),raw=new Uint8Array(packed.buffer,packed.byteOffset,packed.byteLength),v=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);
+            for(let block=0;block<g.width/32;block++){const scale=halfToFloat(v.getUint16(block*18,true));for(let i=0;i<32;i++)out[block*32+i]=scale*IQ4NL[(raw[block*18+2+i%16]>>>(i<16?0:4))&15];}
+        }
+        return out;
+    }
+    async plePackedRows(token,previous){
+        const g=this.config;if(!this.ple)throw Error('Select the original PLE GGUF shard as well as the canonical pack files');
+        if(this.ple.type!==20||g.pleHeadDim%32)throw Error('PLE GGUF import currently requires IQ4_NL rows');
+        const ids=ngramRows(token,previous,this.constants,g.eos),rowBytes=g.pleHeadDim/32*18;
+        const rows=await Promise.all(Array.from(ids,async id=>{
                 if(this.pleRowCache.has(id)){const row=this.pleRowCache.get(id);this.pleRowCache.delete(id);this.pleRowCache.set(id,row);return row;}
                 if(this.plePending.has(id))return this.plePending.get(id);
                 const work=this.source.read(this.ple.file,this.ple.offset+id*rowBytes,rowBytes).then(row=>{while(this.pleRowCache.size>=65536)this.pleRowCache.delete(this.pleRowCache.keys().next().value);this.pleRowCache.set(id,row);return row;});
                 this.plePending.set(id,work);try{return await work;}finally{this.plePending.delete(id);}
-            }));
-            for(let h=0;h<rows.length;h++){const raw=rows[h],v=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);for(let b=0;b<g.pleHeadDim/32;b++){const scale=halfToFloat(v.getUint16(b*18,true));if(!Number.isFinite(scale))throw Error('Non-finite PLE scales');for(let i=0;i<32;i++)out[h*g.pleHeadDim+b*32+i]=scale*IQ4NL[(raw[b*18+2+i%16]>>>(i<16?0:4))&15];}}
-        }
-        return out;
+        }));
+        const result=new Uint8Array(Math.ceil(rows.length*rowBytes/4)*4);
+        for(let h=0;h<rows.length;h++){const raw=rows[h],view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);for(let at=0;at<rowBytes;at+=18)if((view.getUint16(at,true)&0x7c00)===0x7c00)throw Error('Non-finite PLE scales');result.set(raw,h*rowBytes);}
+        return new Uint32Array(result.buffer);
     }
 }

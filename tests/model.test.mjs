@@ -37,6 +37,12 @@ test('canonical Q2_0 expert gate/up interleave preserves consecutive code order'
     const store=new PackStore(m,new BlobSource([new File([p.binary],'weights.bin'),new File([raw],'experts.bin')]));
     for(const role of ['gate','up'])assert.deepEqual(Array.from(dequantCanonical(await store.readRows(`blk.0.expert.0.${role}`,3,1)).slice(0,8)),[-1,0,1,2,-1,0,1,2]);
     assert.deepEqual(Array.from(dequantCanonical(await store.readRows('blk.0.expert.0.down',3,1)).slice(0,4)),[2,1,0,-1]);
+    for(const role of ['gate','up','down']){
+        const row=await store.readRows(`blk.0.expert.0.${role}`,3,3,{packedScales:true});
+        assert.equal(row.scaleCount,3);assert.equal(row.scales,undefined);
+        assert.deepEqual(Array.from(new Uint16Array(row.packedScales.buffer)),[0x3c00,0x3c00,0x3c00,0]);
+        assert.deepEqual(row.codes,(await store.readRows(`blk.0.expert.0.${role}`,3,3)).codes);
+    }
     const read=store.source.read.bind(store.source);let reads=0;store.source.read=(...a)=>{reads++;return read(...a);};store.setExpertCacheBudget(blobBytes);
     await Promise.all([store.prefetchExpert(0,0),store.prefetchExpert(0,0)]);
     for(const role of ['gate','up','down'])await store.readRows(`blk.0.expert.0.${role}`,0,rows);
@@ -80,6 +86,22 @@ test('raw PLE tables reject non-finite IQ4_NL scales before dispatch',async()=>{
     const files=new BlobSource([new File([p.binary],'weights.bin'),new File([raw],'ple.gguf')]);
     const pack=new PackStore(p.manifest,files,{config:{width:128,pleHeadDim:32},ple:{file:'ple.gguf',offset:0,type:20}});
     await assert.rejects(()=>pack.pleRows(2,[]),/Non-finite PLE/);
+});
+
+test('adjacent canonical planes share a bounded file read without changing their values',async()=>{
+    const p=encodeFixturePack(createFixture()),raw=new Uint8Array(128),view=new DataView(raw.buffer);raw.fill(0x87,0,64);
+    for(let i=0;i<8;i++){view.setUint16(80+2*i,0x3c00,true);view.setFloat32(96+4*i,i*.125,true);}
+    p.manifest.files['q.bin']=128;p.manifest.tensors.q={shape:[64,2],file:'q.bin',form:'S4',code_bits:4,code_bias:-3,group_elems:16,has_offset:true,scales_fp16:true,codes:{offset:0,bytes:64},scales:{offset:80,bytes:16},offsets:{offset:96,bytes:32}};
+    const files=new BlobSource([new File([p.binary],'weights.bin'),new File([raw],'q.bin')]),calls=[],read=files.read.bind(files);files.read=(...args)=>{calls.push(args);return read(...args);};
+    const store=new PackStore(p.manifest,files),values=dequantCanonical(await store.readRows('q',0,2));
+    assert.deepEqual(calls,[['q.bin',0,128]]);for(let i=0;i<128;i++)assert.equal(values[i],(i%2?5:4)+Math.floor(i/16)*.125);
+});
+
+test('expert prefetch limits concurrent reads and drains outstanding work after failure',async()=>{
+    let active=0,peak=0;const visited=[];
+    const store={expertCacheBudget:128,manifest:{experts:{blob_bytes:16}},async prefetchExpert(layer,id){active++;peak=Math.max(peak,active);await new Promise(resolve=>setImmediate(resolve));active--;visited.push(id);if(id===3)throw Error('missing expert');}};
+    await assert.rejects(()=>PackStore.prototype.prefetchExperts.call(store,0,[0,1,2,2,3,4,5,6,7,8,9]),/missing expert/);
+    assert.equal(active,0);assert.equal(peak,4);assert.equal(visited.length,10);assert.equal(new Set(visited).size,10);
 });
 
 function ggufFixture(){

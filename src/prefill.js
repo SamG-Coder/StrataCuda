@@ -13,9 +13,9 @@ class PromptBatch {
     }
     async write(output,inject){const {g,b,n}=this;await b.run('strata_hc_write_batch',{Residual:this.residual,Output:output,Inject:inject,width:g.width,streams:g.streams,tokens:n},grid(n*g.width*g.streams));}
     async ple(){
-        const {g,o,b,n,e}=this,p=`blk.${g.pleLayer}.ple_`,hc=g.width*g.streams,rows=new Float32Array(n*g.width),previous=[...e.previous];
-        for(let i=0;i<n;i++){rows.set(await e.store.pleRows(this.tokens[i],previous),i*g.width);previous.push(this.tokens[i]);if(previous.length>2)previous.shift();}
-        const emb=await o.alloc(rows),rawKey=await this.mat(p+'key.weight',emb),key=await o.norm(rawKey,await o.vector(p+'norm_key.weight'),g.width,n*g.streams,g.streams);
+        const {g,o,b,n,e}=this,p=`blk.${g.pleLayer}.ple_`,hc=g.width*g.streams,emb=await o.alloc(n*g.width),previous=[...e.previous];
+        for(let i=0;i<n;i++){const row=await o.ple(this.tokens[i],previous);await b.copy(row,emb,g.width,0,i*g.width);await o.release(row);previous.push(this.tokens[i]);if(previous.length>2)previous.shift();}
+        const rawKey=await this.mat(p+'key.weight',emb),key=await o.norm(rawKey,await o.vector(p+'norm_key.weight'),g.width,n*g.streams,g.streams);
         const query=await o.norm(this.residual,await o.vector(p+'norm_query.weight'),g.width,n*g.streams,g.streams),value=await this.mat(p+'value.weight',emb),gate=await o.alloc(n*g.streams),gated=await o.alloc(n*hc);
         await b.run('strata_ple_gate',{Key:key,Query:query,Gate:gate,width:g.width,streams:n*g.streams},[n*g.streams,1,1]);
         await b.run('strata_ple_broadcast_batch',{Value:value,Gate:gate,Y:gated,width:g.width,streams:g.streams,tokens:n},grid(n*hc));
@@ -36,9 +36,7 @@ class PromptBatch {
         return this.mat(p+'ssm_out.weight',await o.elem(norm,z,4));
     }
     async rotate(x,heads){
-        const {g,o,b,n}=this,cos=new Float32Array(n*g.rotary/2),sin=new Float32Array(cos.length);
-        for(let t=0;t<n;t++)for(let i=0;i<g.rotary/2;i++){const theta=(this.position+t)/g.ropeBase**(2*i/g.rotary),at=t*g.rotary/2+i;cos[at]=Math.cos(theta);sin[at]=Math.sin(theta);}
-        const y=await o.alloc(x.length);await b.run('strata_rope_batch',{X:x,Cos:await o.alloc(cos),Sin:await o.alloc(sin),Y:y,dim:g.headDim,heads,rotary:g.rotary,tokens:n},grid(x.length));return y;
+        return this.o.rotate(x,heads,this.position,this.n);
     }
     async qsa(layer,x){
         const {g,o,b,n,e}=this,p=`blk.${layer}.`,st=e.states[layer];
@@ -61,8 +59,14 @@ class PromptBatch {
             e.stats.routes.push({position:this.position+t,layer,ids:row,devices:row.map(()=>b.kind)});
             for(let k=0;k<g.topK;k++){const id=row[k];if(!groups.has(id))groups.set(id,[]);groups.get(id).push({token:t,part:t*g.topK+k});}
         }
+        await e.store.prefetchExperts?.(layer,[...groups.keys()].filter(id=>!o.residency?.hasExpert(`${layer}:${id}`)));
         for(const [id,jobs] of groups){
             const key=`${layer}:${id}`;o.residency?.note(key,jobs.length);const resident=await o.residency?.admit(key);if(!resident)await e.store.prefetchExpert?.(layer,id);
+            if(b.kind==='webgpu'&&e.store.manifest?.experts?.source_type==='Q2_0'){
+                const mapping=Int32Array.from(jobs.flatMap(j=>[j.token,j.part]));
+                await o.packedExpert(layer,id,x,jobs.length,{output:parts,mapping});
+                e.stats[b.kind==='webgpu'?'gpuExperts':'cpuExperts']+=jobs.length;continue;
+            }
             const indices=await o.alloc(Int32Array.from(jobs,j=>j.token),'i32'),input=await o.alloc(jobs.length*g.width);
             await b.run('strata_gather_rows',{X:x,Indices:indices,Y:input,width:g.width,rows:jobs.length},grid(input.length));
             const output=await e.expert(o,p+`expert.${id}.`,input,false,jobs.length),destinations=await o.alloc(Int32Array.from(jobs,j=>j.part),'i32');
@@ -73,15 +77,16 @@ class PromptBatch {
         await b.run('strata_moe_combine_batch',{Parts:parts,Weights:weights,Shared:shared,SharedGate:sharedGate,Y:y,width:g.width,count:g.topK,tokens:n},grid(y.length));return y;
     }
     async run({signal,onProgress}){
-        const {g,o,b,n,e}=this,hc=g.width*g.streams,rows=new Float32Array(n*g.width);
-        for(let t=0;t<n;t++)rows.set(await e.store.readValues('token_embd.weight',this.tokens[t]*g.width,g.width),t*g.width);
+        const {g,o,b,n,e}=this,hc=g.width*g.streams;
         this.residual=await b.alloc(n*hc);
         try{
-            await b.run('strata_embed_batch',{Rows:await o.alloc(rows),Residual:this.residual,width:g.width,streams:g.streams,tokens:n},grid(n*hc));
+            for(let t=0;t<n;t++)await o.embedding(this.tokens[t],this.residual,t*hc);
             for(let l=0;l<g.layers;l++){
+                await o.prepareLayer(l);
                 if(l===g.pleLayer)await this.ple();
                 const attn=await this.hc(`blk.${l}.hc_attn_`),mixed=l%g.qsaInterval===g.qsaInterval-1?await this.qsa(l,attn.mixed):await this.gdn(l,attn.mixed);
                 await this.write(mixed,attn.inject);const ffn=await this.hc(`blk.${l}.hc_ffn_`);await this.write(await this.moe(l,ffn.mixed),ffn.inject);
+                o.finishLayer(l);
                 await o.clearTemporary();onProgress?.(l+1,g.layers);signal?.throwIfAborted();
             }
             await b.copy(this.residual,e.residual,hc,(n-1)*hc,0);

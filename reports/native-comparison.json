@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-02T04:31:07.579668+00:00",
+  "timestamp": "2026-10-02T05:10:53.308870+00:00",
   "upstreamVersion": "0.1.34",
   "upstreamCommit": "1678de333d0e0711bc414ad992b640e1a37dd814",
   "executableSha256": "f0838beeb5b630483262456b1d0a596c76c7e19633bbb58eebe27ab86b497bb4",
@@ -11,8 +11,8 @@
     369,
     11751
   ],
-  "portableKernelSha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
-  "portableLogitsSha256": "88fd69736db3148099c8c4627cc5c30f78c45de5f99255a9e526602fdaacab19",
+  "portableKernelSha256": "ecad731efa5c67b228efebf4331570e977cc63be512115c5c9722ae99a7cc7b5",
+  "portableLogitsSha256": "83ec40a54016560968679d5033a14e49016900228c96d887924c3de6ff349fc6",
   "note": "This measures differences; agreement on one token is not a native parity or model-quality pass.",
   "comparisons": [
     {
@@ -43,9 +43,9 @@
       "nativeLastToken": 13,
       "portableLastToken": 13,
       "bitExact": false,
-      "maxAbsoluteError": 0.9972515106201172,
-      "rmsError": 0.16274228029062798,
-      "cosine": 0.9977428568434035,
+      "maxAbsoluteError": 0.9972519874572754,
+      "rmsError": 0.16274241720729613,
+      "cosine": 0.9977428530248069,
       "routing": {
         "records": 288,
         "orderedMatches": 81,
@@ -84,9 +84,9 @@
       "nativeLastToken": 13,
       "portableLastToken": 13,
       "bitExact": false,
-      "maxAbsoluteError": 0.9397945404052734,
-      "rmsError": 0.15168872284443333,
-      "cosine": 0.9980339944764733,
+      "maxAbsoluteError": 0.9397950172424316,
+      "rmsError": 0.15168878657527074,
+      "cosine": 0.9980339930499523,
       "routing": {
         "records": 288,
         "orderedMatches": 144,

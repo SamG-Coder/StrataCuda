@@ -25,6 +25,22 @@ export function validateDispatch(name, args) {
         for(const key of ['codeOffset','scaleOffset','weightRow'])requireInteger(args[key],key,0);
         requireInteger(args.rowStride,'expert row stride',1,2);
     }
+    if(name==='strata_q2_gate_up'||name==='strata_q2_down'){
+        if(get('width')%64||get('ff')%64)throw Error('Packed expert dimensions must contain complete groups');
+        const tokens=get('tokens');if(args.Hidden.length<tokens*args.ff||args.mapped&&args.Mapping.length<tokens*2)throw Error('Packed expert batch exceeds buffer layout');
+        if(name==='strata_q2_down')requireInteger(args.outputOffset,'expert output offset',0);
+    }
+    if(name==='strata_embedding'){
+        const count=get('width')*get('streams');requireInteger(args.outputOffset,'embedding output offset',0);
+        if(args.outputOffset+count>args.Residual.length||![0,1,2].includes(args.format))throw Error('Embedding exceeds buffer layout');
+        if(args.format===2&&(![2,4,8].includes(args.bits)||args.width%get('groupSize')))throw Error('Invalid packed embedding layout');
+    }
+    if(name==='strata_ple_decode'&&(get('count')%32||Math.ceil(args.count/32*18/4)>args.Packed.length||args.count>args.Values.length))throw Error('Invalid packed PLE layout');
+    if(name==='strata_rope_position'){
+        requireInteger(args.position,'RoPE position',0,2047);
+        if(get('rotary')%2||args.rotary>get('dim')||args.position+get('tokens')>2048||args.Cos.length<(args.position+args.tokens)*args.rotary/2||args.Sin.length!==args.Cos.length||args.X.length!==args.dim*get('heads')*args.tokens||args.Y.length!==args.X.length)throw Error('Invalid RoPE layout');
+    }
+    if(name==='strata_rope_frequencies'&&(!Number.isFinite(args.base)||args.base<=1||get('rotary')%2))throw Error('Invalid RoPE frequencies');
     if (name === 'strata_attention') {
         if(get('heads') % get('kvHeads'))throw new RangeError('Attention heads must be divisible by KV heads');
         requireInteger(args.count,'attention selected cells',1,2048);
@@ -170,9 +186,12 @@ export class WorkerBackend {
     alloc(dataOrLength,type='f32') {
         if(!typed[type])throw Error('Unsupported buffer type '+type);
         const length=typeof dataOrLength==='number'?requireInteger(dataOrLength,'allocation'):dataOrLength.byteLength/4;
+        // Structured clone copies an entire backing ArrayBuffer, even for a tiny
+        // typed view into a bulk layer read. Send only the requested weight tile.
+        if(typeof dataOrLength!=='number'&&dataOrLength.byteLength!==dataOrLength.buffer.byteLength)dataOrLength=dataOrLength.slice();
         const handle={id:++this.nextBuffer,type,length};this.enqueue('alloc',{dataOrLength,type,handle},typeof dataOrLength==='number'?0:dataOrLength.byteLength);return handle;
     }
-    write(buffer,data,offset=0) { this.enqueue('write',{buffer,data,offset},data.byteLength); }
+    write(buffer,data,offset=0) { if(data.byteLength!==data.buffer.byteLength)data=data.slice();this.enqueue('write',{buffer,data,offset},data.byteLength); }
     async read(buffer,type=buffer.type) { await this.submitCommands();return this.call('read',{buffer,type}); }
     copy(source,destination,count=source.length,sourceOffset=0,destinationOffset=0) { this.enqueue('copy',{source,destination,count,sourceOffset,destinationOffset}); }
     run(name,args,groups) { validateDispatch(name,args);this.enqueue('run',{name,args,groups}); }

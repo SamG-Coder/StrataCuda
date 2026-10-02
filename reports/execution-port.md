@@ -1,5 +1,7 @@
 # Resident execution and batched prompts — 2 October 2026
 
+This is the historical **v0.2.0** report. Current CUDA ownership, validation and performance are recorded in [cuda-performance.md](cuda-performance.md).
+
 This release adds persistent dense weights, real complete-expert GPU/RAM residency, batched prompt processing and batched backend scheduling to the original portable engine. The shared CUDA source now has 41 kernels compiled to both WebGPU and threaded WebAssembly. The real-model GPU result is bit-identical to the original portable baseline on the measured prompt. Native Strata numerical parity remains incomplete; the comparison below records the differences.
 
 Source revisions: Strata `1678de333d0e0711bc414ad992b640e1a37dd814` and CUDA WebShader `ef46ff1bf02a306bad94ddc18286d25d3d902c14`. Strata's `v0.1.34` release points at that same commit. The only changed vendored WebCuda file is its WASM CPU shim, which adds four CUDA bit-cast intrinsics; `PROVENANCE.json` records every vendor hash. The original `D:\cuda-webshader` checkout was not modified.
