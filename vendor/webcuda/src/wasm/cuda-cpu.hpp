@@ -3,6 +3,12 @@
 // Unsupported GPU synchronization is rejected by the compiler, never no-op'd.
 #include <cmath>
 #include <cstdint>
+#include <bit>
+// CUDA bit-cast intrinsics already supported by the WGSL compiler.
+inline float __uint_as_float(unsigned int x){return std::bit_cast<float>(x);}
+inline float __int_as_float(int x){return std::bit_cast<float>(x);}
+inline unsigned int __float_as_uint(float x){return std::bit_cast<unsigned int>(x);}
+inline int __float_as_int(float x){return std::bit_cast<int>(x);}
 #define __device__
 #define __global__
 struct Index {unsigned x=0,y=0,z=0;};

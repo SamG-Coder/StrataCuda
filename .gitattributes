@@ -8,4 +8,4 @@
 *.css text eol=lf
 *.py text eol=lf
 # Preserve the exact upstream bytes recorded in PROVENANCE.json.
-vendor/** -text
+vendor/** -text whitespace=cr-at-eol

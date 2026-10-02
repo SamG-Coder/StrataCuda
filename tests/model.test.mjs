@@ -37,6 +37,10 @@ test('canonical Q2_0 expert gate/up interleave preserves consecutive code order'
     const store=new PackStore(m,new BlobSource([new File([p.binary],'weights.bin'),new File([raw],'experts.bin')]));
     for(const role of ['gate','up'])assert.deepEqual(Array.from(dequantCanonical(await store.readRows(`blk.0.expert.0.${role}`,3,1)).slice(0,8)),[-1,0,1,2,-1,0,1,2]);
     assert.deepEqual(Array.from(dequantCanonical(await store.readRows('blk.0.expert.0.down',3,1)).slice(0,4)),[2,1,0,-1]);
+    const read=store.source.read.bind(store.source);let reads=0;store.source.read=(...a)=>{reads++;return read(...a);};store.setExpertCacheBudget(blobBytes);
+    await Promise.all([store.prefetchExpert(0,0),store.prefetchExpert(0,0)]);
+    for(const role of ['gate','up','down'])await store.readRows(`blk.0.expert.0.${role}`,0,rows);
+    assert.equal(reads,1,'all projections and concurrent prefetch share one blob read');assert.equal(store.expertCacheUsed,blobBytes);store.clearExpertCache();assert.equal(store.expertCacheUsed,0);
 });
 test('PLE hash honors oldest-first history, token zero, EOS cut and 64-bit wrap',()=>{
     const a=ngramRows(7,[2,3]);assert.notDeepEqual(a,ngramRows(7,[3,2]));assert.notDeepEqual(ngramRows(7,[0,0]),ngramRows(7,[]));

@@ -1,15 +1,18 @@
 import {Ops,grid} from './ops.js';
 import {validateGeometry} from './model.js';
 import {requireInteger} from './backend.js';
+import {WeightResidency} from './residency.js';
+import {prefillChunks} from './prefill.js';
 
 export class StrataEngine {
     static async create(store,backend,options={}) {
         const engine=new StrataEngine(store,backend,options);
         try {await engine.initialize();return engine;}catch(error){await engine.dispose();throw error;}
     }
-    constructor(store,backend,{cpuBackend=null,cacheBytes=64*1024*1024,gpuExperts=8}={}) {
+    constructor(store,backend,{cpuBackend=null,cacheBytes=64*1024*1024,cpuCacheBytes=64*1024*1024,gpuExperts=8,weightBudgetBytes=0,expertRamBytes=1024**3,tileRows=256}={}) {
         this.store=store;this.g=validateGeometry(store.config);this.b=backend;this.cpu=cpuBackend;
-        this.ops=new Ops(backend,store,{cacheBytes});this.cpuOps=cpuBackend?new Ops(cpuBackend,store,{cacheBytes}):null;
+        this.ops=new Ops(backend,store,{cacheBytes,tileRows});this.cpuOps=cpuBackend?new Ops(cpuBackend,store,{cacheBytes:cpuCacheBytes,tileRows}):null;
+        this.weightBudgetBytes=requireInteger(weightBudgetBytes,'GPU weight budget',0,Number.MAX_SAFE_INTEGER);this.expertRamBytes=requireInteger(expertRamBytes,'expert RAM budget',0,Number.MAX_SAFE_INTEGER);
         this.gpuExperts=requireInteger(gpuExperts,'GPU expert slots');this.hot=new Map();this.frequency=new Map();
         this.position=0;this.previous=[];this.states=[];this.persistent=[];this.busy=false;this.failed=false;this.disposed=false;
         this.checkpointOwner=crypto.randomUUID();
@@ -55,6 +58,12 @@ export class StrataEngine {
             const want=[...expected];while(want.length>1&&want.at(-1)===1)want.pop();
             if(String(shape)!==String(want))throw Error(`${name}: expected [${expected}], found [${shape}]`);
         }
+        if(this.weightBudgetBytes){
+            if(this.b.kind!=='webgpu')throw Error('GPU weight residency requires the WebGPU backend');
+            const dense=this.expectedShapes().map(([name])=>name).filter(name=>name!=='token_embd.weight'&&!name.includes('.expert.'));
+            this.ops.residency=new WeightResidency(this.ops,dense,this.weightBudgetBytes);
+        }
+        this.store.setExpertCacheBudget?.(this.expertRamBytes);
         const g=this.g,c=(2*g.keyHeads+g.valueHeads)*g.ssmDim;
         this.residual=await this.keep(g.width*g.streams);
         this.pleHistory=await this.keep((g.pleTaps-1)*g.pleDilation*g.width*g.streams);
@@ -116,10 +125,10 @@ export class StrataEngine {
         await b.run('strata_attention_gate',{Attention:attn,FullQ:full,Y:gated,dim:g.headDim,heads:g.heads},grid(g.heads*g.headDim));
         return o.mat(p+'attn_output.weight',gated);
     }
-    async expert(o,prefix,x,shared=false) {
+    async expert(o,prefix,x,shared=false,tokens=1) {
         const name=role=>shared?prefix+'ffn_'+role+'_shexp.weight':prefix+role;
-        const gate=await o.mat(name('gate'),x),up=await o.mat(name('up'),x),activation=await o.elem(gate,up,3);
-        return o.mat(name('down'),activation);
+        const gate=await o.mat(name('gate'),x,tokens),up=await o.mat(name('up'),x,tokens),activation=await o.elem(gate,up,3);
+        return o.mat(name('down'),activation,tokens);
     }
     async moe(layer,x) {
         const {g,ops:o,b}=this,p=`blk.${layer}.`;
@@ -127,19 +136,31 @@ export class StrataEngine {
         await b.run('strata_router',{Logits:logits,Ids:ids,Weights:weights,experts:g.experts,topK:g.topK},[1,1,1]);
         const selected=await b.read(ids,'i32');
         if(selected.some(id=>id<0||id>=g.experts)||new Set(selected).size!==g.topK)throw Error('Invalid expert routing result');
-        const parts=await o.alloc(g.width*g.topK),jobs=Array.from(selected,(id,index)=>({id,index,key:`${layer}:${id}`,gpu:!this.cpu||this.hot.has(`${layer}:${id}`)}));
+        const resident=o.residency;
+        if(resident)for(const id of selected)resident.note(`${layer}:${id}`);
+        const parts=await o.alloc(g.width*g.topK),jobs=Array.from(selected,(id,index)=>({id,index,key:`${layer}:${id}`,gpu:!this.cpu||(resident?resident.hasExpert(`${layer}:${id}`):this.hot.has(`${layer}:${id}`))}));
         const cpuX=jobs.some(j=>!j.gpu)?await b.read(x):null;
         this.stats.routes.push({layer,ids:Array.from(selected),devices:jobs.map(j=>j.gpu?b.kind:'wasm')});
         // The two independent command queues execute concurrently. Each WASM module
         // has a single ordered stream and persistent pooled weights.
         const lanes=await Promise.allSettled([
-            (async()=>{for(const job of jobs.filter(j=>j.gpu)){const result=await this.expert(o,p+`expert.${job.id}.`,x);await b.copy(result,parts,g.width,0,job.index*g.width);this.stats.gpuExperts+=b.kind==='webgpu'?1:0;this.stats.cpuExperts+=b.kind==='wasm'?1:0;}})(),
+            (async()=>{for(const job of jobs.filter(j=>j.gpu)){await resident?.admit(job.key);const result=await this.expert(o,p+`expert.${job.id}.`,x);await b.copy(result,parts,g.width,0,job.index*g.width);this.stats.gpuExperts+=b.kind==='webgpu'?1:0;this.stats.cpuExperts+=b.kind==='wasm'?1:0;}})(),
             (async()=>{for(const job of jobs.filter(j=>!j.gpu)){const cx=await this.cpuOps.alloc(cpuX),result=await this.expert(this.cpuOps,p+`expert.${job.id}.`,cx);await b.write(parts,await this.cpu.read(result),job.index*g.width);await this.cpuOps.clearTemporary();this.stats.cpuExperts++;}})()
         ]);
         const failure=lanes.find(lane=>lane.status==='rejected');if(failure)throw failure.reason;
+        if(resident&&this.cpu)for(const job of jobs.filter(j=>!j.gpu))if((resident.frequency.get(job.key)||0)>=2&&await resident.admit(job.key))this.stats.promotions++;
         if(this.cpu)for(const job of jobs)this.frequency.set(job.key,(this.frequency.get(job.key)||0)+1);
         const shared=await this.expert(o,p,x,true),sharedGate=await o.mat(p+'ffn_gate_inp_shexp.weight',x),y=await o.alloc(g.width);
         await b.run('strata_moe_combine',{Parts:parts,Weights:weights,Shared:shared,SharedGate:sharedGate,Y:y,width:g.width,count:g.topK},grid(g.width));return y;
+    }
+    residencyInfo(){return {...(this.ops.residency?.info()||{streamingCacheBytes:this.ops.used,hits:this.ops.hits,misses:this.ops.misses}),hostExpertCacheBytes:this.store.expertCacheUsed||0,hostExpertCache:this.store.expertCacheStats};}
+    async prefill(tokens,options={}){
+        this.assertIdle('A session operation is already running');if(this.failed)throw Error('Session failed; reset it before continuing');
+        tokens=Array.from(tokens);if(!tokens.length)throw Error('Prompt is empty');for(const t of tokens)requireInteger(t,'token',0,this.g.vocab-1);
+        if(this.position+tokens.length>this.g.context)throw Error('Context capacity reached');
+        requireInteger(options.chunkSize??16,'prompt chunk size',1,64);if(options.logits&&options.predict===false)throw Error('Logits require prediction');
+        options.signal?.throwIfAborted();this.busy=true;
+        try{return await prefillChunks(this,tokens,options);}catch(error){this.failed=true;throw error;}finally{this.busy=false;}
     }
     async step(token,{logits=false,predict=true,signal,onProgress}={}) {
         this.assertIdle('A session operation is already running');if(this.failed)throw Error('Session failed; reset it before continuing');
@@ -175,7 +196,7 @@ export class StrataEngine {
         this.assertIdle('Cannot reset during a decode step or state operation');this.busy=true;
         try {
             await this.ops.clearTemporary();if(this.cpuOps)await this.cpuOps.clearTemporary();
-            for(const buffer of this.persistent)await this.b.write(buffer,new Float32Array(buffer.length));this.position=0;this.previous=[];this.failed=false;
+            for(const buffer of this.persistent){if(this.b.zero)await this.b.zero(buffer);else await this.b.write(buffer,new Float32Array(buffer.length));}this.position=0;this.previous=[];this.failed=false;
         } catch(error) {this.failed=true;throw error;}finally {this.busy=false;}
     }
     async checkpoint() {
@@ -194,7 +215,7 @@ export class StrataEngine {
     }
     async dispose() {
         if(this.disposed)return;this.assertIdle('Cannot dispose during a decode step or state operation');this.busy=true;
-        try {await this.ops.dispose();if(this.cpuOps)await this.cpuOps.dispose();for(const b of this.persistent)await this.b.free(b);this.persistent=[];this.disposed=true;}
+        try {await this.ops.dispose();if(this.cpuOps)await this.cpuOps.dispose();for(const b of this.persistent)await this.b.free(b);this.persistent=[];this.store.clearExpertCache?.();this.disposed=true;}
         catch(error) {this.failed=true;throw error;}finally {this.busy=false;}
     }
 }

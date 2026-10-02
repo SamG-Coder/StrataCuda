@@ -10,6 +10,7 @@
 <fieldset id="settings"><legend class="section-label">GENERATION</legend>
 <label for="backend">Run on</label><select id="backend"><option value="webgpu">GPU · WebGPU</option><option value="hybrid">GPU + CPU · Hybrid</option><option value="wasm">CPU · WebAssembly</option></select>
 <div id="thread-control" hidden><label for="threads">CPU threads</label><select id="threads"><option>1</option><option>2</option><option selected>4</option><option>8</option></select></div>
+<div id="memory-control"><label for="gpu-memory">GPU weight budget</label><select id="gpu-memory"><option value="8" selected>8 GiB · 16 GB GPU</option><option value="12">12 GiB · 24 GB GPU</option><option value="0">Streaming · low memory</option></select><p class="field-note">Dense weights stay loaded. Remaining space holds experts.</p></div>
 <label for="context">Context window <span class="help-label">tokens</span></label><select id="context"><option>128</option><option selected>256</option><option>512</option><option>1024</option><option>2048</option></select><p class="field-note">Shared by the conversation and reply.</p>
 <label for="reply-limit">Maximum reply <span class="help-label">tokens</span></label><input id="reply-limit" type="number" min="1" max="2048" value="32">
 <label for="format">Prompt format</label><select id="format"><option value="chat">Chat</option><option value="completion">Text completion</option></select>

@@ -1,6 +1,6 @@
 {
   "name": "strata-webcuda",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Strata inference primitives and portable decode on CUDA WebShader's WebGPU and threaded WebAssembly backends",
@@ -15,6 +15,7 @@
     "test:upstream": "node scripts/test-upstream.mjs",
     "test:model": "node scripts/test-model.mjs",
     "compare:model": "node scripts/compare-model.mjs",
+    "benchmark:model": "node scripts/benchmark-model.mjs --label=release --resident=8 --prefill=true --repeat=true",
     "test:tokenizer": "node scripts/test-tokenizer.mjs",
     "test:chat": "node scripts/test-chat.mjs",
     "test:ui": "node scripts/test-chat.mjs --ui-only",

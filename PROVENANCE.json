@@ -9,11 +9,16 @@
     "commit": "ef46ff1bf02a306bad94ddc18286d25d3d902c14",
     "license": "MIT",
     "localSource": "D:/cuda-webshader",
-    "modifications": []
+    "modifications": [
+      {
+        "file": "vendor/webcuda/src/wasm/cuda-cpu.hpp",
+        "change": "Add the four CUDA float/integer bit-cast intrinsics using C++20 std::bit_cast; WGSL already supports these intrinsics."
+      }
+    ]
   },
   "port": {
     "source": "kernels/strata.cu",
-    "sha256": "caadb9622f18afaa6dd7ca72fe6a6998711d503a983196951439c29a31524652",
+    "sha256": "5aeaa179bd3a7aef888e63f112b2a1990d2c9e4b48343a1695cee2c4fbbc31f0",
     "numericContract": "F32 activations/reductions/KV; portable baseline, not native bit parity",
     "upstreamMapping": {
       "projections": [
@@ -59,6 +64,7 @@
     "vendor/strata/tools/canonical_xcheck.py": "5496e71367ecb62288860140bfc396fb271d2844e985beb7aceb6de2f4113499",
     "vendor/strata/tools/gguf_reader.py": "a93fd735d956dd8415314888e55f281f653573c21a5f2006f44982016f6926a2",
     "vendor/strata/tools/gguf_writer.py": "1974d67916e71b228cb59b302ee4c7ab4632361e5a8b9d1cb890bc8fbd47a09f",
+    "vendor/strata/tools/pack_index.py": "ffc349dbbb08689ce1ef68bbf5916b303b7142de6914245bafa11afa65ebe4a0",
     "vendor/strata/tools/pack_layer.py": "df42f1bef3a74c5802a81c582c25d30a1e4f549decf60cd193b3a9e29c61f310",
     "vendor/strata/tools/strata_pack.py": "4213aa22f45fbd58ceb8069bae1624e17c3496b8ed356f4443a6211e321281c4",
     "vendor/strata/tools/strata_tokenizer.py": "e19a8c3c0ee672e857135c277be74bdb0acf810cf7a7c763984efeda36f3ee7f",
@@ -113,7 +119,7 @@
     "vendor/webcuda/src/runtime/three-bridge.js": "f06f7e89ec39ad11881880fb46bd908aef4ac8df46a199a2c5ae3a27000c9a34",
     "vendor/webcuda/src/style.css": "1ae142effd5b92fb78ff57c0695d839461590f537a6fca2f44c56236101072ed",
     "vendor/webcuda/src/wasm/compile.mjs": "7d54159470d2aa64b41ae9d22904d614f04e024c557fcc5c0260f04474017951",
-    "vendor/webcuda/src/wasm/cuda-cpu.hpp": "05e2a3b1b39a43d41d0ed351a0429f037158d0874105c4d978f1b4e6150c70a4",
+    "vendor/webcuda/src/wasm/cuda-cpu.hpp": "4a3e5ea353636d70607786ab573523080784e810b76ad948c7d5621acc30c297",
     "vendor/webcuda/src/wasm/independent-runtime.js": "fc7b61bf9bcbdb87cba16af590f26c65f58512ced7d89de4834b128f0234ca3a",
     "vendor/webcuda/src/wasm/independent.mjs": "701e17d3965715ed0b794e1dfe6a9b1dcfb47dda5ae70da075bdff1de86fa2ab",
     "vendor/webcuda/src/wasm/runtime.js": "4bceb79946f8f38183fbc2e6565a43e3b5dbec98f4c5bb20f8002558f35e9335",

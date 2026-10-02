@@ -31,24 +31,24 @@ async function createEngine(context){
     try{
         if(mode==='wasm')backend=await WorkerBackend.create({threads});
         else{backend=await GpuBackend.create({onError:e=>{diagnostic.errors.push(e.message);controller?.abort();error(e.message);}});if(mode==='hybrid')cpu=await WorkerBackend.create({threads});}
-        engine=await StrataEngine.create(model.store(context),backend,{cpuBackend:cpu,gpuExperts:48});diagnostic.backend=await backend.info();diagnostic.context=engine.g.context;return {engine,dispose};
+        engine=await StrataEngine.create(model.store(context),backend,{cpuBackend:cpu,gpuExperts:48,weightBudgetBytes:mode==='wasm'?0:Number($('gpu-memory').value)*1024**3,tileRows:4096});diagnostic.backend=await backend.info();diagnostic.context=engine.g.context;return {engine,dispose};
     }catch(e){await dispose();throw e;}
 }
 async function open(loader){
     if(busy)return;error();lock(true);connection('Loading model…');$('model-state').textContent='Reading model and tokenizer…';
     try{
-        const loaded=await loader();await session?.reset();model=loaded;session=new TextSession(model.tokenizer,createEngine);messages=[];$('messages').replaceChildren();$('welcome').hidden=false;$('conversation-title').textContent='New conversation';
+        const loaded=await loader();await session?.reset({release:true});model=loaded;session=new TextSession(model.tokenizer,createEngine);messages=[];$('messages').replaceChildren();$('welcome').hidden=false;$('conversation-title').textContent='New conversation';
         $('model-name').textContent=model.label;$('model-state').textContent='Ready · 48 layers · Q2_0';$('load-local').textContent='Reload downloaded model';diagnostic.model=model.label;diagnostic.chatSupported=model.chatSupported;
         $('format').querySelector('[value=chat]').disabled=!model.chatSupported;if(!model.chatSupported)$('format').value='completion';$('system').disabled=$('format').value==='completion';
-        $('run-note').textContent='Weights stream from disk. Full-model replies can take several minutes.';connection('Model ready',true);document.body.classList.remove('settings-open');$('toggle-settings').setAttribute('aria-expanded','false');
+        $('run-note').textContent='The first request loads reusable weights. Later tokens reuse GPU memory.';connection('Model ready',true);document.body.classList.remove('settings-open');$('toggle-settings').setAttribute('aria-expanded','false');
     }catch(e){error(e.message);diagnostic.errors.push(e.message);connection(model?'Model ready':'No model loaded',!!model);$('model-state').textContent=model?'Ready':'Model not loaded';}
     finally{lock(false);}
 }
 $('load-local').onclick=()=>open(()=>loadLocal());$('choose-folder').onclick=()=>$('model-folder').click();$('model-folder').onchange=()=>{if($('model-folder').files.length)open(()=>loadFolder($('model-folder').files));};
 async function clear(){if(busy)return;error();lock(true);try{await session?.reset();messages=[];delete diagnostic.last;$('messages').replaceChildren();$('welcome').hidden=false;$('conversation-title').textContent='New conversation';$('prompt').value='';}catch(e){error(e.message);}finally{lock(false);}}
 $('new-chat').onclick=clear;$('clear').onclick=clear;
-for(const id of ['backend','threads','context','format'])$(id).onchange=async()=>{
-    if(busy)return;$('thread-control').hidden=$('backend').value==='webgpu';$('system').disabled=$('format').value==='completion';error();lock(true);try{await session?.reset();}catch(e){error(e.message);}finally{lock(false);}
+for(const id of ['backend','threads','context','format','gpu-memory'])$(id).onchange=async()=>{
+    if(busy)return;$('thread-control').hidden=$('backend').value==='webgpu';$('memory-control').hidden=$('backend').value==='wasm';$('system').disabled=$('format').value==='completion';error();lock(true);try{await session?.reset({release:true});}catch(e){error(e.message);}finally{lock(false);}
 };
 for(const id of ['system','reply-limit'])$(id).addEventListener('input',budget);
 $('prompt').addEventListener('input',()=>{budget();$('prompt').style.height='auto';$('prompt').style.height=Math.min(200,$('prompt').scrollHeight)+'px';});
@@ -65,7 +65,7 @@ $('composer').onsubmit=async event=>{
     const tick=()=>$('elapsed').textContent=Math.round((performance.now()-start)/1000)+'s';tick();timer=setInterval(tick,1000);
     try{
         const result=await session.generate({...s,messages:history,signal:controller.signal,
-            onProgress:p=>{diagnostic.progress=p;if(controller.signal.aborted)return;$('progress-label').textContent=p.phase==='starting'?'Preparing model…':p.phase==='prompt'?`Reading prompt · token ${p.done+1} of ${p.total}`:`Writing reply · ${p.done} tokens`;$('progress-bar').value=p.phase==='starting'?0:(p.done+(p.layer||0)/(p.layers||1))/p.total;},
+            onProgress:p=>{diagnostic.progress=p;if(controller.signal.aborted)return;$('progress-label').textContent=p.phase==='starting'?'Preparing model…':p.phase==='prompt'?`Reading prompt · ${p.done+1}–${Math.min(p.total,p.done+(p.chunkTokens||1))} of ${p.total}`:`Writing reply · ${p.done} tokens`;$('progress-bar').value=p.phase==='starting'?0:(p.done+(p.chunkTokens||1)*(p.layer||0)/(p.layers||1))/p.total;},
             onText:(text,info)=>{reply.body.textContent=text;reply.meta.textContent=info.generated+' tokens';if(text)scroll();}
         });
         if(result.text)messages.push({role:'assistant',content:result.text});else reply.body.textContent=result.stop==='stopped'?'Stopped before a reply.':'The model ended without a text reply.';

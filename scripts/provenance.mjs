@@ -7,7 +7,7 @@ async function walk(dir){const out=[];for(const d of await readdir(path.join(roo
 const sources={};for(const file of await walk('vendor'))sources[file]=sha(await readFile(path.join(root,file)));
 const provenance={
     strata:{repository:'https://github.com/Niko1221/Strata',commit:'1678de333d0e0711bc414ad992b640e1a37dd814',license:'MIT'},
-    webcuda:{repository:'https://github.com/SamG-Coder/cuda-webshader',commit:'ef46ff1bf02a306bad94ddc18286d25d3d902c14',license:'MIT',localSource:'D:/cuda-webshader',modifications:[]},
+    webcuda:{repository:'https://github.com/SamG-Coder/cuda-webshader',commit:'ef46ff1bf02a306bad94ddc18286d25d3d902c14',license:'MIT',localSource:'D:/cuda-webshader',modifications:[{file:'vendor/webcuda/src/wasm/cuda-cpu.hpp',change:'Add the four CUDA float/integer bit-cast intrinsics using C++20 std::bit_cast; WGSL already supports these intrinsics.'}]},
     port:{source:'kernels/strata.cu',sha256:sha(await readFile(path.join(root,'kernels/strata.cu'))),numericContract:'F32 activations/reductions/KV; portable baseline, not native bit parity',upstreamMapping:{
         projections:['src/kernels/cuda/bf16_gemv.cu','src/kernels/cuda/s_gemv.cu'],router:['src/kernels/cuda/router_top10.cu'],
         gatedResidual:['src/kernels/cuda/gr.cu'],deltaNet:['src/kernels/cuda/gdn.cu','src/kernels/cuda/elementwise.cu'],

@@ -2,7 +2,8 @@ import {formatChat} from './tokenizer.js';
 
 export class TextSession {
     constructor(tokenizer,create){this.tokenizer=tokenizer;this.create=create;this.owner=null;this.consumed=[];this.busy=false;}
-    async reset(){if(this.busy)throw Error('Stop generation before resetting.');await this.drop();}
+    async reset({release=false}={}){if(this.busy)throw Error('Stop generation before resetting.');await this.clearState(release);}
+    async clearState(release=false){if(!release&&this.owner?.engine.reset){try{await this.owner.engine.reset();this.consumed=[];}catch(error){await this.drop();throw error;}}else await this.drop();}
     async drop(){const owner=this.owner;this.owner=null;this.consumed=[];if(owner)await owner.dispose();}
     plan({messages,system='',mode='chat',context,maxTokens}){
         if(!Number.isInteger(context)||context<32||context>2048||!Number.isInteger(maxTokens)||maxTokens<1||maxTokens>context)throw Error('Choose a context of 32–2048 tokens and a reply limit within it.');
@@ -19,7 +20,8 @@ export class TextSession {
         this.busy=true;const started=performance.now();let generated=[],stop='limit';
         try{
             signal?.throwIfAborted();
-            if(this.owner&&(this.owner.engine.g.context!==context||this.consumed.length>=tokens.length||this.consumed.some((t,i)=>t!==tokens[i])))await this.drop();
+            if(this.owner?.engine.g.context!==context&&this.owner)await this.drop();
+            else if(this.owner&&(this.consumed.length>=tokens.length||this.consumed.some((t,i)=>t!==tokens[i])))await this.clearState();
             if(!this.owner){onProgress({phase:'starting',done:0,total:tokens.length});this.owner=await this.create(context);}
             signal?.throwIfAborted();
             const engine=this.owner.engine;let result;
@@ -28,7 +30,12 @@ export class TextSession {
                 const out=await engine.step(token,{predict,signal,onProgress:(layer,layers)=>onProgress({phase,done,total,layer,layers,position:engine.position})});
                 this.consumed.push(token);return out;
             };
-            for(let i=this.consumed.length;i<tokens.length;i++)result=await step(tokens[i],i===tokens.length-1,'prompt',i,tokens.length);
+            const begin=this.consumed.length;
+            if(engine.prefill&&tokens.length-begin>1){
+                onProgress({phase:'prompt',done:begin,total:tokens.length,layer:0,layers:engine.g.layers,position:engine.position});
+                result=await engine.prefill(tokens.slice(begin),{signal,onProgress:(layer,layers,offset,count)=>onProgress({phase:'prompt',done:begin+offset,total:tokens.length,chunkTokens:count,layer,layers,position:engine.position})});
+                this.consumed.push(...tokens.slice(begin));
+            }else for(let i=begin;i<tokens.length;i++)result=await step(tokens[i],i===tokens.length-1,'prompt',i,tokens.length);
             for(let n=0;n<maxTokens;n++){
                 signal?.throwIfAborted();
                 if(this.tokenizer.endTokens.has(result.token)){stop='end';break;}
@@ -36,7 +43,7 @@ export class TextSession {
                 if(n+1<maxTokens)result=await step(result.token,true,'reply',n+1,maxTokens);
             }
             const text=this.tokenizer.decode(generated,{stream:stop!=='end'});onText(text,{generated:generated.length,position:engine.position,ms:engine.stats.lastMs});
-            return {text,generated,promptTokens:tokens.length,position:engine.position,stop,seconds:(performance.now()-started)/1000};
+            return {text,generated,promptTokens:tokens.length,position:engine.position,stop,seconds:(performance.now()-started)/1000,residency:engine.residencyInfo?.()};
         }catch(error){
             // A layer may have changed recurrent state before Stop was observed.
             // Rebuild from visible conversation next time; never reuse partial state.

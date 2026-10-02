@@ -3,11 +3,12 @@
 <body>
 <header><a class="brand" href="./"><span class="mark">▱</span> STRATA <span class="slash">/</span> <span class="quiet">WebCuda</span></a><span class="tag">PORTABLE INFERENCE LAB</span><a href="https://github.com/Niko1221/Strata" target="_blank" rel="noreferrer">Upstream ↗</a></header>
 <main>
-<div class="intro"><div><p class="eyebrow">ONE CUDA SOURCE · TWO EXECUTION TARGETS</p><h1>An engine across<br>GPU <span>&</span> CPU.</h1><p class="lead">Strata’s recurrent attention and mixture of experts,<br>running through CUDA WebShader.</p></div><div class="overview"><div><b>21</b><span>CUDA kernels</span></div><div><b>2</b><span>compiler targets</span></div><div><b>Local</b><span>file access</span></div></div></div>
+<div class="intro"><div><p class="eyebrow">ONE CUDA SOURCE · TWO EXECUTION TARGETS</p><h1>An engine across<br>GPU <span>&</span> CPU.</h1><p class="lead">Strata’s recurrent attention and mixture of experts,<br>running through CUDA WebShader.</p></div><div class="overview"><div><b>41</b><span>CUDA kernels</span></div><div><b>2</b><span>compiler targets</span></div><div><b>Local</b><span>file access</span></div></div></div>
 <div class="notice"><span class="dot amber"></span><div><strong>Development port · model weights loaded separately</strong><p>Start with the untrained fixture or open a converted Q2_0 model pack. The fixture checks the decode graph. Native Strata numerical parity and model quality remain unverified.</p></div></div>
 <div class="workspace">
 <section class="controls panel"><div class="panel-title"><span>01 / EXECUTION</span><span id="status" class="pill">Idle</span></div>
 <label for="backend">Execution backend</label><select id="backend"><option value="hybrid">Hybrid · WebGPU + WASM experts</option><option value="webgpu">WebGPU · all kernels on GPU</option><option value="wasm">WebAssembly · CPU threads</option></select>
+<label for="memory">GPU weight budget</label><select id="memory"><option value="8" selected>8 GiB</option><option value="12">12 GiB</option><option value="0">Streaming</option></select>
 <div class="two"><div><label for="threads">CPU threads</label><select id="threads"><option>1</option><option>2</option><option selected>4</option><option>8</option></select></div><div><label for="steps">Decode steps</label><input id="steps" type="number" min="1" max="16" value="4"></div></div>
 <label for="tokens">Input token IDs</label><input id="tokens" value="2, 7, 4" spellcheck="false"><p id="token-hint" class="hint">Vocabulary: 0–39 · context: 32 tokens</p>
 <button class="primary" id="run">Run decode <span>→</span></button><div class="two"><button id="reset">Reset state</button><button id="verify">Verify kernels</button></div>

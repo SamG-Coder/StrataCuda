@@ -37,5 +37,11 @@ try{
     await writeFile('reports/chat.json',JSON.stringify({timestamp:new Date().toISOString(),model:result.model,context:result.context,backend:result.backend,stopSeconds,result:result.last,errors},null,2)+'\n');
     console.log('PASS real text chat '+JSON.stringify(result.last));
     await page.locator('#new-chat').click();await page.waitForFunction(()=>!window.strataChat.busy);assert.equal(await page.locator('#messages .message').count(),0);
+    if(process.argv.includes('--extended')){
+        await page.locator('#reply-limit').fill('8');await page.locator('#prompt').fill('Hi');await page.locator('#send').click();
+        await page.waitForFunction(()=>window.strataChat.last&&!window.strataChat.busy||window.strataChat.errors.length,{},{timeout:30*60*1000});
+        const warm=await page.evaluate(()=>window.strataChat.last);assert.deepEqual(await page.evaluate(()=>window.strataChat.errors),[]);assert.ok(warm.generated.length>2);assert.ok(warm.text.startsWith('Hello!'));
+        await writeFile('reports/chat-warm.json',JSON.stringify(warm,null,2)+'\n');await page.screenshot({path:'reports/chat-warm.png',fullPage:true,animations:'disabled'});console.log('PASS warm conversation '+JSON.stringify(warm));
+    }
     }
 }finally{clearInterval(ticker);await browser.close();await new Promise(r=>server.close(r));}

@@ -10,7 +10,7 @@ let store=createFixture(),backend,cpu,engine,key='',busy=false;
 const diagnostic=window.strataDiagnostics={ready:true,errors:[],model:'fixture',backend:null};
 function log(message){$('log').textContent+='\n'+message;$('log').scrollTop=$('log').scrollHeight;}
 function state(label,error=false){$('status').textContent=label;$('status').className='pill'+(error?' error':busy?' busy':'');}
-function lock(value){busy=value;for(const id of ['run','verify','reset','fixture','backend','threads','files'])$(id).disabled=value;}
+function lock(value){busy=value;for(const id of ['run','verify','reset','fixture','backend','threads','memory','files'])$(id).disabled=value;}
 function modelDetails(){
     $('model-name').textContent=store.label;
     $('token-hint').textContent=`Vocabulary: 0–${store.config.vocab-1} · context: ${store.config.context} tokens`;
@@ -18,12 +18,12 @@ function modelDetails(){
 }
 async function release(){if(engine)await engine.dispose();engine=null;if(cpu)await cpu.dispose();cpu=null;if(backend)await backend.dispose();backend=null;key='';}
 async function ensure(){
-    const next=$('backend').value+':'+$('threads').value;if(engine&&key===next)return;
+    const next=$('backend').value+':'+$('threads').value+':'+$('memory').value;if(engine&&key===next)return;
     await release();state('Starting');log('Starting '+$('backend').value+' backend…');
     try{
         if($('backend').value==='wasm')backend=await WorkerBackend.create({threads:Number($('threads').value)});
         else {backend=await GpuBackend.create({onError:e=>{diagnostic.errors.push(e.message);log(e.message);}});if($('backend').value==='hybrid')cpu=await WorkerBackend.create({threads:Number($('threads').value)});}
-        engine=await StrataEngine.create(store,backend,{cpuBackend:cpu,gpuExperts:48});key=next;const info=await backend.info();
+        engine=await StrataEngine.create(store,backend,{cpuBackend:cpu,gpuExperts:48,weightBudgetBytes:backend.kind==='webgpu'?Number($('memory').value)*1024**3:0,tileRows:4096});key=next;const info=await backend.info();
         diagnostic.backend=info;$('adapter').textContent=info.backend==='webgpu'?(info.vendor+' · '+info.architecture):`WASM · ${info.threads} CPU threads`;
         log('Ready: '+store.config.layers+' layers, '+store.config.experts+' experts per layer, '+store.config.context+' context cells.');state('Ready');
     }catch(error){await release();throw error;}

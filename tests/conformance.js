@@ -1,6 +1,8 @@
 import {router,gdn,conv,attention,rope,ReferenceEngine} from './reference.mjs';
 import {createFixture} from '../src/fixture.js';
 import {StrataEngine} from '../src/engine.js';
+import {halfToFloat,PackStore,BlobSource} from '../src/model.js';
+import {encodeFixturePack} from '../src/pack.js';
 export function compare(actual,expected,tolerance=2e-5,label='values') {
     if(actual.length!==expected.length)throw Error(label+' length mismatch');let maxError=0;
     for(let i=0;i<actual.length;i++){const e=Math.abs(actual[i]-expected[i]);if(!Number.isFinite(actual[i])||e>tolerance*(1+Math.abs(expected[i])))throw Error(`${label}[${i}]: ${actual[i]} versus ${expected[i]}, error ${e}`);maxError=Math.max(maxError,e);}return maxError;
@@ -11,6 +13,23 @@ export async function conformance(b,{cpu=null}={}) {
     const clean=async()=>{await b.idle();for(const x of owned)await b.free(x);owned=[];};
     const pass=(name,error=0)=>checks.push({name,maxAbsoluteError:error});
     try {
+        const halves=Uint32Array.from({length:32768},(_,i)=>(2*i)|((2*i+1)<<16)),decoded=await alloc(65536);
+        await b.run('strata_unpack_half',{Packed:await alloc(halves,'u32'),Values:decoded,count:65536},[1024,1,1]);
+        const actualHalf=await b.read(decoded);for(let h=0;h<65536;h++){const expected=halfToFloat(h);if(!(Number.isNaN(expected)?Number.isNaN(actualHalf[h]):Object.is(actualHalf[h],expected)))throw Error('Packed FP16 decode differs at '+h);}
+        pass('All 65536 packed FP16 bit patterns');await clean();
+        // A complete expert blob with interleaved gate/up rows, signed scales,
+        // three prompt rows and output padding exercises the actual resident ABI.
+        {
+            const cols=64,rows=65,tokens=3,cb=rows*cols/4,sb=rows*2,raw=new Uint8Array(Math.ceil(3*(cb+sb)/4)*4),view=new DataView(raw.buffer);
+            for(let i=0;i<3*cb;i++)raw[i]=(i*13+7)&255;
+            for(let i=0;i<3*rows;i++)view.setUint16(3*cb+i*2,0x3800+(i%6)*64+(i%3===0?0x8000:0),true);
+            const x=Float32Array.from({length:tokens*cols},(_,i)=>Math.sin(i*.23)),blob=await alloc(new Uint32Array(raw.buffer),'u32'),input=await alloc(x),outputStride=rows+7,outputOffset=3;
+            for(const role of ['gate','up','down']){
+                const down=role==='down',codeOffset=(down?2*cb:0)/4,scaleOffset=(3*cb+(down?2*sb:0))/2,weightRow=role==='up'?1:0,rowStride=down?1:2,out=await alloc(tokens*outputStride),ref=new Float64Array(out.length);
+                for(let t=0;t<tokens;t++)for(let r=0;r<rows;r++){const row=weightRow+r*rowStride,scale=halfToFloat(view.getUint16((scaleOffset+row)*2,true));let sum=0;for(let c=0;c<cols;c++)sum+=x[t*cols+c]*(((raw[codeOffset*4+row*cols/4+(c>>2)]>>((c%4)*2))&3)-1)*scale;ref[t*outputStride+outputOffset+r]=sum;}
+                await b.run('strata_q2_project',{X:input,Blob:blob,Y:out,cols,rows,tokens,outputStride,outputOffset,codeOffset,scaleOffset,weightRow,rowStride},[rows,tokens,1]);pass('Packed Q2 '+role+' with strided prompt output',compare(await b.read(out),ref,2e-5));
+            }await clean();
+        }
         // Full 512-expert router, equal-logit ties, large magnitudes, k=10.
         for(const style of ['ties','spread']) {
             const logits=Float32Array.from({length:512},(_,i)=>style==='ties'?7:Math.sin(i*3.1)*90),reference=router(logits,10),ids=await alloc(10,'i32'),w=await alloc(10);
@@ -58,6 +77,33 @@ export async function conformance(b,{cpu=null}={}) {
             const predicted=await engine.step(4,{logits:true}),promptExpected=await promptReference.step(4);
             if(predicted.token!==promptExpected.token)throw Error('Prompt-only steps changed the generated token');
             pass('Prompt-only state updates preserve final logits',compare(predicted.logits,promptExpected.logits,8e-5));
+            // Layer-major batching must preserve every recurrent/KV/PLE state,
+            // including nonzero starts, chunk boundaries and the next decode.
+            for(const chunkSize of [1,2,5]){
+                await engine.reset();const ref=new ReferenceEngine(store);let wanted;
+                await engine.step(2,{predict:false});await ref.step(2);
+                for(const t of [7,4,8,7,4])wanted=await ref.step(t);
+                const actual=await engine.prefill([7,4,8,7,4],{chunkSize,logits:true});
+                pass(`Batched prompt chunk ${chunkSize} at nonzero position`,compare(actual.logits,wanted.logits,8e-5));
+                const next=await engine.step(8,{logits:true}),expectedNext=await ref.step(8);
+                pass(`Decode after prompt chunk ${chunkSize}`,compare(next.logits,expectedNext.logits,8e-5));
+            }
+            if(b.kind==='webgpu'){
+                const resident=await StrataEngine.create(store,b,{weightBudgetBytes:8*1024*1024,tileRows:7,cpuBackend:cpu});
+                try{
+                    const ref=new ReferenceEngine(store);let expected;for(const t of [2,7,4])expected=await ref.step(t);
+                    const out=await resident.prefill([2,7,4],{logits:true});pass('Resident tiled weights with batched prompt',compare(out.logits,expected.logits,8e-5));
+                    const before=resident.ops.residency.denseUsed;await resident.step(7,{logits:true});
+                    if(resident.ops.residency.denseUsed!==before||!resident.ops.residency.hits||!resident.ops.residency.experts.size)throw Error('Dense/expert residency did not persist');
+                }finally{await resident.dispose();}
+                const original=createFixture(),pack=encodeFixturePack(original),dense=pack.manifest.tensors['blk.0.hc_attn_down.weight'];
+                // Losslessly round the fixture weights to a BF16 source, then
+                // compare compact GPU storage with its original F32 container.
+                const tensor=original.tensors.get(dense.name),bits=new Uint32Array(tensor.data.buffer);for(let i=0;i<bits.length;i++)bits[i]&=0xffff0000;
+                pack.binary.set(new Uint8Array(tensor.data.buffer),dense.values.offset);dense.source_type='BF16';
+                const compactStore=new PackStore(pack.manifest,new BlobSource([new File([pack.binary],'weights.bin')])),compact=await StrataEngine.create(compactStore,b,{weightBudgetBytes:8*1024**2,tileRows:7});
+                try{const ref=new ReferenceEngine(original);let expected;for(const t of [2,7,4])expected=await ref.step(t);const out=await compact.prefill([2,7,4],{logits:true});pass('Lossless compact BF16 projections',compare(out.logits,expected.logits,8e-5));}finally{await compact.dispose();}
+            }
             const stats={...engine.stats,weightCacheHits:engine.ops.hits,weightCacheMisses:engine.ops.misses};
             return {backend:await b.info(),checks,tokens,stats};
         } finally {await engine.dispose();}

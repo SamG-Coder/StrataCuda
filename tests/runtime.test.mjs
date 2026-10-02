@@ -6,6 +6,7 @@ import {WorkerBackend} from '../src/backend.js';
 import {createFixture} from '../src/fixture.js';
 import {logitBars} from '../web/logits.js';
 import {attention} from './reference.mjs';
+import {WeightResidency,residentBytes} from '../src/residency.js';
 
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};};
 const tick=()=>new Promise(r=>setImmediate(r));
@@ -50,6 +51,37 @@ test('a tile larger than the cache stays temporary and is released',async()=>{
     finally {await ops.dispose();}
 });
 
+test('resident dense weights survive complete expert replacement within separate budgets',async()=>{
+    const store=createFixture(),b=new TestBackend(),o=new Ops(b,store,{tileRows:7}),name='output.weight',expertBytes=['gate','up','down'].reduce((n,r)=>n+residentBytes(store,`blk.0.expert.0.${r}`),0);
+    o.residency=new WeightResidency(o,[name],residentBytes(store,name)+expertBytes);
+    try{
+        const first=await o.weights(name,0,7);o.residency.note('0:0');assert.ok(await o.residency.admit('0:0'));
+        assert.ok(o.residency.hasExpert('0:0'));assert.equal(await o.residency.admit('0:1'),false);
+        o.residency.note('0:1',2);assert.ok(await o.residency.admit('0:1'));assert.equal(o.residency.hasExpert('0:0'),false);
+        assert.equal(await o.weights(name,0,7),first);assert.ok(o.residency.expertUsed<=o.residency.expertBudget);
+        for(const role of ['gate','up','down'])assert.ok(await o.residency.get(`blk.0.expert.1.${role}`,0,7));
+    }finally{await o.dispose();}assert.equal(b.used,0);
+});
+
+test('failed expert admission rolls back every projection and resident entry',async()=>{
+    const store=createFixture(),b=new TestBackend({failAllocation:3}),o=new Ops(b,store,{tileRows:7});o.residency=new WeightResidency(o,[],1024**2);
+    await assert.rejects(o.residency.admit('0:0'),/injected/);assert.equal(o.residency.experts.size,0);assert.equal(o.residency.tiles.size,0);assert.equal(o.residency.expertUsed,0);assert.equal(b.used,0);await o.dispose();
+});
+
+test('GPU budgets above 2 GiB never expand the separate WASM cache',async()=>{
+    const b=new TestBackend(),cpu=new TestBackend({kind:'wasm'}),engine=await StrataEngine.create(createFixture(),b,{cpuBackend:cpu,weightBudgetBytes:8*1024**3});
+    try{assert.equal(engine.ops.residency.budgetBytes,8*1024**3);assert.equal(engine.cpuOps.cacheBytes,64*1024**2);}
+    finally{await engine.dispose();}assert.equal(b.used,0);assert.equal(cpu.used,0);
+});
+
+test('aborting batched prefill discards partial state and permits reset',async()=>{
+    const b=new TestBackend(),engine=await StrataEngine.create(createFixture(),b),controller=new AbortController();
+    // This allocator is a scheduling oracle; populate every batched routing row.
+    const run=b.run.bind(b);b.run=(name,args)=>{if(name==='strata_router_batch')for(let i=0;i<args.Ids.length;i++)args.Ids.data[i]=i%args.topK;else run(name,args);};
+    await assert.rejects(engine.prefill([2,7,4],{signal:controller.signal,onProgress:()=>controller.abort()}),{name:'AbortError'});
+    assert.equal(engine.position,0);assert.equal(engine.failed,true);await assert.rejects(engine.step(2),/Session failed/);await engine.reset();assert.equal(engine.failed,false);await engine.dispose();assert.equal(b.used,0);
+});
+
 test('hybrid failures wait for the other lane before releasing the session',async()=>{
     const b=new TestBackend(),cpu=new TestBackend({kind:'wasm'}),engine=await StrataEngine.create(createFixture(),b,{cpuBackend:cpu});
     engine.hot.set('0:0',true);const releaseGPU=deferred(),cpuStarted=deferred();
@@ -90,6 +122,19 @@ test('an uncloneable worker request does not leak a pending RPC',async()=>{
     const worker=new TestWorker(),backend=new WorkerBackend(worker);
     worker.postMessage=()=>{throw Error('injected clone failure');};
     await assert.rejects(()=>backend.call('write'),/clone failure/);assert.equal(backend.pending.size,0);
+});
+
+test('WASM batching preserves allocation/dispatch/copy/free order before readback',async()=>{
+    const worker=new TestWorker(),sent=[];worker.postMessage=message=>{sent.push(message);queueMicrotask(()=>worker.onmessage({data:{id:message.id,value:message.method==='read'?new Float32Array([3]):null}}));};
+    const b=new WorkerBackend(worker),a=b.alloc(new Float32Array([3])),out=b.alloc(1);
+    b.run('strata_elementwise',{A:a,B:a,Y:out,n:1,mode:0,scale:1},[1,1,1]);b.copy(a,out);b.free(a);
+    assert.equal(sent.length,0);assert.deepEqual(await b.read(out),new Float32Array([3]));
+    assert.deepEqual(sent[0].args.commands.map(c=>c.method),['alloc','alloc','run','copy','free']);assert.equal(sent[1].method,'read');await b.dispose();
+});
+
+test('a failed WASM batch rejects readback and future allocations',async()=>{
+    const worker=new TestWorker();worker.postMessage=message=>queueMicrotask(()=>worker.onmessage({data:{id:message.id,error:'injected batched allocation failure'}}));
+    const b=new WorkerBackend(worker),out=b.alloc(1);await assert.rejects(b.read(out),/batched allocation/);assert.throws(()=>b.alloc(1),/batched allocation/);await b.dispose();assert.equal(worker.terminated,true);
 });
 
 test('production vocabulary visualization stays bounded and shows the selected token',()=>{

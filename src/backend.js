@@ -9,23 +9,38 @@ export function requireInteger(n, label, min=1, max=0x7fffffff) {
 }
 export function validateDispatch(name, args) {
     const get = k => requireInteger(args[k], name + '.' + k);
-    if (name === 'strata_router') {
+    if (name === 'strata_router'||name==='strata_router_batch') {
         if (get('experts') > 512 || get('topK') > Math.min(args.experts,32)) throw new RangeError('Router supports 1–512 experts and topK <= min(experts,32)');
     }
-    if (name === 'strata_quant_gemv') {
+    if (name === 'strata_quant_gemv' || name === 'strata_quant_project') {
         if (![2,4,8].includes(args.bits)) throw new RangeError('Canonical code width must be 2, 4 or 8');
         if (get('cols') % get('groupSize') || args.cols * args.rows * args.bits > 0x7fffffff) throw new RangeError('Quantized rows must contain whole groups and fit 31-bit indexing');
+    }
+    if(['strata_project','strata_quant_project','strata_bf16_project','strata_q2_project'].includes(name)) {
+        get('tokens');get('rows');get('cols');get('outputStride');requireInteger(args.outputOffset,'projection output offset',0);
+        if(args.outputOffset+args.rows>args.outputStride||args.tokens*args.outputStride>args.Y.length||args.tokens*args.cols>args.X.length)throw Error('Projection batch exceeds buffer layout');
+    }
+    if(name==='strata_q2_project'){
+        if(args.cols%64)throw Error('Q2 expert columns must contain complete groups');
+        for(const key of ['codeOffset','scaleOffset','weightRow'])requireInteger(args[key],key,0);
+        requireInteger(args.rowStride,'expert row stride',1,2);
     }
     if (name === 'strata_attention') {
         if(get('heads') % get('kvHeads'))throw new RangeError('Attention heads must be divisible by KV heads');
         requireInteger(args.count,'attention selected cells',1,2048);
+    }
+    if(name==='strata_attention_batch') {
+        if(get('heads')%get('kvHeads'))throw Error('Attention heads must be divisible by KV heads');
+        requireInteger(args.position,'attention position',0,2047);
+        const tokens=args.Q.length/(get('heads')*get('dim'));
+        if(!Number.isInteger(tokens)||args.position+tokens>2048)throw Error('Batched attention exceeds 2048 cells');
     }
     if (name === 'strata_rope' && (get('rotary') % 2 || args.rotary > get('dim'))) throw new RangeError('Rotary width must be even and <= head dimension');
     if (name === 'strata_norm' && get('rows') % get('weightRows')) throw new RangeError('Normalization weight rows must divide input rows');
 }
 
 export class GpuBackend {
-    static async create({base=new URL('../generated/',import.meta.url), onError}={}) {
+    static async create({base=new URL('../generated/',import.meta.url), onError, batch=true}={}) {
         const runtime = await GpuRuntime.create({useAdapterBufferLimits:true, onError});
         const manifest = await (await fetch(new URL('manifest.json',base))).json();
         const kernels = new Map();
@@ -35,36 +50,59 @@ export class GpuBackend {
                 if (!response.ok) throw Error('Missing generated kernel: ' + entry);
                 kernels.set(entry,await runtime.kernel(await response.json()));
             }
-            return new GpuBackend(runtime,kernels,manifest);
+            return new GpuBackend(runtime,kernels,manifest,{batch});
         } catch (error) { runtime.dispose(); throw error; }
     }
-    constructor(runtime,kernels,manifest) { this.runtime=runtime; this.kernels=kernels; this.manifest=manifest; this.kind='webgpu'; this.buffers=new Set(); }
-    alloc(dataOrLength,type='f32') {
+    constructor(runtime,kernels,manifest,{batch=true}={}) {
+        this.runtime=runtime;this.kernels=kernels;this.manifest=manifest;this.kind='webgpu';this.buffers=new Set();this.batching=batch;this.pendingBatch=null;this.retired=new Set();
+        this.pool=new Map();this.poolBytes=0;this.poolBudget=128*1024**2;this.bufferSequence=0;this.bindings=new Map();this.poolHits=0;this.bindingHits=0;
+    }
+    commandBatch() {
+        if(this.pendingBatch&&(this.pendingBatch.dispatchCount>=128||this.pendingBatch.cursor+this.runtime.uniformAlignment*2>this.runtime.uniformCapacity))this.flush();
+        return this.pendingBatch??=this.runtime.batch();
+    }
+    flush() {
+        if(this.pendingBatch){this.pendingBatch.submit();this.pendingBatch=null;}
+        for(const buffer of this.retired)this.runtime.destroyBuffer(buffer);this.retired.clear();
+    }
+    alloc(dataOrLength,type='f32',{zero=true}={}) {
         if(!typed[type])throw Error('Unsupported buffer type '+type);
         // WebGPU initializes new buffers to zero; avoid a duplicate CPU allocation
         // and upload for every state and output buffer.
         const data = typeof dataOrLength === 'number' ? requireInteger(dataOrLength,'allocation')*4 : dataOrLength;
-        const handle = this.runtime.createBuffer(data); handle.type=type; handle.length=(typeof data==='number'?data:data.byteLength)/4; this.buffers.add(handle); return handle;
+        const key=typeof data==='number'?`${type}:${data}`:null,available=key?this.pool.get(key):null;
+        if(available?.length){const handle=available.pop();this.poolBytes-=handle.byteLength;this.poolHits++;this.buffers.add(handle);if(zero)this.zero(handle);return handle;}
+        const handle = this.runtime.createBuffer(data);handle.poolKey=key;handle.bindingId=++this.bufferSequence;handle.type=type;handle.length=(typeof data==='number'?data:data.byteLength)/4;this.buffers.add(handle);return handle;
     }
-    write(buffer,data,offset=0) { this.runtime.write(buffer,data,offset*4); }
-    async read(buffer,type=buffer.type) { return this.runtime.read(buffer,typed[type]); }
+    write(buffer,data,offset=0) { this.flush();this.runtime.write(buffer,data,offset*4); }
+    zero(buffer){this.commandBatch().clear(buffer);if(!this.batching)this.flush();}
+    async read(buffer,type=buffer.type) { this.flush();return this.runtime.read(buffer,typed[type]); }
     copy(source,destination,count=source.length,sourceOffset=0,destinationOffset=0) {
         this.runtime.assertAlive();
-        const encoder = this.runtime.device.createCommandEncoder();
-        encoder.copyBufferToBuffer(source.gpuBuffer,sourceOffset*4,destination.gpuBuffer,destinationOffset*4,count*4);
-        this.runtime.device.queue.submit([encoder.finish()]);
+        this.commandBatch().copy(source,destination,{sourceOffset:sourceOffset*4,targetOffset:destinationOffset*4,byteLength:count*4});
+        if(!this.batching)this.flush();
     }
     run(name,args,groups) {
         validateDispatch(name,args);
         const kernel = this.kernels.get(name); if (!kernel) throw Error('Unknown kernel ' + name);
         const buffers={},scalars={};
         for (const [key,value] of Object.entries(args)) (typeof value === 'number' ? scalars : buffers)[key]=value;
-        this.runtime.batch().dispatch(kernel.bind(buffers,scalars),groups).submit();
+        const key=name+':'+Object.entries(buffers).map(([key,value])=>key+'='+value.bindingId).join(','),cached=this.bindings.get(key);
+        let invocation;
+        if(cached&&Object.values(cached.buffers).every(b=>!b.destroyed)){invocation=cached.setScalars(scalars);this.bindingHits++;this.bindings.delete(key);}
+        else invocation=kernel.bind(buffers,scalars);
+        this.bindings.set(key,invocation);if(this.bindings.size>4096)this.bindings.delete(this.bindings.keys().next().value);
+        this.commandBatch().dispatch(invocation,groups);
+        if(!this.batching)this.flush();
     }
-    free(buffer) { if (this.buffers.delete(buffer)) this.runtime.destroyBuffer(buffer); }
-    async idle() { await this.runtime.idle(); }
-    info() { return {backend:this.kind,...this.runtime.describe(),...this.runtime.stats}; }
-    async dispose() { await this.idle(); this.runtime.dispose(); this.buffers.clear(); }
+    free(buffer) {
+        if(!this.buffers.delete(buffer))return;
+        if(buffer.poolKey&&this.poolBytes+buffer.byteLength<=this.poolBudget){if(!this.pool.has(buffer.poolKey))this.pool.set(buffer.poolKey,[]);this.pool.get(buffer.poolKey).push(buffer);this.poolBytes+=buffer.byteLength;return;}
+        if(this.pendingBatch)this.retired.add(buffer);else this.runtime.destroyBuffer(buffer);
+    }
+    async idle() { this.flush();await this.runtime.idle(); }
+    info() { return {backend:this.kind,...this.runtime.describe(),...this.runtime.stats,pooledBytes:this.poolBytes,poolHits:this.poolHits,bindingCacheHits:this.bindingHits}; }
+    async dispose() {try{await this.idle();}finally{this.pendingBatch?.discard();this.pendingBatch=null;this.retired.clear();this.bindings.clear();this.pool.clear();this.poolBytes=0;this.runtime.dispose();this.buffers.clear();} }
 }
 
 export class WasmBackend {
@@ -106,6 +144,7 @@ export class WorkerBackend {
     }
     constructor(worker) {
         this.worker=worker; this.pending=new Map(); this.sequence=0; this.kind='wasm';this.closed=false;this.failure=null;
+        this.commands=[];this.commandBytes=0;this.nextBuffer=0;this.lastBatch=Promise.resolve();
         worker.onmessage=({data})=>{ const p=this.pending.get(data.id); if (!p) return; this.pending.delete(data.id); data.error ? p.reject(Error(data.error)) : p.resolve(data.value); };
         worker.onerror=e=>this.fail(Error(e.message||'WASM worker failed'));
         worker.onmessageerror=()=>this.fail(Error('Cannot decode WASM worker response'));
@@ -119,17 +158,30 @@ export class WorkerBackend {
             catch(error) {this.pending.delete(id);reject(error);}
         });
     }
-    async alloc(dataOrLength,type='f32') { return this.call('alloc',{dataOrLength,type}); }
-    write(buffer,data,offset=0) { return this.call('write',{buffer,data,offset}); }
-    read(buffer,type=buffer.type) { return this.call('read',{buffer,type}); }
-    copy(source,destination,count=source.length,sourceOffset=0,destinationOffset=0) { return this.call('copy',{source,destination,count,sourceOffset,destinationOffset}); }
-    run(name,args,groups) { validateDispatch(name,args); return this.call('run',{name,args,groups}); }
-    free(buffer) { return this.call('free',{buffer}); }
-    idle() { return this.call('idle'); }
-    info() { return this.call('info'); }
+    enqueue(method,args,bytes=0){
+        if(this.closed||this.failure)throw this.failure||Error('WASM worker is disposed');
+        this.commands.push({method,args});this.commandBytes+=bytes;
+        if(this.commands.length>=64||this.commandBytes>=8*1024**2)this.submitCommands();
+    }
+    submitCommands(){
+        if(this.commands.length){const commands=this.commands;this.commands=[];this.commandBytes=0;this.lastBatch=this.call('batch',{commands});this.lastBatch.catch(error=>this.fail(error));}
+        return this.lastBatch;
+    }
+    alloc(dataOrLength,type='f32') {
+        if(!typed[type])throw Error('Unsupported buffer type '+type);
+        const length=typeof dataOrLength==='number'?requireInteger(dataOrLength,'allocation'):dataOrLength.byteLength/4;
+        const handle={id:++this.nextBuffer,type,length};this.enqueue('alloc',{dataOrLength,type,handle},typeof dataOrLength==='number'?0:dataOrLength.byteLength);return handle;
+    }
+    write(buffer,data,offset=0) { this.enqueue('write',{buffer,data,offset},data.byteLength); }
+    async read(buffer,type=buffer.type) { await this.submitCommands();return this.call('read',{buffer,type}); }
+    copy(source,destination,count=source.length,sourceOffset=0,destinationOffset=0) { this.enqueue('copy',{source,destination,count,sourceOffset,destinationOffset}); }
+    run(name,args,groups) { validateDispatch(name,args);this.enqueue('run',{name,args,groups}); }
+    free(buffer) { this.enqueue('free',{buffer}); }
+    async idle() { await this.submitCommands();return this.call('idle'); }
+    async info() { await this.submitCommands();return this.call('info'); }
     async dispose() {
         if(this.closed)return;
-        try {if(!this.failure)await this.call('dispose');}
+        try {if(!this.failure){await this.submitCommands();await this.call('dispose');}}
         finally {this.closed=true;this.fail(Error('WASM worker is disposed'));this.worker.terminate();}
     }
 }

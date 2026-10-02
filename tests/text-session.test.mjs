@@ -13,3 +13,12 @@ test('generation predicts only at the last prompt token and stops on EOS',async(
 test('prefix reuse consumes the final generated token before extending the prompt',async()=>{const {session,created}=harness([65,66,67]);await session.generate(request('Hi'));const r=await session.generate(request('HiAB!',{maxTokens:1}));assert.equal(created.length,1);assert.deepEqual(created[0].calls.slice(3),[{token:66,predict:false},{token:33,predict:true}]);assert.equal(r.text,'C');});
 test('changed context or prefix rebuilds the session instead of mixing states',async()=>{const {session,created}=harness();await session.generate(request());await session.generate(request('Other',{context:512,maxTokens:1}));assert.equal(created.length,2);assert.ok(created[0].disposed);assert.equal(created[1].engine.g.context,512);});
 test('stopping inside a layer discards partial state and permits a fresh request',async()=>{const {session,created}=harness(),abort=new AbortController();const r=await session.generate(request('Hi',{signal:abort.signal,onProgress:p=>{if(p.layer===1)abort.abort();}}));assert.equal(r.stop,'stopped');assert.ok(created[0].disposed);assert.equal(session.owner,null);await session.generate(request());assert.equal(created.length,2);});
+
+test('new conversations reset recurrent state while retaining loaded weights',async()=>{
+    const {session,created}=harness([65,66,67,68]);await session.generate(request());const owner=created[0];let resets=0;
+    owner.engine.reset=async()=>{owner.engine.position=0;resets++;};
+    await session.reset();assert.equal(resets,1);assert.equal(owner.disposed,undefined);assert.equal(session.consumed.length,0);
+    await session.generate(request('New',{maxTokens:1}));assert.equal(created.length,1);
+    await session.generate(request('Other',{maxTokens:1}));assert.equal(resets,2);assert.equal(created.length,1);
+    await session.reset({release:true});assert.equal(owner.disposed,true);assert.equal(session.owner,null);
+});

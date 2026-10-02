@@ -35,13 +35,16 @@ export function halfToFloat(h) {
     return exponent===0 ? sign*2**-14*(fraction/1024) : exponent===31 ? (fraction?NaN:sign*Infinity) : sign*2**(exponent-15)*(1+fraction/1024);
 }
 function floats(bytes,half=false) {
-    const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength); const stride=half?2:4;
+    const stride=half?2:4;
     if(bytes.byteLength%stride) throw Error('Misaligned float plane');
-    const result=new Float32Array(bytes.byteLength/stride);
-    for(let i=0;i<result.length;i++) result[i]=half?halfToFloat(v.getUint16(i*2,true)):v.getFloat32(i*4,true);
-    if(result.some(x=>!Number.isFinite(x))) throw Error('Non-finite model weights'); return result;
+    const result=!half&&bytes.byteOffset%4===0&&littleEndian?new Float32Array(bytes.buffer,bytes.byteOffset,bytes.byteLength/4):new Float32Array(bytes.byteLength/stride);
+    if(half){const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);for(let i=0;i<result.length;i++)result[i]=halfTable[v.getUint16(i*2,true)];}
+    else if(result.buffer!==bytes.buffer){const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);for(let i=0;i<result.length;i++)result[i]=v.getFloat32(i*4,true);}
+    for(let i=0;i<result.length;i++)if(!Number.isFinite(result[i]))throw Error('Non-finite model weights');return result;
 }
-function words(bytes) { const out=new Uint8Array(Math.ceil(bytes.length/4)*4); out.set(bytes); return new Uint32Array(out.buffer); }
+const littleEndian=new Uint8Array(new Uint32Array([1]).buffer)[0]===1;
+const halfTable=Float32Array.from({length:65536},(_,h)=>halfToFloat(h));
+function words(bytes) {if(littleEndian&&bytes.byteOffset%4===0&&bytes.byteLength%4===0)return new Uint32Array(bytes.buffer,bytes.byteOffset,bytes.byteLength/4);const out=new Uint8Array(Math.ceil(bytes.length/4)*4);out.set(bytes);return new Uint32Array(out.buffer);}
 export function dequantCanonical(t) {
     if(t.format==='f32') return t.data;
     const out=new Float32Array(product(t.shape)); const mask=(1<<t.bits)-1;
@@ -85,6 +88,7 @@ export class PackStore {
             vocab:manifest.config?.vocab||manifest.tensors['token_embd.weight']?.shape?.[1]||0});
         if(this.constants.vocab.length!==this.config.pleHeads||this.constants.offsets.length!==this.config.pleHeads||this.constants.vocab.some(v=>!Number.isSafeInteger(v)||v<1)||this.constants.offsets.some(v=>!Number.isSafeInteger(v)||v<0))throw Error('PLE constants do not match the head geometry');
         this.label=manifest.name||'Local Strata pack';
+        this.pleRowCache=new Map();this.plePending=new Map();
         for(const [name,bytes] of Object.entries(manifest.files||{}))if(source.size(name)!==bytes)throw Error(name+' size differs from manifest');
         for(const [name,t] of Object.entries(manifest.tensors)) {
             if(!Array.isArray(t.shape)||!t.shape.length||t.shape.some(x=>!Number.isSafeInteger(x)||x<1)||!Number.isSafeInteger(product(t.shape)))throw Error('Invalid tensor shape: '+name);
@@ -107,14 +111,56 @@ export class PackStore {
         const layer=Number(e[1]),expert=Number(e[2]); if(layer>=this.config.layers||expert>=this.config.experts)throw Error('Expert out of range');
         return {shape:e[3]==='down'?[this.config.ff,this.config.width]:[this.config.width,this.config.ff],expert:{layer,id:expert,role:e[3]}};
     }
-    async readRows(name,start,rows) {
+    setExpertCacheBudget(bytes) {
+        requireInteger(bytes,'expert RAM budget',0,Number.MAX_SAFE_INTEGER);
+        this.expertCacheBudget=bytes;this.expertBlobs??=new Map();this.expertReads??=new Map();this.expertCacheUsed??=0;
+        this.expertCacheStats??={hits:0,misses:0,bytesRead:0};
+        while(this.expertCacheUsed>bytes&&this.expertBlobs.size){const [key,b]=this.expertBlobs.entries().next().value;this.expertBlobs.delete(key);this.expertCacheUsed-=b.byteLength;}
+    }
+    async prefetchExpert(layer,id) {
+        if(!this.expertCacheBudget||!this.manifest.experts)return null;
+        const key=`${layer}:${id}`,cached=this.expertBlobs.get(key);
+        if(cached){this.expertBlobs.delete(key);this.expertBlobs.set(key,cached);this.expertCacheStats.hits++;return cached;}
+        if(this.expertReads.has(key))return this.expertReads.get(key);
+        const ex=this.manifest.experts,info=ex.layers.find(l=>l.layer===layer);
+        if(!info||!Number.isInteger(id)||id<0||id>=this.config.experts)throw Error('Expert out of range');
+        if(ex.blob_bytes>this.expertCacheBudget)return null;
+        const work=(async()=>{
+            const blob=await this.source.read('experts.bin',info.offset+id*ex.blob_bytes,ex.blob_bytes);
+            this.retainExpertBlob(layer,id,blob);this.expertCacheStats.misses++;this.expertCacheStats.bytesRead+=blob.byteLength;return blob;
+        })();
+        this.expertReads.set(key,work);try{return await work;}finally{this.expertReads.delete(key);}
+    }
+    forgetExpertBlob(layer,id){const key=`${layer}:${id}`,old=this.expertBlobs?.get(key);if(old){this.expertBlobs.delete(key);this.expertCacheUsed-=old.byteLength;}}
+    retainExpertBlob(layer,id,blob){
+        if(!this.expertCacheBudget||blob.byteLength>this.expertCacheBudget)return;
+        this.forgetExpertBlob(layer,id);
+        while(this.expertCacheUsed+blob.byteLength>this.expertCacheBudget&&this.expertBlobs.size){const [old,b]=this.expertBlobs.entries().next().value;this.expertBlobs.delete(old);this.expertCacheUsed-=b.byteLength;}
+        this.expertBlobs.set(`${layer}:${id}`,blob);this.expertCacheUsed+=blob.byteLength;
+    }
+    clearExpertCache(){this.expertBlobs?.clear();this.expertCacheUsed=0;}
+    async readExpertBlob(layer,id){
+        const ex=this.manifest.experts;if(!ex||ex.source_type!=='Q2_0')return null;
+        let raw=await this.prefetchExpert(layer,id);
+        if(!raw){const info=ex.layers.find(l=>l.layer===layer);if(!info||!Number.isInteger(id)||id<0||id>=this.config.experts)throw Error('Expert out of range');raw=await this.source.read('experts.bin',info.offset+id*ex.blob_bytes,ex.blob_bytes);}
+        const view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);
+        for(let i=ex.offsets.gate_up_scales;i<raw.byteLength;i+=2)if((view.getUint16(i,true)&0x7c00)===0x7c00)throw Error('Non-finite expert scales');
+        return {raw:words(raw),layout:ex};
+    }
+    async readRows(name,start,rows,{compact=false}={}) {
         const t=this.describe(name),cols=t.shape[0],total=product(t.shape)/cols;
         if(!Number.isInteger(start)||start<0||!Number.isInteger(rows)||rows<1||start+rows>total)throw Error('Tensor range invalid: '+name);
         if(t.expert)return this.readExpert(t,start,rows);
         const count=cols*rows,begin=start*cols;
         if(t.values) {
             const stride=t.values_fp16?2:4;
-            return {format:'f32',shape:[cols,rows],data:floats(await this.source.read(t.file,t.values.offset+begin*stride,count*stride),t.values_fp16)};
+            const raw=await this.source.read(t.file,t.values.offset+begin*stride,count*stride);
+            if(compact&&t.source_type==='BF16'&&!t.values_fp16){
+                const v=new DataView(raw.buffer,raw.byteOffset,raw.byteLength),codes=new Uint32Array(Math.ceil(count/2));
+                for(let i=0;i<count;i++){const word=v.getUint32(i*4,true);if((word&65535)!==0||(word&0x7f800000)===0x7f800000)throw Error('Invalid canonical BF16 value');codes[i>>>1]|=(word>>>16)<<((i&1)*16);}
+                return {format:'bf16',shape:[cols,rows],codes};
+            }
+            return {format:'f32',shape:[cols,rows],data:floats(raw,t.values_fp16)};
         }
         const gs=t.group_elems, groupStart=begin/gs,groups=count/gs;
         const [c,s,o]=await Promise.all([
@@ -132,12 +178,13 @@ export class PackStore {
         const base=layerInfo.offset+id*ex.blob_bytes, down=role==='down', stride=down?1:2, first=down?start:2*start+(role==='up'?1:0);
         const codeStart=base+ex.offsets[down?'down_codes':'gate_up_codes'],scaleStart=base+ex.offsets[down?'down_scales':'gate_up_scales'];
         const span=(rows-1)*stride+1;
-        const [cb,sb]=await Promise.all([this.source.read('experts.bin',codeStart+first*cols/4,span*cols/4),this.source.read('experts.bin',scaleStart+first*cols/64*2,span*cols/64*2)]);
+        const blob=await this.prefetchExpert(layer,id),read=(offset,bytes)=>blob?blob.subarray(offset-base,offset-base+bytes):this.source.read('experts.bin',offset,bytes);
+        const [cb,sb]=await Promise.all([read(codeStart+first*cols/4,span*cols/4),read(scaleStart+first*cols/64*2,span*cols/64*2)]);
         // Q2_0 uses consecutive two-bit codes (unlike Q4_0's split halves).
         const packed=new Uint8Array(rows*cols/4),scales=new Float32Array(rows*cols/64),sv=new DataView(sb.buffer,sb.byteOffset,sb.byteLength);
-        for(let r=0;r<rows;r++)for(let b=0;b<cols/64;b++) {
-            scales[r*cols/64+b]=halfToFloat(sv.getUint16((r*stride*cols/64+b)*2,true));
-            packed.set(cb.subarray(r*stride*cols/4+b*16,r*stride*cols/4+b*16+16),r*cols/4+b*16);
+        for(let r=0;r<rows;r++){
+            packed.set(cb.subarray(r*stride*cols/4,(r*stride+1)*cols/4),r*cols/4);
+            for(let b=0;b<cols/64;b++)scales[r*cols/64+b]=halfTable[sv.getUint16((r*stride*cols/64+b)*2,true)];
         }
         if(scales.some(x=>!Number.isFinite(x)))throw Error('Non-finite expert scales');
         return {format:'s',shape:[cols,rows],codes:words(packed),scales,offsets:new Float32Array(1),bits:2,groupSize:64,bias:-1,codebook:0,hasOffset:false};
@@ -156,7 +203,12 @@ export class PackStore {
             if(!this.ple)throw Error('Select the original PLE GGUF shard as well as the canonical pack files');
             if(this.ple.type!==20||g.pleHeadDim%32)throw Error('PLE GGUF import currently requires IQ4_NL rows');
             const rowBytes=g.pleHeadDim/32*18;
-            const rows=await Promise.all(Array.from(ids,id=>this.source.read(this.ple.file,this.ple.offset+id*rowBytes,rowBytes)));
+            const rows=await Promise.all(Array.from(ids,async id=>{
+                if(this.pleRowCache.has(id)){const row=this.pleRowCache.get(id);this.pleRowCache.delete(id);this.pleRowCache.set(id,row);return row;}
+                if(this.plePending.has(id))return this.plePending.get(id);
+                const work=this.source.read(this.ple.file,this.ple.offset+id*rowBytes,rowBytes).then(row=>{while(this.pleRowCache.size>=65536)this.pleRowCache.delete(this.pleRowCache.keys().next().value);this.pleRowCache.set(id,row);return row;});
+                this.plePending.set(id,work);try{return await work;}finally{this.plePending.delete(id);}
+            }));
             for(let h=0;h<rows.length;h++){const raw=rows[h],v=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);for(let b=0;b<g.pleHeadDim/32;b++){const scale=halfToFloat(v.getUint16(b*18,true));if(!Number.isFinite(scale))throw Error('Non-finite PLE scales');for(let i=0;i<32;i++)out[h*g.pleHeadDim+b*32+i]=scale*IQ4NL[(raw[b*18+2+i%16]>>>(i<16?0:4))&15];}}
         }
         return out;
