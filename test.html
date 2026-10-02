@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Strata · Kernel test lab</title><link rel="icon" href="./web/icon.svg"><link rel="stylesheet" href="./web/style.css"></head>
+<body>
+<header><a class="brand" href="./"><span class="mark">▱</span> STRATA <span class="slash">/</span> <span class="quiet">WebCuda</span></a><span class="tag">PORTABLE INFERENCE LAB</span><a href="https://github.com/Niko1221/Strata" target="_blank" rel="noreferrer">Upstream ↗</a></header>
+<main>
+<div class="intro"><div><p class="eyebrow">ONE CUDA SOURCE · TWO EXECUTION TARGETS</p><h1>An engine across<br>GPU <span>&</span> CPU.</h1><p class="lead">Strata’s recurrent attention and mixture of experts,<br>running through CUDA WebShader.</p></div><div class="overview"><div><b>21</b><span>CUDA kernels</span></div><div><b>2</b><span>compiler targets</span></div><div><b>Local</b><span>file access</span></div></div></div>
+<div class="notice"><span class="dot amber"></span><div><strong>Development port · model weights loaded separately</strong><p>Start with the untrained fixture or open a converted Q2_0 model pack. The fixture checks the decode graph. Native Strata numerical parity and model quality remain unverified.</p></div></div>
+<div class="workspace">
+<section class="controls panel"><div class="panel-title"><span>01 / EXECUTION</span><span id="status" class="pill">Idle</span></div>
+<label for="backend">Execution backend</label><select id="backend"><option value="hybrid">Hybrid · WebGPU + WASM experts</option><option value="webgpu">WebGPU · all kernels on GPU</option><option value="wasm">WebAssembly · CPU threads</option></select>
+<div class="two"><div><label for="threads">CPU threads</label><select id="threads"><option>1</option><option>2</option><option selected>4</option><option>8</option></select></div><div><label for="steps">Decode steps</label><input id="steps" type="number" min="1" max="16" value="4"></div></div>
+<label for="tokens">Input token IDs</label><input id="tokens" value="2, 7, 4" spellcheck="false"><p id="token-hint" class="hint">Vocabulary: 0–39 · context: 32 tokens</p>
+<button class="primary" id="run">Run decode <span>→</span></button><div class="two"><button id="reset">Reset state</button><button id="verify">Verify kernels</button></div>
+<div class="separator"></div><div class="panel-title"><span>02 / MODEL FILES</span><button class="text-button" id="fixture">Use fixture</button></div><p id="model-name">Untrained deterministic fixture</p>
+<label class="file-button" for="files">Open local pack files <span>＋</span></label><input id="files" type="file" multiple accept=".json,.bin,.gguf" hidden><p class="hint">Select a manifest and its .bin files. A Strata canonical Q2_0 pack also needs the original IQ4_NL PLE GGUF shard. Files are read locally in slices.</p>
+<details><summary>Supported baseline</summary><p>Greedy token decoding, F32 activations, canonical S2/S4/S8 weights, GDN, QSA up to 2048 cells, gated residuals, PLE and shared/routed experts. Use the main page for text prompts, chat instructions and context controls. IQ expert packs, MTP, vision and API serving are not yet ported.</p></details>
+</section>
+<section class="results panel"><div class="panel-title"><span>03 / LIVE DECODE</span><span id="adapter" class="quiet">Select a backend and run</span></div>
+<div class="metrics"><div><span>Position</span><b id="position">—</b></div><div><span>Last token time</span><b id="latency">—</b></div><div><span>GPU expert calls</span><b id="gpu-count">0</b></div><div><span>CPU expert calls</span><b id="cpu-count">0</b></div></div>
+<div class="output"><span class="eyebrow">GENERATED TOKEN IDS</span><div id="output">Ready for the first token.</div><p id="output-note">The same .cu kernels power WebGPU and WebAssembly.</p></div>
+<div class="chart-title"><h2>Logits</h2><span class="quiet">Most recent decode step</span></div><div id="logits" aria-label="Logit values"><span class="empty">Run a decode to inspect model output.</span></div>
+<div class="chart-title"><h2>Expert routing</h2><span class="legend"><i class="gpu"></i> GPU <i class="cpu"></i> WASM</span></div><div id="routing"><span class="empty">Routing appears here after a token.</span></div>
+</section>
+</div>
+<section class="panel checks"><div class="panel-title"><span>04 / VALIDATION</span><span id="validation-summary" class="quiet">Not run</span></div><div id="checks"><p class="quiet">Verify against independent scalar equations, including the production 512-expert router and 128 × 48 × 128 recurrent state.</p></div><pre id="log" aria-live="polite">Ready. Model files stay on this computer.</pre></section>
+<footer><span>Strata @ 1678de3 · CUDA WebShader @ ef46ff1</span><div><a href="./kernels/strata.cu">CUDA source ↗</a><a href="./generated/manifest.json">Build manifest ↗</a><a href="./README.md">Port scope ↗</a></div></footer>
+</main><script type="module" src="./web/app.js"></script></body></html>

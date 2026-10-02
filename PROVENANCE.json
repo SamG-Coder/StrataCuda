@@ -1,0 +1,122 @@
+{
+  "strata": {
+    "repository": "https://github.com/Niko1221/Strata",
+    "commit": "1678de333d0e0711bc414ad992b640e1a37dd814",
+    "license": "MIT"
+  },
+  "webcuda": {
+    "repository": "https://github.com/SamG-Coder/cuda-webshader",
+    "commit": "ef46ff1bf02a306bad94ddc18286d25d3d902c14",
+    "license": "MIT",
+    "localSource": "D:/cuda-webshader",
+    "modifications": []
+  },
+  "port": {
+    "source": "kernels/strata.cu",
+    "sha256": "caadb9622f18afaa6dd7ca72fe6a6998711d503a983196951439c29a31524652",
+    "numericContract": "F32 activations/reductions/KV; portable baseline, not native bit parity",
+    "upstreamMapping": {
+      "projections": [
+        "src/kernels/cuda/bf16_gemv.cu",
+        "src/kernels/cuda/s_gemv.cu"
+      ],
+      "router": [
+        "src/kernels/cuda/router_top10.cu"
+      ],
+      "gatedResidual": [
+        "src/kernels/cuda/gr.cu"
+      ],
+      "deltaNet": [
+        "src/kernels/cuda/gdn.cu",
+        "src/kernels/cuda/elementwise.cu"
+      ],
+      "attention": [
+        "src/kernels/cuda/qsa.cu",
+        "src/kernels/cuda/rope.cu"
+      ],
+      "ple": [
+        "src/kernels/cuda/ple.cu",
+        "src/kernels/ngram.cpp"
+      ],
+      "orchestration": [
+        "src/core/layer.cpp",
+        "src/core/layout.cpp"
+      ],
+      "fileLayouts": [
+        "tools/strata_pack.py",
+        "tools/pack_layer.py",
+        "include/strata/artifact/dequant.hpp"
+      ]
+    }
+  },
+  "vendorSha256": {
+    "vendor/strata/include/strata/artifact/dequant.hpp": "db3014cd0bd3cfef7a860205570cadc752d469a3b36c0bdc6bc20670a3ac31c0",
+    "vendor/strata/include/strata/artifact/gguf_reader.hpp": "1632d20c3548f1e6a1584fe81a038470507edba3cd6664f52b985722c971ed55",
+    "vendor/strata/include/strata/artifact/gguf_split.hpp": "2f66d12f231c840fcd0177d9b2552aa98759252e95c6b5740e670cf0afa9e1b1",
+    "vendor/strata/include/strata/kernels/ngram.hpp": "af798236947b6e1f56add0c456e4245a06346bbad94d4e587af8a52952cf6ed8",
+    "vendor/strata/ref/load.py": "f856ddc1756300b953af711cfbbeb7959bc574ad20a646e3ced586fb162ab547",
+    "vendor/strata/src/kernels/ngram.cpp": "885765c9d5409035f90c4b143fd6c3eeeee3e73b00d414d883b71451c882caac",
+    "vendor/strata/tools/canonical_xcheck.py": "5496e71367ecb62288860140bfc396fb271d2844e985beb7aceb6de2f4113499",
+    "vendor/strata/tools/gguf_reader.py": "a93fd735d956dd8415314888e55f281f653573c21a5f2006f44982016f6926a2",
+    "vendor/strata/tools/gguf_writer.py": "1974d67916e71b228cb59b302ee4c7ab4632361e5a8b9d1cb890bc8fbd47a09f",
+    "vendor/strata/tools/pack_layer.py": "df42f1bef3a74c5802a81c582c25d30a1e4f549decf60cd193b3a9e29c61f310",
+    "vendor/strata/tools/strata_pack.py": "4213aa22f45fbd58ceb8069bae1624e17c3496b8ed356f4443a6211e321281c4",
+    "vendor/strata/tools/strata_tokenizer.py": "e19a8c3c0ee672e857135c277be74bdb0acf810cf7a7c763984efeda36f3ee7f",
+    "vendor/STRATA-LICENSE": "d287f56f89f7ca62ded62124d5741c4e858bce5ee30d45f39bb4469ea63f5188",
+    "vendor/webcuda/LICENSE": "8cfad05cca921d774bd78ecc5c15b85b0f193be253b8c7dcbaa72b92aef338e0",
+    "vendor/webcuda/src/app.js": "715a0c94124037ca72c8dc54fe79ab0ab3bbdbe4b8ddf97b45a49a350d00f105",
+    "vendor/webcuda/src/compiler/buffer-references.js": "6b40c629600a2449e9f0c7f38aa902eb4c52a45a4e3601f9567391f3e1d2bf3e",
+    "vendor/webcuda/src/compiler/client.js": "26e93c71983879f7edb20b645dac148acbdcbd2e6cc27de7295fd49a4b09ba33",
+    "vendor/webcuda/src/compiler/clone-ast.js": "ebdea79ee5940db579fb6a9a1dae8570f3c5be3899ce76a4a8c6e25a5b921891",
+    "vendor/webcuda/src/compiler/compiler.js": "353d6c5a41400956c8e5264278d93d88f406bbb832905cd6914a57ae039e3b3e",
+    "vendor/webcuda/src/compiler/constant-rows.js": "3b99ea31e78c38c07a10cf634aee1b9d5a44f48e5fe4586be6555c010e30af35",
+    "vendor/webcuda/src/compiler/constexpr.js": "ceaf86adf889a4fc70f00120944dbf4db19bc9e68b80eb2ab47c5755f5d2eb5c",
+    "vendor/webcuda/src/compiler/cpu-oracle.js": "88d8b74616c7613260d7066ffaa2043da2deb92ef509f21bd91a9aa0d6acb986",
+    "vendor/webcuda/src/compiler/curand-xorwow.js": "b6b3c433bb0c24cb7937774284e361b5f679493e4ed1ae53d38de577823d2f14",
+    "vendor/webcuda/src/compiler/deferred-pointers.js": "2e535c2ba18d4e98fa5d2eec4e969ce19cc87882b7d5d3448763e80f457b2ca4",
+    "vendor/webcuda/src/compiler/device-heap.js": "2e377e38d579ba5c01ebb1670432272fb7321bf4520f34c082866b46f58e5a8f",
+    "vendor/webcuda/src/compiler/device-launch.js": "3304a7a06b7953e3290250f9889fe0d0ebd3737aee6224e6af7a8502de733386",
+    "vendor/webcuda/src/compiler/diagnostics.js": "a54ebef9503a6196913f72ae9acfea91ebb53a44c4b463ff95b19a2d65ded8d3",
+    "vendor/webcuda/src/compiler/float64.js": "496d6216010add3f96a08584e9b23b83855cf933c17478f767141ba699515a4d",
+    "vendor/webcuda/src/compiler/full-workgroups.js": "f28cb6051e0c5ce32d044c17fe6f1e64f5005bf6390810ca668d1eff196dc552",
+    "vendor/webcuda/src/compiler/integer-expression.js": "77c80b128ec5f33fc41e935cf173fbd0d0385682d716b94dcfdffe84d3bddb33",
+    "vendor/webcuda/src/compiler/loop-unroll.js": "eb4e85a24d5cdae0076dae17a1ef3e8d09194dbfb50c7e05b98ad7b9f9c5af9a",
+    "vendor/webcuda/src/compiler/macros.js": "5707d3c9526880fe492660b4d8d7254504d0c5d5ad9b4123ca3e7050519c261a",
+    "vendor/webcuda/src/compiler/module-constexpr.js": "33402c7f1b344d3e0d0b73dd62c559da1bead05cff7fc7390ab115ddfd634a4d",
+    "vendor/webcuda/src/compiler/native-records.js": "332953d7c417281c7fc5bb3c295b709aa72bf9210c37c1f9ae56bad313fc6b5d",
+    "vendor/webcuda/src/compiler/native-tile-phases.js": "9af68804bd9914ce843aad6c2826458dd5bb1b27c7215d7a4dbd28a49d71f68c",
+    "vendor/webcuda/src/compiler/native-tiles.js": "b1e3c889e76e144a0b844ef79e3134e55158826c61d08fe83fa40f43a09a1fcb",
+    "vendor/webcuda/src/compiler/parser.js": "23d5bbe1f5f4879a2852de0c21a69bd698d52fff10654345b2cf7fe7b1afaba3",
+    "vendor/webcuda/src/compiler/record-parameters.js": "37b32dcb2fc09e91b0b3d0cf9acfc62789f4a133c2434f5e66b69a4fcb1bfc22",
+    "vendor/webcuda/src/compiler/return-phases.js": "888d74f4952e28db6284b00617dcbf9fc088dd87c36d032cced06fa02ef7222e",
+    "vendor/webcuda/src/compiler/scoped-enums.js": "25d18c9d5965832e2cadaf2ec1c4c415aadb5f11c027104abad707996bd9463e",
+    "vendor/webcuda/src/compiler/specialize-dependencies.js": "4550d47f2c2bd9c7cc88392a55639b0172a6a8ac5a2ea535035ba8b1d9404db2",
+    "vendor/webcuda/src/compiler/texture-types.js": "e75af7385b0403608f028ffb7e8bb2d953f7e840c2cc29943300475d2c55091d",
+    "vendor/webcuda/src/compiler/tiled-groups.js": "e7ae512358196ef58963f086bf90186152c371537ec5f128d9524c8418bad311",
+    "vendor/webcuda/src/compiler/uniform-records.js": "71255aa1015696d6422f501ce61fb57a6218d243b80ce48a3c2c1923e2adb889",
+    "vendor/webcuda/src/compiler/value-classes.js": "fb522dde6c8fec78a6db9196458e2838faf50d33122634edac88532e177e26e4",
+    "vendor/webcuda/src/compiler/vector-constructor.js": "66b10ddaefa43e40e67a8e22a1828a90bcc2d71d83e1683d4e44e345dfd88279",
+    "vendor/webcuda/src/compiler/wgsl-dependencies.js": "9624e5c9a4a670a60ea4cd3a4ba6db47f0365b6a419503b6b5394e7965b84fe8",
+    "vendor/webcuda/src/compiler/worker.js": "0681426dbde1dd59361700d63fd6b2921ec63eebc2ea508a3766686b12e2cb56",
+    "vendor/webcuda/src/explorer.css": "6d1997d333c0c67a9e612a008b9ca83f98ace05609f44d07b900117dfbfc3c71",
+    "vendor/webcuda/src/explorer.js": "a6a069592dade7f4a8e6dc5ce02066cb48b8fb53605d062c2e7886e282ea3113",
+    "vendor/webcuda/src/kernels.js": "1e98816bb5781725fe271d72734fe053817f21d1af2ab7fde55d3f43d405dc9e",
+    "vendor/webcuda/src/runtime/benchmark.js": "253eef92da14dde8e252803c6ab21633a27804aec2a900c1781ffe8f3a5db8e1",
+    "vendor/webcuda/src/runtime/fft-kernels.js": "5ecf19486442232e5523c63419aa44bbf631b8aaed9dda20d040a492d3bba152",
+    "vendor/webcuda/src/runtime/least-squares.js": "3dd213cbdba02800a0488757ecbd73eb60f7a992dee5bf7f96fc2dcb33ccda64",
+    "vendor/webcuda/src/runtime/object-arena.js": "18871506e23228fbc641404fdc5ea9be64c68bf2deab36e3a7b41bdc862f9a0c",
+    "vendor/webcuda/src/runtime/operations.js": "f32910e4081d69b35674af1ceb3de064a97d6a5296e8d8cd40aa5b1012359b04",
+    "vendor/webcuda/src/runtime/recursive-launches.js": "aac02df143ac871aa5e9af18229dae760b63ce7708f85e4e9f83846bcc183aa5",
+    "vendor/webcuda/src/runtime/runtime.js": "fef8f491a88504dbcd5765403038f7aae30c117d832fe955a9385017f2f04841",
+    "vendor/webcuda/src/runtime/scan-kernels.js": "5c558392f406d8e49be21f00fc12ef76e935104dd1558212c5a2cf2b775f2332",
+    "vendor/webcuda/src/runtime/sort-kernels.js": "f325847718f1d2d55cbe750b131d47dba9eb9e9f1c8da881cee1dd8ad91e968c",
+    "vendor/webcuda/src/runtime/three-bridge.js": "f06f7e89ec39ad11881880fb46bd908aef4ac8df46a199a2c5ae3a27000c9a34",
+    "vendor/webcuda/src/style.css": "1ae142effd5b92fb78ff57c0695d839461590f537a6fca2f44c56236101072ed",
+    "vendor/webcuda/src/wasm/compile.mjs": "7d54159470d2aa64b41ae9d22904d614f04e024c557fcc5c0260f04474017951",
+    "vendor/webcuda/src/wasm/cuda-cpu.hpp": "05e2a3b1b39a43d41d0ed351a0429f037158d0874105c4d978f1b4e6150c70a4",
+    "vendor/webcuda/src/wasm/independent-runtime.js": "fc7b61bf9bcbdb87cba16af590f26c65f58512ced7d89de4834b128f0234ca3a",
+    "vendor/webcuda/src/wasm/independent.mjs": "701e17d3965715ed0b794e1dfe6a9b1dcfb47dda5ae70da075bdff1de86fa2ab",
+    "vendor/webcuda/src/wasm/runtime.js": "4bceb79946f8f38183fbc2e6565a43e3b5dbec98f4c5bb20f8002558f35e9335",
+    "vendor/webcuda/src/wasm/thread-pool.hpp": "7ac84c2cc092c5754b22d283bd938be5cacf550c1476191e8bf9e3c46e97440c"
+  }
+}

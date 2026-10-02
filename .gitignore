@@ -1,0 +1,10 @@
+node_modules/
+.local/
+upstream/
+generated/
+reports/*.png
+reports/*.json
+models/
+dist/
+*.log
+__pycache__/

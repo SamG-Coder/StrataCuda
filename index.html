@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Strata · Local AI</title><link rel="icon" href="./web/icon.svg"><link rel="stylesheet" href="./web/chat.css"></head>
+<body><div class="app-shell">
+<aside id="sidebar" aria-label="Model and generation settings">
+<a class="brand" href="./"><img src="./web/icon.svg" width="28" height="28" alt=""><span>Strata<small>powered by WebCuda</small></span></a>
+<button id="new-chat" class="new-chat"><span aria-hidden="true">＋</span> New conversation</button>
+<div class="section-label">MODEL</div>
+<div class="model-card"><div class="model-heading"><span class="model-symbol">S</span><div><strong id="model-name">Your local model</strong><span id="model-state">Load a model to begin</span></div></div><button id="load-local" class="load-button">Load downloaded model</button><button id="choose-folder" class="folder-button">Choose a model folder <span>↗</span></button><input id="model-folder" type="file" webkitdirectory multiple hidden></div>
+<fieldset id="settings"><legend class="section-label">GENERATION</legend>
+<label for="backend">Run on</label><select id="backend"><option value="webgpu">GPU · WebGPU</option><option value="hybrid">GPU + CPU · Hybrid</option><option value="wasm">CPU · WebAssembly</option></select>
+<div id="thread-control" hidden><label for="threads">CPU threads</label><select id="threads"><option>1</option><option>2</option><option selected>4</option><option>8</option></select></div>
+<label for="context">Context window <span class="help-label">tokens</span></label><select id="context"><option>128</option><option selected>256</option><option>512</option><option>1024</option><option>2048</option></select><p class="field-note">Shared by the conversation and reply.</p>
+<label for="reply-limit">Maximum reply <span class="help-label">tokens</span></label><input id="reply-limit" type="number" min="1" max="2048" value="32">
+<label for="format">Prompt format</label><select id="format"><option value="chat">Chat</option><option value="completion">Text completion</option></select>
+<label for="system">Instructions <span class="help-label">optional</span></label><textarea id="system" rows="3" maxlength="16000" placeholder="How should the model respond?"></textarea>
+</fieldset>
+<div class="sidebar-footer"><a href="./test.html">Test lab <span>↗</span></a><a href="./README.md">Documentation <span>↗</span></a><span class="local-note"><i></i> Inference stays on your device</span></div>
+</aside>
+<main>
+<header><div class="header-left"><button id="toggle-settings" class="icon-button" aria-label="Toggle settings" aria-expanded="false">☰</button><span id="conversation-title">New conversation</span></div><div class="header-right"><span id="connection" class="status-badge"><i></i> No model loaded</span><button id="clear" class="icon-button" aria-label="Clear conversation" title="Clear conversation">↺</button></div></header>
+<div id="scroll-area" class="scroll-area"><section id="welcome" class="welcome"><div class="welcome-mark"><img src="./web/icon.svg" width="36" height="36" alt=""></div><p class="eyebrow">LOCAL INTELLIGENCE. YOUR WORKSPACE.</p><h1>A space to think,<br>write, and explore.</h1><p class="welcome-copy">Bring a question. Start an idea.<br>Your model runs here, on your computer.</p><div class="suggestions"><button data-prompt="Explain how a GPU differs from a CPU in simple terms."><span>Understand something</span><small>Turn a complex topic into a clear explanation.</small><b>↗</b></button><button data-prompt="Help me write a concise introduction for a software project."><span>Find the right words</span><small>Draft, refine, and shape an idea.</small><b>↗</b></button><button data-prompt="What is the capital of France? Answer in one word."><span>Try a quick question</span><small>Start with a short, familiar example.</small><b>↗</b></button></div></section><section id="messages" class="messages" aria-label="Conversation" aria-live="polite"></section></div>
+<div class="composer-area"><div id="error" class="error-box" role="alert" hidden></div><div id="progress" class="generation-progress" hidden><div><span class="pulse"></span><span id="progress-label">Preparing model…</span><span id="elapsed"></span></div><progress id="progress-bar" max="1" value="0" aria-label="Generation progress"></progress></div>
+<form id="composer"><label for="prompt" class="sr-only">Your message</label><textarea id="prompt" rows="3" maxlength="32000" placeholder="Ask a question, or start writing…"></textarea><div class="composer-bottom"><span id="budget">Load a model to count tokens</span><div><span class="keyboard-hint">Enter to send</span><button id="stop" type="button" hidden><span aria-hidden="true">■</span> Stop</button><button id="send" type="submit" aria-label="Send message" disabled><span>Send</span> ↑</button></div></div></form>
+<div class="composer-footer"><span id="run-note">Load the downloaded model, or choose a converted model folder.</span><span>WebCuda <span class="footer-dot">·</span> Local AI</span></div></div>
+</main></div><script type="module" src="./web/chat.js"></script></body></html>

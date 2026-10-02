@@ -1,0 +1,11 @@
+* text=auto
+*.js text eol=lf
+*.mjs text eol=lf
+*.cu text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.py text eol=lf
+# Preserve the exact upstream bytes recorded in PROVENANCE.json.
+vendor/** -text
